@@ -7,15 +7,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-	apiKey: 'AIzaSyBy-vy6Vn0QoS7e1yhiu2mCjgDUeEfv2V4',
-	authDomain: 'aura-b801a.firebaseapp.com',
-	projectId: 'aura-b801a',
-	storageBucket: 'aura-b801a.firebasestorage.app',
-	messagingSenderId: '92809608918',
-	appId: '1:92809608918:web:cc887f03a3689d55e59377',
-	measurementId: 'G-LWJY33BRRE'
-};
+const firebaseConfig = {};
 
 export const app = initializeApp(firebaseConfig);
 export const analytics = getAnalytics(app);

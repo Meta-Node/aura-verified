@@ -1,3 +1,37 @@
+<script lang="ts">
+	import { browser } from '$app/environment';
+	import { onMount } from 'svelte';
+	let user = null;
+	let auth: any = null;
+	let googleProvider: any = null;
+
+	// Dynamically import Firebase only in the browser
+	onMount(async () => {
+		if (browser) {
+			const { auth: firebaseAuth, googleProvider: provider } = await import('../lib/firebase');
+			auth = firebaseAuth;
+			googleProvider = provider;
+
+			// Set up auth state listener
+			auth.onAuthStateChanged((currentUser: any) => {
+				user = currentUser;
+				console.log(currentUser);
+			});
+		}
+	});
+
+	async function loginWithGoogle() {
+		if (!browser || !auth || !googleProvider) return;
+		try {
+			const { signInWithPopup } = await import('firebase/auth');
+			const result = await signInWithPopup(auth, googleProvider);
+			user = result.user;
+		} catch (error) {
+			console.error('Login failed:', error);
+		}
+	}
+</script>
+
 <h3 class="text-center text-3xl font-bold">Aura Get Verified</h3>
 
 <p class="mt-10 text-center">To get started signup using these integrations</p>
@@ -10,6 +44,7 @@
                   transition-all duration-200 hover:shadow-md
                   focus:ring-2 focus:ring-blue-500
                   focus:ring-offset-2 focus:outline-none dark:bg-white dark:text-gray-700"
+		on:click={loginWithGoogle}
 	>
 		<div class="flex h-6 w-6 items-center justify-center">
 			<span class="icon-[flat-color-icons--google] h-5 w-5"></span>

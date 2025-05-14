@@ -1,7 +1,7 @@
-import { type Config } from 'tailwindcss';
+import type { Config } from "tailwindcss"
 
 const config: Config = {
-	content: ['src/**/*.{ts|svelte|html}']
-};
+  content: ["./index.html", "./src/**/*.{js,ts}"],
+}
 
-export default config;
+export default config

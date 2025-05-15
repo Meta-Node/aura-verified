@@ -19,12 +19,13 @@
     "skipLibCheck": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
 
-    // Some stricter flags (disabled by default)
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false,
     "outDir": "dist"
   },
-  "include": ["src"]
+  "include": ["src", "vite-env.d.ts", "tailwind.config.ts"]
 }

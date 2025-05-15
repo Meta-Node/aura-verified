@@ -2,18 +2,25 @@
   "name": "get-verified",
   "module": "index.ts",
   "type": "module",
+  "lisence": "MIT",
+  "scripts": {
+    "dev": "vite"
+  },
   "private": true,
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.6",
     "@types/bun": "latest",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.3",
-    "tailwindcss": "^4.1.6",
+    "postcss-lit": "^1.2.0",
+    "tailwindcss": "4",
     "vite": "^6.3.5"
   },
   "peerDependencies": {
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@lit-labs/signals": "^0.1.2",
     "lit": "^3.3.0"
   }
 }

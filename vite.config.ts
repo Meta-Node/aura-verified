@@ -1,9 +1,14 @@
 import { defineConfig } from "vite"
+import tsconfigPaths from "vite-tsconfig-paths"
+import { litHMRPlugin } from "./vite-plugin-lit-hmr"
 
 export default defineConfig({
   root: ".",
   build: {
-    outDir: "build",
+    outDir: "build"
   },
-  plugins: [],
+  plugins: [
+    tsconfigPaths(),
+    litHMRPlugin()
+  ]
 })

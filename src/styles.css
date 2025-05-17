@@ -1,14 +1,11 @@
-
-
-
 body {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    background: #0D0D1B;
-    color: white;
-    font-family: "Roboto", sans-serif;
-    font-optical-sizing: auto;
-    font-style: normal;
-    font-weight: normal;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  background: #0d0d1b;
+  color: white;
+  font-family: "Roboto", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-weight: normal;
 }

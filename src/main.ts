@@ -13,6 +13,8 @@ import "@shoelace-style/shoelace/dist/components/icon/icon.js"
 import "@shoelace-style/shoelace/dist/components/input/input.js"
 import "@shoelace-style/shoelace/dist/components/rating/rating.js"
 
+import "fa-icons"
+
 @customElement("my-app")
 export class MyApp extends LitElement {
   private router = createRouter(this)

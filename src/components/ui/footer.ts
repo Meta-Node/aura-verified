@@ -6,7 +6,6 @@ export class AppFooter extends LitElement {
 
     static styles = css`
         .navbar {
-            border-top: 1px solid #ffffff30;
             background-image: linear-gradient(to top right, rgba(46, 51, 90, 0.26), rgba(28, 27, 51, 0.26) 100%);
             position: fixed;
             bottom: 2px;
@@ -16,7 +15,9 @@ export class AppFooter extends LitElement {
             transform: translateX(-50%);
             backdrop-filter: blur(24px);
             padding: 16px;
-            border-radius: 16px;
+            border: 1px solid #33333360;
+            border-top: 1px solid #ffffff30;
+            border-radius: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;

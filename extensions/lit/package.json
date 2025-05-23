@@ -1,0 +1,38 @@
+{
+  "name": "vscode-lit-extension",
+  "displayName": "Lit Language Support",
+  "description": "Syntax highlighting and basic import support for .lit files",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "lit",
+        "aliases": [
+          "Lit",
+          "lit"
+        ],
+        "extensions": [
+          ".lit"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "lit",
+        "scopeName": "source.lit",
+        "path": "./syntaxes/lit.tmLanguage.json"
+      },
+      {
+        "scopeName": "injection.lit.template",
+        "path": "./syntaxes/injection.tmLanguage.json"
+      }
+    ]
+  }
+}

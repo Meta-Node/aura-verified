@@ -1,0 +1,12 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "scopeName": "injection.lit.template",
+  "injectionSelector": "L:meta.embedded.html.lit - comment - string",
+  "patterns": [
+    {
+      "begin": "\\${",
+      "end": "}",
+      "patterns": [{ "include": "source.js" }]
+    }
+  ]
+}

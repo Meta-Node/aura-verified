@@ -20,6 +20,14 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
       render: () => html` <my-home></my-home>`,
     },
     {
+      path: "/project/:id",
+      enter: async () => {
+        await import("@/routes/verification-page.lit")
+        return true
+      },
+      render: () => html` <my-verificationpage></my-verificationpage>`,
+    },
+    {
       path: "*",
       enter: async () => {
         await import("@/routes/not-found.lit")

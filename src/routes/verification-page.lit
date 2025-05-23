@@ -86,10 +86,7 @@
   import { property, customElement } from "lit/decorators.js"
 
   @customElement("verification-page")
-  class VerificationPage extends LitElement {
-    @property()
-    name: string
-  }
+  class VerificationPage extends LitElement {}
 </script>
 
 <style>
@@ -189,7 +186,6 @@
     color: var(--highlight);
   }
 
-  /* Steps Section */
   .steps-heading {
     font-size: 30px;
     font-weight: 700;

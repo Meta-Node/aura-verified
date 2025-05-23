@@ -193,7 +193,6 @@ export class HomeElement extends LitElement {
 
 .apps-section {
   text-align: left;
-  padding: 0 16px;
   margin-bottom: 32px;
 }
 

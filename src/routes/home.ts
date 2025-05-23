@@ -1,175 +1,376 @@
-import { html, LitElement } from "lit"
+import { css, html, LitElement } from "lit"
+import { customElement } from "lit/decorators.js"
 
+@customElement("my-home")
 export class HomeElement extends LitElement {
+  static styles = css`
+
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .signal {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+    }
+
+    .signal-bar {
+      width: 4px;
+      background-color: white;
+      border-top-left-radius: 2px;
+      border-top-right-radius: 2px;
+    }
+
+    .signal-bar:nth-child(1) {
+      height: 8px;
+    }
+
+    .signal-bar:nth-child(2) {
+      height: 12px;
+    }
+
+    .signal-bar:nth-child(3) {
+      height: 16px;
+    }
+
+    .signal-bar:nth-child(4) {
+      height: 20px;
+    }
+
+    .wifi {
+      margin-left: 4px;
+    }
+
+    .wifi svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .battery {
+      width: 24px;
+      height: 12px;
+      background-color: white;
+      border-radius: 2px;
+    }
+
+    .profile-card-wrapper {
+      position: relative;
+
+    }
+
+    .profile-card {
+      margin: 32px 0;
+      background-image: linear-gradient(to top right, rgba(46, 51, 90, 0.26), rgba(28, 27, 51, 0.26) 100%);
+      backdrop-filter: blur(21px);
+      border-radius: 24px;
+      padding: 15px;
+      border-top: 1px solid #ffffff30;
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: start;
+
+      text-align: left;
+
+      gap: 24px;
+      margin-bottom: 16px;
+    }
+
+    .profile-picture {
+      width: 64px;
+      height: 64px;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .profile-picture img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-info h2 {
+      font-size: small;
+      font-weight: 700;
+    }
+
+    .profile-info p {
+      color: #dadada;
+      font-size: smaller;
+    }
+
+    .profile-stats {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .stat {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stat span:first-child {
+      color: #dadada;
+    }
+
+    .stat span:last-child {
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .level-progress {
+      color: #ccc;
+      font-size: 12px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 12px;
+      background-color: #313042;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress {
+      height: 100%;
+      background-color: #5500ff;
+      border-radius: 9999px;
+    }
+
+    .apps-section {
+      text-align: left;
+      padding: 0 16px;
+      margin-bottom: 32px;
+    }
+
+    .apps-section h2 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .verification-card {
+      background-color: rgba(21, 22, 44, 0.8);
+      backdrop-filter: blur(4px);
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .card-header h3 {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .status {
+      padding: 4px 16px;
+      border-radius: 9999px;
+      font-size: 14px;
+    }
+
+    .status.in-progress {
+      background-color: #0093b1;
+      color: white;
+    }
+
+    .status.completed {
+      background-color: rgba(5, 150, 105, 0.2);
+      color: #10b981;
+    }
+
+    .level-requirement {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .level-requirement span:first-child {
+      color: #15c8ec;
+    }
+
+    .level-requirement span:last-child {
+      font-weight: 700;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .continue-button {
+      width: 100%;
+      background-color: #2f6de9;
+      color: white;
+      padding: 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 18px;
+      text-align: center;
+    }
+
+    .verified {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .checkmark {
+      background-color: #10b981;
+      border-radius: 50%;
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+
+    .checkmark svg {
+      width: 24px;
+      height: 24px;
+      color: white;
+    }
+
+    .verified-date {
+      color: #747474;
+    }
+
+
+
+    .profile-card-bg {
+      position: absolute;
+      inset: 3px;
+      border-radius: 24px;
+      z-index: -10;
+    }
+  `
+
   protected render() {
     return html`
-      <div class="flex flex-col min-h-screen bg-[#0d0d1b] text-white font-sans">
-        <div class="flex justify-between items-center p-4">
-          <div class="text-xl font-medium">9:41</div>
-          <div class="flex items-center gap-1">
-            <div class="flex items-end gap-0.5">
-              <div class="w-1 h-2 bg-white rounded-t-sm"></div>
-              <div class="w-1 h-3 bg-white rounded-t-sm"></div>
-              <div class="w-1 h-4 bg-white rounded-t-sm"></div>
-              <div class="w-1 h-5 bg-white rounded-t-sm"></div>
-            </div>
-            <div class="flex items-center gap-1 ml-1">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M1 8.5C1 5 4 2 7.5 2H16.5C20 2 23 5 23 8.5V15.5C23 19 20 22 16.5 22H7.5C4 22 1 19 1 15.5V8.5Z"
-                  stroke="white"
-                  strokeWidth="1.5"
-                />
-                <path
-                  d="M7 9C8.10457 9 9 8.10457 9 7C9 5.89543 8.10457 5 7 5C5.89543 5 5 5.89543 5 7C5 8.10457 5.89543 9 7 9Z"
-                  stroke="white"
-                  strokeWidth="1.5"
-                />
-                <path
-                  d="M17 9C18.1046 9 19 8.10457 19 7C19 5.89543 18.1046 5 17 5C15.8954 5 15 5.89543 15 7C15 8.10457 15.8954 9 17 9Z"
-                  stroke="white"
-                  strokeWidth="1.5"
-                />
-                <path
-                  d="M7 19C8.10457 19 9 18.1046 9 17C9 15.8954 8.10457 15 7 15C5.89543 15 5 15.8954 5 17C5 18.1046 5.89543 19 7 19Z"
-                  stroke="white"
-                  strokeWidth="1.5"
-                />
-                <path
-                  d="M17 19C18.1046 19 19 18.1046 19 17C19 15.8954 18.1046 15 17 15C15.8954 15 15 15.8954 15 17C15 18.1046 15.8954 19 17 19Z"
-                  stroke="white"
-                  strokeWidth="1.5"
-                />
-              </svg>
-              <div class="w-6 h-3 bg-white rounded-sm"></div>
-            </div>
-          </div>
-        </div>
+      <div class="body">
+        <div class="profile-card-wrapper">
 
-        {/* User Profile Card */}
-        <div class="mx-4 mb-8 bg-[#15162c]/80 backdrop-blur-sm rounded-3xl p-6">
-          <div class="flex items-center gap-4 mb-4">
-            <div class="relative w-16 h-16 rounded-full overflow-hidden">
-              <image
-                src="/placeholder.svg?height=64&width=64"
-                alt="Profile picture"
-                width="{64}"
-                height="{64}"
-                class="object-cover"
-              />
-            </div>
-            <div>
-              <h2 class="text-2xl font-bold">Ali Maktabi</h2>
-              <p class="text-[#dadada] text-sm">maktabi876@gmail.com</p>
-            </div>
-          </div>
-
-          <div class="flex items-center justify-between mb-4">
-            <div class="flex items-center gap-2">
-              <span class="text-[#dadada]">Level</span>
-              <span class="font-bold text-lg">3</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="text-[#dadada]">Score</span>
-              <span class="font-bold text-lg">150M</span>
-            </div>
-            <div class="text-[#dadada] text-sm">Level 4 at 500M</div>
-          </div>
-
-          <div class="w-full h-2 bg-[#313042] rounded-full overflow-hidden">
-            <div class="h-full w-[30%] bg-[#5500ff] rounded-full"></div>
-          </div>
-        </div>
-
-        {/* Apps Needing Verification */}
-        <div class="px-4 mb-8">
-          <h2 class="text-3xl font-bold mb-6">Apps needing verification</h2>
-
-          {/* UBI Raffle Verification Card */}
-          <div class="bg-[#15162c]/80 backdrop-blur-sm rounded-3xl p-6 mb-6">
-            <div class="flex justify-between items-center mb-4">
-              <h3 class="text-xl font-bold">UBI Raffle Verification</h3>
-              <div
-                class="bg-[#0093b1] text-white px-4 py-1 rounded-full text-sm"
-              >
-                In Progress
+          <div class="profile-card">
+            <div class="profile-header">
+              <div class="profile-picture">
+                <img
+                  src="/images/profile-photo.png?height=64&width=64"
+                  alt="Profile picture"
+                />
+              </div>
+              <div class="profile-info">
+                <h2>Ali Maktabi</h2>
+                <p>maktabi876@gmail.com</p>
               </div>
             </div>
-
-            <div class="flex items-center gap-2 mb-4">
-              <span class="text-[#15c8ec]">Requires Level:</span>
-              <span class="font-bold">4</span>
+            <div class="profile-stats">
+              <div class="stat">
+                <span>Level</span>
+                <span>3</span>
+              </div>
+              <div class="stat">
+                <span>Score</span>
+                <span>150M</span>
+              </div>
+              <div class="level-progress">Level 4 at <strong>500M</strong></div>
+            </div>
+            <div class="progress-bar">
+              <div class="progress" style="width: 30%;"></div>
             </div>
 
-            <div class="flex justify-between items-center mb-2">
+        </div>
+        </div>
+          <div class="profile-card-bg">
+            <div class="profile-header">
+              <div class="profile-picture">
+                <img
+                  src="/images/profile-photo.png?height=64&width=64"
+                  alt="Profile picture"
+                />
+              </div>
+              <div class="profile-info">
+                <h2>Ali Maktabi</h2>
+                <p>maktabi876@gmail.com</p>
+              </div>
+            </div>
+            <div class="profile-stats">
+              <div class="stat">
+                <span>Level</span>
+                <span>3</span>
+              </div>
+              <div class="stat">
+                <span>Score</span>
+                <span>150M</span>
+              </div>
+              <div class="level-progress">Level 4 at 500M</div>
+            </div>
+            <div class="progress-bar">
+              <div class="progress" style="width: 30%;"></div>
+            </div>
+          </div>
+
+        <div class="apps-section">
+          <h2>Apps needing verification</h2>
+          <div class="verification-card">
+            <div class="card-header">
+              <h3>UBI Raffle Verification</h3>
+              <div class="status in-progress">In Progress</div>
+            </div>
+            <div class="level-requirement">
+              <span>Requires Level:</span>
+              <span>4</span>
+            </div>
+            <div class="progress-info">
               <span>Progress</span>
               <span>2/5 completed</span>
             </div>
-
-            <div
-              class="w-full h-2 bg-[#313042] rounded-full overflow-hidden mb-6"
-            >
-              <div class="h-full w-[40%] bg-[#5500ff] rounded-full"></div>
+            <div class="progress-bar">
+              <div class="progress" style="width: 40%;"></div>
             </div>
-
-            <button
-              class="w-full bg-[#2f6de9] text-white py-4 rounded-xl font-bold text-lg"
-            >
-              Continue
-            </button>
+            <button class="continue-button">Continue</button>
           </div>
-
-          {/* Project Gamma Card */}
-          <div class="bg-[#15162c]/80 backdrop-blur-sm rounded-3xl p-6">
-            <div class="flex justify-between items-center mb-4">
-              <h3 class="text-xl font-bold">Project Gamma</h3>
-              <div
-                class="bg-[#059669]/20 text-[#10b981] px-4 py-1 rounded-full text-sm"
-              >
-                Completed
-              </div>
+          <div class="verification-card">
+            <div class="card-header">
+              <h3>Project Gamma</h3>
+              <div class="status completed">Completed</div>
             </div>
-
-            <div class="flex items-center gap-2 mb-8">
-              <span class="text-[#15c8ec]">Requires Level:</span>
-              <span class="font-bold">3</span>
+            <div class="level-requirement">
+              <span>Requires Level:</span>
+              <span>3</span>
             </div>
-
-            <div class="flex flex-col items-center">
-              <div class="bg-[#10b981] rounded-full p-3 mb-4">
-                <Check class="w-6 h-6 text-white" />
+            <div class="verified">
+              <div class="checkmark">
+                <svg
+                  class="w-6 h-6 text-white"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M20 6L9 17l-5-5"></path>
+                </svg>
               </div>
-              <span class="text-[#747474]">Verified on Mar 15, 2025</span>
+              <span class="verified-date">Verified on Mar 15, 2025</span>
             </div>
           </div>
         </div>
 
-        {/* Bottom Navigation */}
-        <div
-          class="mt-auto bg-[#15162c]/90 backdrop-blur-sm p-4 flex justify-between items-center"
-        >
-          <button class="p-2">
-            <Home class="w-6 h-6 text-white" />
-          </button>
-          <button class="p-2">
-            <Activity class="w-6 h-6 text-[#747474]" />
-          </button>
-          <button class="p-2">
-            <Bell class="w-6 h-6 text-[#747474]" />
-          </button>
-          <button class="p-2">
-            <User class="w-6 h-6 text-[#747474]" />
-          </button>
-          <button class="p-2">
-            <Share2 class="w-6 h-6 text-[#747474]" />
-          </button>
-        </div>
+       
       </div>
     `
   }

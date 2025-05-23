@@ -1,6 +1,9 @@
 import { css, html, LitElement } from "lit"
 import { customElement } from "lit/decorators.js"
 
+
+import "./footer.ts"
+
 @customElement("app-layout")
 export class AppLayout extends LitElement {
 
@@ -80,6 +83,8 @@ export class AppLayout extends LitElement {
         <main>
           <slot></slot>
         </main>
+        
+        <app-footer></app-footer>
       </div>
     `
   }

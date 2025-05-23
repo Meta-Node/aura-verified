@@ -1,15 +1,10 @@
-
-
-
-
 <template>
   <div>
     salam
   </div>
 </template>
 
-
 <script>
-import {} from "lit"
+import {LitElement} from "lit"
 class NotFoundElement extends LitElement {}
 </script>

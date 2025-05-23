@@ -18,7 +18,18 @@ export default function litTemplatePlugin() {
       if (scriptMatch) {
         className = scriptMatch[1]!
       }
-      const elementName = `my-${className.toLowerCase()}`
+
+      script = "import {css as __litCSS} from 'lit' \n" + script
+
+      if (style) {
+        const staticStylesRegex = /static\s+styles\s*=/g
+        if (!staticStylesRegex.test(script)) {
+          script = script.replace(
+            /class\s+\w+\s*(?:extends\s+\w+)?\s*\{/,
+            (match) => `${match}\n static styles = __litCSS\`${style}\`;`,
+          )
+        }
+      }
 
       if (script && id.endsWith(".lit")) {
         const tsResult = await transformWithEsbuild(script, id + ".ts", {
@@ -29,17 +40,14 @@ export default function litTemplatePlugin() {
       }
 
       const transformedCode = `
-        import { LitElement, html, css } from 'lit';
-        
+        import * as __lit from 'lit'
+
         ${script || `class ${className} extends LitElement {}`}
         
-        ${style ? `${className}.styles = css\`${style}\`;\n` : ""}
         
         ${className}.prototype.render = function() {
-          return html\`${template}\`;
+          return __lit.html\`${template}\`;
         };
-        
-        customElements.define('${elementName}', ${className});
         
         export default ${className};
       `

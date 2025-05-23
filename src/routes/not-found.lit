@@ -1,10 +1,11 @@
 <template>
-  <div>
-    salam
-  </div>
+  <div>salam</div>
 </template>
 
 <script>
-import {LitElement} from "lit"
-class NotFoundElement extends LitElement {}
+  import { LitElement } from "lit"
+  import { customElement } from "lit/decorators.js"
+
+  @customElement("not-found")
+  class NotFoundElement extends LitElement {}
 </script>

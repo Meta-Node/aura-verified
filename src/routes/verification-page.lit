@@ -82,8 +82,10 @@
 </template>
 
 <script lang="ts">
-  import { property } from "lit/decorators.js"
+  import { LitElement } from "lit"
+  import { property, customElement } from "lit/decorators.js"
 
+  @customElement("verification-page")
   class VerificationPage extends LitElement {
     @property()
     name: string

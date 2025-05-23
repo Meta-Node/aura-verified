@@ -54,6 +54,10 @@ export class AppLayout extends LitElement {
       background: white;
       opacity: 0.2;
     }
+
+    main {
+      padding: 40px 0;
+    }
   `
 
   render() {

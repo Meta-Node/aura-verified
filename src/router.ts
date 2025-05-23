@@ -6,7 +6,7 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
     {
       path: "/",
       enter: async () => {
-        await import("@/routes/index.ts")
+        await import("@/routes/index.lit")
         return true
       },
       render: () => html` <home-page></home-page>`,
@@ -14,7 +14,7 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
     {
       path: "/home",
       enter: async () => {
-        await import("@/routes/home")
+        await import("@/routes/home.lit")
         return true
       },
       render: () => html` <my-home></my-home>`,
@@ -25,7 +25,7 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
         await import("@/routes/verification-page.lit")
         return true
       },
-      render: () => html` <my-verificationpage></my-verificationpage>`,
+      render: () => html` <verification-page></verification-page>`,
     },
     {
       path: "*",
@@ -33,6 +33,6 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
         await import("@/routes/not-found.lit")
         return true
       },
-      render: () => html` <my-notfoundelement></my-notfoundelement>`,
+      render: () => html` <not-found></not-found>`,
     },
   ])

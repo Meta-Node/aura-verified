@@ -24,11 +24,12 @@ export class AppLayout extends LitElement {
     }
 
     .lamp-bg {
-      position: fixed;
+      position: sticky;
       top: -8px;
       width: 1px;
       right: 20px;
       height: 1px;
+      margin-left: auto;
       border-radius: 100000px;
       box-shadow: 0 0 200px 120px rgba(253, 224, 255, 0.3);
     }

@@ -33,6 +33,7 @@ export class AppFooter extends LitElement {
       outline: none;
       border: none;
       color: #aaaaaa;
+      cursor: pointer;
     }
 
     .navbar svg {
@@ -40,13 +41,6 @@ export class AppFooter extends LitElement {
       height: 40px;
       background: transparent;
     }
-    //.navbar svg.active {
-    //    color: white;
-    //}
-    //
-    //.navbar svg.inactive {
-    //    color: #747474;
-    //}
   `
 
   render() {

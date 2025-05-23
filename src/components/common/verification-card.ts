@@ -49,7 +49,7 @@ export class VerificationCard extends LitElement {
     }
 
     .status {
-      padding: 4px 16px;
+      padding: 4px 10px;
       border-radius: 9999px;
       font-size: smaller;
     }

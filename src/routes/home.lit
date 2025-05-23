@@ -30,33 +30,33 @@
           <div class="progress" style="width: 30%;"></div>
         </div>
       </div>
-    </div>
-    <div class="profile-card-bg">
-      <div class="profile-header">
-        <div class="profile-picture">
-          <img
-            src="/images/profile-photo.png?height=64&width=64"
-            alt="Profile picture"
-          />
+      <div class="profile-card-bg">
+        <div class="profile-header">
+          <div class="profile-picture">
+            <img
+              src="/images/profile-photo.png?height=64&width=64"
+              alt="Profile picture"
+            />
+          </div>
+          <div class="profile-info">
+            <h2>Ali Maktabi</h2>
+            <p>maktabi876@gmail.com</p>
+          </div>
         </div>
-        <div class="profile-info">
-          <h2>Ali Maktabi</h2>
-          <p>maktabi876@gmail.com</p>
+        <div class="profile-stats">
+          <div class="stat">
+            <span>Level</span>
+            <span>3</span>
+          </div>
+          <div class="stat">
+            <span>Score</span>
+            <span>150M</span>
+          </div>
+          <div class="level-progress">Level 4 at 500M</div>
         </div>
-      </div>
-      <div class="profile-stats">
-        <div class="stat">
-          <span>Level</span>
-          <span>3</span>
+        <div class="progress-bar">
+          <div class="progress" style="width: 30%;"></div>
         </div>
-        <div class="stat">
-          <span>Score</span>
-          <span>150M</span>
-        </div>
-        <div class="level-progress">Level 4 at 500M</div>
-      </div>
-      <div class="progress-bar">
-        <div class="progress" style="width: 30%;"></div>
       </div>
     </div>
 
@@ -141,7 +141,7 @@ export class HomeElement extends LitElement {
 }
 
 .profile-info h2 {
-  font-size: small;
+  font-size: medium;
   font-weight: 700;
 }
 

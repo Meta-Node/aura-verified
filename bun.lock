@@ -14,6 +14,7 @@
         "@tailwindcss/postcss": "^4.1.6",
         "@types/bun": "latest",
         "autoprefixer": "^10.4.21",
+        "lit-svg-loader": "^0.0.3",
         "node-html-parser": "^7.0.1",
         "postcss": "^8.5.3",
         "postcss-lit": "^1.2.0",
@@ -308,6 +309,8 @@
     "lit-element": ["lit-element@2.5.1", "", { "dependencies": { "lit-html": "^1.1.1" } }, "sha512-ogu7PiJTA33bEK0xGu1dmaX5vhcRjBXCFexPja0e7P7jqLhTpNKYRPmE+GmiCaRVAbiQKGkUgkh/i6+bh++dPQ=="],
 
     "lit-html": ["lit-html@3.3.0", "", { "dependencies": { "@types/trusted-types": "^2.0.2" } }, "sha512-RHoswrFAxY2d8Cf2mm4OZ1DgzCoBKUKSPvA1fhtSELxUERq2aQQ2h05pO9j81gS1o7RIRJ+CePLogfyahwmynw=="],
+
+    "lit-svg-loader": ["lit-svg-loader@0.0.3", "", {}, "sha512-nC/PtKl2v+PzJs/bqjD64U6a6wlUIVEdUvyO+NPGrDGDGMlReKpltsE2EjVb/Fp3yCr9oZ9ppVgsoMCcM6roFw=="],
 
     "magic-string": ["magic-string@0.30.17", "", { "dependencies": { "@jridgewell/sourcemap-codec": "^1.5.0" } }, "sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA=="],
 

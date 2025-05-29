@@ -80,8 +80,6 @@ export class AppLayout extends LitElement {
         <main>
           <slot></slot>
         </main>
-
-        <app-footer></app-footer>
       </div>
     `
   }

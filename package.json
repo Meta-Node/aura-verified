@@ -11,6 +11,7 @@
     "@tailwindcss/postcss": "^4.1.6",
     "@types/bun": "latest",
     "autoprefixer": "^10.4.21",
+    "lit-svg-loader": "^0.0.3",
     "node-html-parser": "^7.0.1",
     "postcss": "^8.5.3",
     "postcss-lit": "^1.2.0",

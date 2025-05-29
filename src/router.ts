@@ -1,8 +1,13 @@
 import { Router } from "@lit-labs/router"
+import { signal } from "@lit-labs/signals"
 import { html, type ReactiveControllerHost } from "lit"
 
-export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
-  new Router(classThis, [
+export const router = signal(null as null | Router)
+
+export const createRouter = (
+  classThis: ReactiveControllerHost & HTMLElement,
+) => {
+  const routerValue = new Router(classThis, [
     {
       path: "/",
       enter: async () => {
@@ -17,7 +22,9 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
         await import("@/routes/home")
         return true
       },
-      render: () => html`<my-home></my-home>`,
+      render: () =>
+        html`<my-home></my-home>
+          <app-footer></app-footer> `,
     },
     {
       path: "/project",
@@ -25,7 +32,9 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
         await import("@/routes/verification-page")
         return true
       },
-      render: () => html`<verification-page></verification-page>`,
+      render: () =>
+        html`<verification-page></verification-page>
+          <app-footer></app-footer> `,
     },
     {
       path: "/share",
@@ -33,7 +42,9 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
         await import("@/routes/share")
         return true
       },
-      render: () => html`<verification-page></verification-page>`,
+      render: () =>
+        html`<verification-page></verification-page>
+          <app-footer></app-footer> `,
     },
     {
       path: "*",
@@ -41,6 +52,12 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
         await import("@/routes/not-found")
         return true
       },
-      render: () => html`<not-found></not-found>`,
+      render: () =>
+        html`<not-found></not-found>
+          <app-footer></app-footer> `,
     },
   ])
+  router.set(routerValue)
+
+  return routerValue
+}

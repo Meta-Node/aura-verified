@@ -1,5 +1,6 @@
 import { css, html, LitElement, type CSSResultGroup } from "lit"
 import { customElement } from "lit/decorators.js"
+import externalLinkIcon from "@/assets/icons/external-link.svg"
 
 @customElement("home-page")
 export class HomePage extends LitElement {
@@ -44,15 +45,17 @@ export class HomePage extends LitElement {
       margin-right: 4px;
     }
 
-    /* form box */
     .form-container {
       margin: 30px 0 16px;
       position: relative;
       border-radius: 12px;
       border: 1px solid #fff;
       background: rgba(255, 255, 255, 0.05);
-      padding: 24px;
       overflow: hidden;
+      width: 369px;
+      height: 391px;
+      padding: 10px;
+      box-sizing: border-box;
     }
     .lamp-light {
       position: absolute;
@@ -190,10 +193,10 @@ export class HomePage extends LitElement {
         <h1 class="title">Aura Get Verified</h1>
         <p class="info-text">Decentralized verification platform</p>
 
-        <button class="desc-btn">
+        <a href="/home" class="desc-btn">
           <span>What is Aura?</span>
-          <fa-icon class="fas fa-external-link-square-alt"></fa-icon>
-        </button>
+          <img src=${externalLinkIcon} alt="Aura" />
+        </a>
 
         <div class="form-container">
           <div class="lamp-light"></div>

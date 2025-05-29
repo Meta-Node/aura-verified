@@ -1,12 +1,40 @@
 import { css, html, LitElement } from "lit"
 import { customElement } from "lit/decorators.js"
+import homeIcon from "@/assets/icons/home.svg"
+import activitiesIcon from "@/assets/icons/activities.svg"
+import bellIcon from "@/assets/icons/bell.svg"
+import profileIcon from "@/assets/icons/profile.svg"
+import shareIcon from "@/assets/icons/share.svg"
+
+const menuItems = [
+  {
+    icon: homeIcon,
+    href: "/home",
+  },
+  {
+    icon: activitiesIcon,
+    href: "/activities",
+  },
+  {
+    icon: bellIcon,
+    href: "/notifications",
+  },
+  {
+    icon: profileIcon,
+    href: "/profile",
+  },
+  {
+    icon: shareIcon,
+    href: "/share",
+  },
+]
 
 @customElement("app-footer")
 export class AppFooter extends LitElement {
   static styles = css`
     .navbar {
       background-image: linear-gradient(
-        to top right,
+        to bottom,
         rgba(46, 51, 90, 0.26),
         rgba(28, 27, 51, 0.26) 100%
       );
@@ -20,8 +48,8 @@ export class AppFooter extends LitElement {
       transform: translateX(-50%);
       backdrop-filter: blur(24px);
       padding: 16px;
-      border: 1px solid #33333360;
-      border-top: 1px solid #ffffff30;
+      border: 1px solid #33333320;
+      border-top: 1px solid #ffffff20;
       border-radius: 20px;
       display: flex;
       justify-content: space-between;
@@ -46,21 +74,11 @@ export class AppFooter extends LitElement {
   render() {
     return html`
       <div class="navbar">
-        <button>
-          <fa-icon size="20px" class="fas fa-home active"></fa-icon>
-        </button>
-        <button>
-          <fa-icon size="20px" class="fas fa-sliders-h inactive"></fa-icon>
-        </button>
-        <button>
-          <fa-icon size="20px" class="fas fa-bell inactive"></fa-icon>
-        </button>
-        <button>
-          <fa-icon size="20px" class="fas fa-user inactive"></fa-icon>
-        </button>
-        <button>
-          <fa-icon size="20px" class="fas fa-share inactive"></fa-icon>
-        </button>
+        ${menuItems.map(
+          (item) => html`
+            <a href="${item.href}"> <img src="${item.icon}" /> </a>
+          `,
+        )}
       </div>
     `
   }

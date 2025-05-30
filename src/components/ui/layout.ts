@@ -1,15 +1,15 @@
-import { css, html, LitElement } from "lit"
-import { customElement } from "lit/decorators.js"
+import { css, html, LitElement } from 'lit'
+import { customElement } from 'lit/decorators.js'
 
-import "./footer.ts"
+import './footer.ts'
 
-@customElement("app-layout")
+@customElement('app-layout')
 export class AppLayout extends LitElement {
   private particlePositions = Array.from({ length: 50 }, () => ({
-    width: Math.random() * 2 + 1 + "px",
-    height: Math.random() * 2 + 1 + "px",
-    top: Math.random() * 100 + "%",
-    left: Math.random() * 100 + "%",
+    width: Math.random() * 2 + 1 + 'px',
+    height: Math.random() * 2 + 1 + 'px',
+    top: Math.random() * 100 + '%',
+    left: Math.random() * 100 + '%'
   }))
 
   static styles = css`
@@ -31,7 +31,8 @@ export class AppLayout extends LitElement {
       height: 1px;
       margin-left: auto;
       border-radius: 100000px;
-      box-shadow: 0 0 200px 120px rgba(253, 224, 255, 0.3);
+      box-shadow: 8px 20px 203px 166px rgba(253, 224, 255, 0.3);
+      transform: rotate3d(0, 1, 1, 63deg);
     }
 
     .bg-lines {
@@ -39,7 +40,7 @@ export class AppLayout extends LitElement {
       top: 40px;
       height: 300px;
       width: 400px;
-      background: url("/images/bg-linear-dashes.svg");
+      background: url('/images/bg-linear-dashes.svg');
       z-index: -10;
     }
 
@@ -73,7 +74,7 @@ export class AppLayout extends LitElement {
               html` <div
                 class="star"
                 style="width: ${particle.width}; height: ${particle.height}; top: ${particle.top}; left: ${particle.left};"
-              ></div>`,
+              ></div>`
           )}
         </div>
 

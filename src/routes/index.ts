@@ -53,7 +53,6 @@ export class HomePage extends LitElement {
       background: rgba(255, 255, 255, 0.05);
       overflow: hidden;
       width: 369px;
-      height: 391px;
       padding: 10px;
       box-sizing: border-box;
     }
@@ -73,9 +72,9 @@ export class HomePage extends LitElement {
       font-size: 32px;
     }
     .form-desc {
-      margin: 8px 0 24px;
+      margin: 8px 0 10px;
       color: #6c7278;
-      font-size: 0.875rem;
+      font-size: 12px;
       text-align: center;
     }
 

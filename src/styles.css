@@ -4,10 +4,10 @@ body {
   box-sizing: border-box;
   background: #0d0d1b;
   color: white;
-  font-family: "Roboto", sans-serif;
+  font-family: "Inter", "Roboto", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
-  font-weight: normal;
+  font-weight: 400;
 }
 
 :root {

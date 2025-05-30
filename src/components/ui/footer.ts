@@ -1,35 +1,35 @@
-import { css, html, LitElement } from "lit"
-import { customElement } from "lit/decorators.js"
-import homeIcon from "@/assets/icons/home.svg"
-import activitiesIcon from "@/assets/icons/activities.svg"
-import bellIcon from "@/assets/icons/bell.svg"
-import profileIcon from "@/assets/icons/profile.svg"
-import shareIcon from "@/assets/icons/share.svg"
+import { css, html, LitElement } from 'lit'
+import { customElement } from 'lit/decorators.js'
+import homeIcon from '@/assets/icons/home.svg'
+import activitiesIcon from '@/assets/icons/activities.svg'
+import bellIcon from '@/assets/icons/bell.svg'
+import profileIcon from '@/assets/icons/profile.svg'
+import shareIcon from '@/assets/icons/share.svg'
 
 const menuItems = [
   {
     icon: homeIcon,
-    href: "/home",
+    href: '/home'
   },
   {
     icon: activitiesIcon,
-    href: "/activities",
+    href: '/activities'
   },
   {
     icon: bellIcon,
-    href: "/notifications",
+    href: '/notifications'
   },
   {
     icon: profileIcon,
-    href: "/profile",
+    href: '/profile'
   },
   {
     icon: shareIcon,
-    href: "/share",
-  },
+    href: '/share'
+  }
 ]
 
-@customElement("app-footer")
+@customElement('app-footer')
 export class AppFooter extends LitElement {
   static styles = css`
     .navbar {
@@ -41,7 +41,7 @@ export class AppFooter extends LitElement {
 
       z-index: 30;
       position: fixed;
-      bottom: 2px;
+      bottom: 23px;
       left: 50%;
       width: 350px;
       max-width: 98vw;
@@ -74,11 +74,7 @@ export class AppFooter extends LitElement {
   render() {
     return html`
       <div class="navbar">
-        ${menuItems.map(
-          (item) => html`
-            <a href="${item.href}"> <img src="${item.icon}" /> </a>
-          `,
-        )}
+        ${menuItems.map((item) => html` <a href="${item.href}"> <img src="${item.icon}" /> </a> `)}
       </div>
     `
   }

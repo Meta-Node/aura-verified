@@ -61,7 +61,7 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
         return true
       },
       render: () =>
-        html`<verification-page></verification-page>
+        html`<share-page></share-page>
           <app-footer></app-footer> `
     },
     {

@@ -65,6 +65,16 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
           <app-footer></app-footer> `
     },
     {
+      path: '/profile',
+      enter: async () => {
+        await import('@/routes/profile')
+        return true
+      },
+      render: () =>
+        html`<profile-page></profile-page>
+          <app-footer></app-footer> `
+    },
+    {
       path: '*',
       enter: async () => {
         await import('@/routes/not-found')

@@ -23,7 +23,7 @@ export class NotificationsPage extends LitElement {
       border: 1px solid rgba(93, 93, 93, 0.32);
       background: #161629;
       padding: 5px 10px;
-      font-size: small;
+      font-size: 14px;
       color: rgba(255, 255, 255, 0.64);
     }
 

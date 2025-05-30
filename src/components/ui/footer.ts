@@ -3,8 +3,11 @@ import { customElement } from 'lit/decorators.js'
 import homeIcon from '@/assets/icons/home.svg'
 import activitiesIcon from '@/assets/icons/activities.svg'
 import bellIcon from '@/assets/icons/bell.svg'
-import profileIcon from '@/assets/icons/profile.svg'
 import shareIcon from '@/assets/icons/share.svg'
+import { SignalWatcher } from '@lit-labs/signals'
+import { router } from '@/router'
+
+// import profileIcon from '@/assets/icons/profile.svg'
 
 const menuItems = [
   {
@@ -19,10 +22,10 @@ const menuItems = [
     icon: bellIcon,
     href: '/notifications'
   },
-  {
-    icon: profileIcon,
-    href: '/profile'
-  },
+  // {
+  //   icon: profileIcon,
+  //   href: '/profile'
+  // },
   {
     icon: shareIcon,
     href: '/share'
@@ -30,7 +33,7 @@ const menuItems = [
 ]
 
 @customElement('app-footer')
-export class AppFooter extends LitElement {
+export class AppFooter extends SignalWatcher(LitElement) {
   static styles = css`
     .navbar {
       background-image: linear-gradient(
@@ -47,7 +50,7 @@ export class AppFooter extends LitElement {
       max-width: 98vw;
       transform: translateX(-50%);
       backdrop-filter: blur(24px);
-      padding: 16px;
+      padding: 10px 16px;
       border: 1px solid #33333320;
       border-top: 1px solid #ffffff20;
       border-radius: 20px;
@@ -64,17 +67,35 @@ export class AppFooter extends LitElement {
       cursor: pointer;
     }
 
-    .navbar svg {
-      width: 40px;
-      height: 40px;
+    .navbar sl-icon {
+      transition: all;
+      transition-duration: 300ms;
+
+      color: #aaaaaa;
+      fill: #aaaaaa;
+      width: 30px;
+      height: 30px;
       background: transparent;
+    }
+    .active {
+      color: white !important;
     }
   `
 
   render() {
+    console.log(router.get()?.link())
     return html`
       <div class="navbar">
-        ${menuItems.map((item) => html` <a href="${item.href}"> <img src="${item.icon}" /> </a> `)}
+        ${menuItems.map(
+          (item) => html`
+            <a href="${item.href}">
+              <sl-icon
+                class="${router.get()?.link() === item.href ? 'active' : ''}"
+                src="${item.icon}"
+              ></sl-icon>
+            </a>
+          `
+        )}
       </div>
     `
   }

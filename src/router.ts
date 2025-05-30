@@ -4,6 +4,10 @@ import { html, type ReactiveControllerHost } from 'lit'
 
 export const router = signal(null as null | Router)
 
+if (!('URLPattern' in globalThis)) {
+  await import('urlpattern-polyfill')
+}
+
 export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) => {
   const routerValue = new Router(classThis, [
     {

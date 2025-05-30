@@ -4,7 +4,8 @@
   "type": "module",
   "lisence": "MIT",
   "scripts": {
-    "dev": "vite"
+    "dev": "vite",
+    "build": "vite build"
   },
   "private": true,
   "devDependencies": {
@@ -27,6 +28,7 @@
     "@lit-labs/signals": "^0.1.2",
     "@shoelace-style/shoelace": "^2.20.1",
     "fa-icons": "^0.2.0",
-    "lit": "^3.3.0"
+    "lit": "^3.3.0",
+    "urlpattern-polyfill": "^10.1.0"
   }
 }

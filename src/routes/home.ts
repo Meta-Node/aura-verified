@@ -56,13 +56,15 @@ export class HomeElement extends LitElement {
           levelRequirement="4"
           stepsCompleted="2"
           totalSteps="5"
+          projectId="2"
         ></verification-card>
         <verification-card
-          name="UBI Raffle Verification"
-          status="In Progress"
+          name="Unitap Raffle Verification"
+          status="Completed"
           levelRequirement="4"
-          stepsCompleted="2"
+          stepsCompleted="5"
           totalSteps="5"
+          projectId="1"
         ></verification-card>
       </div>
     </div>`

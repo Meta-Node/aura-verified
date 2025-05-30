@@ -27,7 +27,7 @@ export const createRouter = (
           <app-footer></app-footer> `,
     },
     {
-      path: "/project",
+      path: "/projects/:id",
       enter: async () => {
         await import("@/routes/verification-page")
         return true

@@ -1,5 +1,9 @@
 import { css, html, LitElement, type CSSResultGroup } from "lit"
 import { property, customElement } from "lit/decorators.js"
+import levelImage from "@/assets/images/level.png"
+import thumbsUpImage from "@/assets/images/thumbs-up.png"
+import ratingImage from "@/assets/images/rating.png"
+import checkboxIcon from "@/assets/icons/checkbox-green.svg"
 
 @customElement("verification-page")
 export class VerificationPage extends LitElement {
@@ -101,9 +105,15 @@ export class VerificationPage extends LitElement {
     }
 
     .steps-heading {
-      font-size: 30px;
-      font-weight: 700;
-      margin-bottom: 32px;
+      color: #e4dad7;
+      text-align: center;
+      margin-top: 35px;
+
+      font-size: 28px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: normal;
+      letter-spacing: -0.7px;
     }
 
     .timeline {
@@ -112,11 +122,11 @@ export class VerificationPage extends LitElement {
 
     .timeline-line {
       position: absolute;
-      left: 24px;
+      left: 19.5px;
       top: 24px;
-      width: 2px;
+      width: 10px;
       height: calc(100% - 60px);
-      background-color: var(--muted);
+      background: rgba(224, 191, 184, 0.12);
       z-index: 0;
     }
 
@@ -147,8 +157,14 @@ export class VerificationPage extends LitElement {
     }
 
     .step-title {
-      font-size: 20px;
+      color: #e4dad7;
+
+      text-overflow: ellipsis;
+      font-size: 17px;
+      font-style: normal;
       font-weight: 600;
+      line-height: normal;
+      letter-spacing: -0.425px;
     }
 
     .step-description {
@@ -166,6 +182,13 @@ export class VerificationPage extends LitElement {
     .step-list-item {
       display: flex;
       align-items: flex-start;
+      color: rgba(235, 213, 209, 0.62);
+
+      font-size: 15px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 135%;
+      letter-spacing: -0.075px;
     }
 
     .step-list-bullet {
@@ -229,10 +252,16 @@ export class VerificationPage extends LitElement {
 
           <div class="step">
             <div class="step-icon">
-              <FileText size="24" />
+              <img
+                class=""
+                width="40px"
+                height="40px"
+                alt="xp-levelup"
+                src="${levelImage}"
+              />
             </div>
             <div class="step-content">
-              <h3 class="step-title">Reach Aura Level 1</h3>
+              <h5 class="step-title">Reach Aura Level 1</h5>
               <ul class="step-list">
                 <li class="step-list-item">
                   <span class="step-list-bullet">•</span>
@@ -244,7 +273,13 @@ export class VerificationPage extends LitElement {
 
           <div class="step">
             <div class="step-icon">
-              <MessageCircle size="24" />
+              <img
+                class=""
+                width="30px"
+                height="30px"
+                alt="high-evaluation"
+                src="${thumbsUpImage}"
+              />
             </div>
             <div class="step-content">
               <h3 class="step-title">Get 2 medium evaluations</h3>
@@ -262,7 +297,13 @@ export class VerificationPage extends LitElement {
 
           <div class="step">
             <div class="step-icon">
-              <MessageCircle size="24" />
+              <img
+                class=""
+                width="30px"
+                height="30px"
+                alt="star"
+                src="${ratingImage}"
+              />
             </div>
             <div class="step-content">
               <h3 class="step-title">Get a score of 350M+</h3>
@@ -274,7 +315,13 @@ export class VerificationPage extends LitElement {
 
           <div class="step">
             <div class="step-icon">
-              <fa-icons size="24" class="fas fa-check" />
+              <img
+                class=""
+                width="40px"
+                height="40px"
+                alt="checkbox"
+                src="${checkboxIcon}"
+              />
             </div>
             <div class="step-content">
               <h3 class="step-title">Get Verified</h3>

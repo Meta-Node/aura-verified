@@ -1,12 +1,14 @@
-import { css, html, LitElement, type CSSResultGroup } from "lit"
-import { customElement } from "lit/decorators.js"
-import externalLinkIcon from "@/assets/icons/external-link.svg"
+import { css, html, LitElement, type CSSResultGroup } from 'lit'
+import { customElement } from 'lit/decorators.js'
+import externalLinkIcon from '@/assets/icons/external-link.svg'
+import googleIcon from '@/assets/icons/google.svg'
+import appleIcon from '@/assets/icons/apple.svg'
 
-@customElement("home-page")
+@customElement('home-page')
 export class HomePage extends LitElement {
   static styles?: CSSResultGroup = css`
     .wrapper {
-      margin-top: 80px;
+      margin-top: 40px;
     }
     .logo {
       width: 60px;
@@ -104,7 +106,9 @@ export class HomePage extends LitElement {
     }
 
     .btn {
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 100%;
       padding: 12px 0;
       border-radius: 12px;
@@ -145,15 +149,21 @@ export class HomePage extends LitElement {
       border: 1px solid #545454;
     }
     .btn-icon {
-      margin-right: 8px;
+      margin-right: 15px;
+      margin-bottom: 5px;
       height: 24px;
       width: 24px;
     }
 
     .form-footer {
+      color: #787878;
+      font-size: 11px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 130%;
+      letter-spacing: -0.22px;
       text-align: center;
       color: #acb5bb;
-      font-size: 0.875rem;
     }
 
     .bottom-bar {
@@ -162,6 +172,7 @@ export class HomePage extends LitElement {
       align-items: center;
       padding: 24px;
       z-index: 10;
+      margin-top: 40px;
     }
     .brand {
       display: flex;
@@ -207,11 +218,7 @@ export class HomePage extends LitElement {
             <div class="email-icon">
               <fa-icon class="fas fa-envelope" color="#2980B9"></fa-icon>
             </div>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              class="email-input"
-            />
+            <input type="email" placeholder="Enter your email" class="email-input" />
           </div>
 
           <button class="btn btn-email">Sign in with Email</button>
@@ -220,21 +227,19 @@ export class HomePage extends LitElement {
 
           <button class="btn-google btn">
             <div class="btn-icon">
-              <fa-icon class="fab fa-google" color="red"></fa-icon>
+              <img src="${googleIcon}" alt="Google" />
             </div>
             Sign in with Google
           </button>
 
           <button class="btn-apple btn">
             <div class="btn-icon">
-              <fa-icon class="fab fa-apple" color="white"></fa-icon>
+              <img src="${appleIcon}" alt="Apple" />
             </div>
             Sign in with Apple
           </button>
 
-          <p class="form-footer">
-            By Signing in you will agree to our privacy policy
-          </p>
+          <p class="form-footer">By Signing in you will agree to our privacy policy</p>
         </div>
       </div>
 

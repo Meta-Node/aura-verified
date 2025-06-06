@@ -89,6 +89,7 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
           <app-footer></app-footer> `
     }
   ])
+
   router.set(routerValue)
 
   return routerValue

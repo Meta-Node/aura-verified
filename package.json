@@ -2,8 +2,9 @@
   "name": "get-verified",
   "module": "index.ts",
   "type": "module",
-  "lisence": "MIT",
+  "license": "MIT",
   "scripts": {
+    "generate-types": "openapi-typescript ./api-docs.json -o ./src/lib/schema.d.ts",
     "dev": "vite",
     "build": "vite build"
   },
@@ -14,6 +15,7 @@
     "autoprefixer": "^10.4.21",
     "lit-svg-loader": "^0.0.3",
     "node-html-parser": "^7.0.1",
+    "openapi-typescript": "^7.8.0",
     "postcss": "^8.5.3",
     "postcss-lit": "^1.2.0",
     "tailwindcss": "4",
@@ -24,11 +26,13 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@lit-app/state": "^1.0.0",
     "@lit-labs/router": "^0.1.4",
     "@lit-labs/signals": "^0.1.2",
     "@shoelace-style/shoelace": "^2.20.1",
     "fa-icons": "^0.2.0",
     "lit": "^3.3.0",
+    "openapi-fetch": "^0.14.0",
     "urlpattern-polyfill": "^10.1.0"
   }
 }

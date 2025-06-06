@@ -3,9 +3,15 @@ import { customElement } from 'lit/decorators.js'
 import externalLinkIcon from '@/assets/icons/external-link.svg'
 import googleIcon from '@/assets/icons/google.svg'
 import appleIcon from '@/assets/icons/apple.svg'
+import { SignalWatcher } from '@lit-labs/signals'
+import { inputText, isLoginLoading } from '@/states/login'
+import { clientAPI } from '@/utils/apis'
+import { StateController } from '@lit-app/state'
+import { userStore } from '@/states/user'
+import { router } from '@/router'
 
 @customElement('home-page')
-export class HomePage extends LitElement {
+export class HomePage extends SignalWatcher(LitElement) {
   static styles?: CSSResultGroup = css`
     .wrapper {
       margin-top: 40px;
@@ -193,7 +199,47 @@ export class HomePage extends LitElement {
       color: #fff;
       text-decoration: none;
     }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
   `
+
+  state = new StateController(this, userStore)
+
+  private onInputChange(e: Event) {
+    const target = e.target as HTMLInputElement
+
+    inputText.set(target.value)
+  }
+
+  private async onSubmit() {
+    isLoginLoading.set(true)
+    const email = inputText.get()
+    try {
+      const res = await clientAPI.POST('/users/login', {
+        body: {
+          email,
+          integration: 'email'
+        }
+      })
+
+      if (res.response.status === 201 && res.data) {
+        userStore.email = email
+
+        const { id } = res.data
+
+        userStore.brightId = id
+
+        router.get()?.goto('/home')
+      }
+    } catch (e) {
+      console.error(e)
+    } finally {
+      isLoginLoading.set(false)
+    }
+  }
 
   render() {
     return html` <div class="wrapper">
@@ -218,10 +264,18 @@ export class HomePage extends LitElement {
             <div class="email-icon">
               <fa-icon class="fas fa-envelope" color="#2980B9"></fa-icon>
             </div>
-            <input type="email" placeholder="Enter your email" class="email-input" />
+            <input
+              .value="${inputText.get()}"
+              @change=${this.onInputChange}
+              type="email"
+              placeholder="Enter your email"
+              class="email-input"
+            />
           </div>
 
-          <button class="btn btn-email">Sign in with Email</button>
+          <button @click=${this.onSubmit} .disabled=${isLoginLoading.get()} class="btn btn-email">
+            Sign in with Email
+          </button>
 
           <div class="divider"></div>
 

@@ -8,8 +8,5 @@ export default defineConfig({
     outDir: 'dist',
     target: 'es2022'
   },
-  resolve: {
-    extensions: ['.js', '.ts']
-  },
   plugins: [tsconfigPaths(), litHMRPlugin()]
 })

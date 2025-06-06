@@ -1,7 +1,16 @@
-import { css, html, LitElement } from "lit"
-import { customElement } from "lit/decorators.js"
+import { css, html, LitElement } from 'lit'
+import { customElement, property } from 'lit/decorators.js'
+import profileIcon from '@/assets/icons/profile.svg'
+import { signal } from '@lit-labs/signals'
+import { getBrightId, queryClient } from '@/utils/apis'
+import { EvaluationCategory, getAuraVerification } from '@/utils/aura'
+import { compactFormat } from '@/utils/number'
+import { subjectLevelPoints, userLevelPoints } from '@/lib/data/levels'
 
-@customElement("profile-card")
+const score = signal(0)
+const level = signal(0)
+
+@customElement('profile-card')
 export class ProfileCard extends LitElement {
   static styles = css`
     .profile-card {
@@ -101,34 +110,77 @@ export class ProfileCard extends LitElement {
     }
   `
 
+  @property({})
+  firstName = 'User'
+
+  @property({})
+  lastName = 'User'
+
+  @property({})
+  email = 'user@email.com'
+
+  @property({})
+  image = profileIcon
+
+  constructor() {
+    super()
+
+    const fetchData = queryClient.fetchQuery({
+      queryKey: ['profile', this.id],
+      queryFn: () => getBrightId(this.id)
+    })
+
+    fetchData.then((res) => {
+      if (res) {
+        const verification = getAuraVerification(res.verifications, EvaluationCategory.SUBJECT)
+        if (!verification) return
+
+        score.set(verification.score)
+        level.set(verification.level)
+      }
+    })
+  }
+
+  private get nextLevel() {
+    return level.get() + 1
+  }
+
+  private get nextLevelScore() {
+    return subjectLevelPoints[this.nextLevel] || 0
+  }
+
   protected render() {
     return html`
       <div class="profile-card">
         <div class="profile-header">
           <div class="profile-picture">
-            <img
-              src="/images/profile-photo.png?height=64&width=64"
-              alt="Profile picture"
-            />
+            <img src="${this.image}" alt="Profile picture" />
           </div>
           <div class="profile-info">
-            <h2>Ali Maktabi</h2>
-            <p>maktabi876@gmail.com</p>
+            <h2>${this.firstName + ' ' + this.lastName}</h2>
+            <p>${this.email}</p>
             <div class="profile-stats">
               <div class="stat">
                 <span>Level</span>
-                <span>3</span>
+                <span>${level.get()}</span>
               </div>
               <div class="stat">
                 <span>Score</span>
-                <span>150M</span>
+                <span>${compactFormat(score.get())}</span>
               </div>
-              <div class="level-progress">Level 4 at 500M</div>
+              <div class="level-progress">
+                ${this.nextLevel
+                  ? html` Level ${level.get() + 1} at
+                    ${level.get() + 1 > subjectLevelPoints.length
+                      ? 'max-level'
+                      : compactFormat(this.nextLevelScore)}`
+                  : html`Max Level`}
+              </div>
             </div>
           </div>
         </div>
         <div class="progress-bar">
-          <div class="progress" style="width: 30%;"></div>
+          <div class="progress" style="width: ${(score.get() / this.nextLevelScore) * 100}%;"></div>
         </div>
         <slot></slot>
       </div>

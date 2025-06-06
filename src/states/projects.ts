@@ -21,4 +21,4 @@ class ProjectsState extends State {
   // phoneNumber = ''
 }
 
-export const userStore = new ProjectsState()
+export const projectStore = new ProjectsState()

@@ -20,7 +20,8 @@ const menuItems = [
   },
   {
     icon: bellIcon,
-    href: '/notifications'
+    href: '/notifications',
+    className: 'bell'
   },
   // {
   //   icon: profileIcon,
@@ -80,17 +81,21 @@ export class AppFooter extends SignalWatcher(LitElement) {
     .active {
       color: white !important;
     }
+
+    .bell {
+      width: 25px !important;
+      height: 25px !important;
+    }
   `
 
   render() {
-    console.log(router.get()?.link())
     return html`
       <div class="navbar">
         ${menuItems.map(
           (item) => html`
             <a href="${item.href}">
               <sl-icon
-                class="${router.get()?.link() === item.href ? 'active' : ''}"
+                class="${router.get()?.link() === item.href ? 'active' : ''} ${item.className}"
                 src="${item.icon}"
               ></sl-icon>
             </a>

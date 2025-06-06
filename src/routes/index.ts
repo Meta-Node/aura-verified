@@ -8,10 +8,17 @@ import { SignalWatcher } from '@lit-labs/signals'
 import { inputText, isLoginLoading } from '@/states/login'
 import { clientAPI } from '@/utils/apis'
 import { StateController } from '@lit-app/state'
-import { userStore } from '@/states/user'
 import { router } from '@/router'
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
+import {
+  userBrightId,
+  userEmail,
+  userFirstName,
+  userLastName,
+  userPhoneNumber,
+  userProfilePicture
+} from '@/states/user'
 
 const appleSignInOptions = {
   clientID: 'org.brightid.get-verified',
@@ -254,8 +261,6 @@ export class LoginPage extends SignalWatcher(LitElement) {
     }
   `
 
-  state = new StateController(this, userStore)
-
   private onInputChange(e: Event) {
     const target = e.target as HTMLInputElement
 
@@ -271,11 +276,11 @@ export class LoginPage extends SignalWatcher(LitElement) {
     })
 
     if (res.response.status === 201 && res.data) {
-      userStore.email = email
+      userEmail.set(email)
 
       const { id } = res.data
 
-      userStore.brightId = id
+      userBrightId.set(id)
       return id
     }
 
@@ -309,17 +314,16 @@ export class LoginPage extends SignalWatcher(LitElement) {
         return
       }
 
-      userStore.email = res.user.email!
+      userEmail.set(res.user.email!)
 
-      const id = await this.createBrightId(userStore.email)
+      const id = await this.createBrightId(userEmail.get())
 
       const [firstName, lastName] = res.user.displayName?.split(' ') ?? []
 
-      userStore.brightId = id
-      userStore.firstName = firstName ?? 'Unknown'
-      userStore.lastName = lastName ?? ''
-      userStore.profilePicture = res.user.photoURL ?? ''
-      userStore.phoneNumber = res.user.phoneNumber ?? ''
+      userFirstName.set(firstName ?? 'Unknown')
+      userLastName.set(lastName ?? '')
+      userProfilePicture.set(res.user.photoURL ?? '')
+      userPhoneNumber.set(res.user.phoneNumber ?? '')
 
       router.get()?.goto('/home')
     } catch (error) {
@@ -345,15 +349,15 @@ export class LoginPage extends SignalWatcher(LitElement) {
         throw new Error('Email is required for registration')
       }
 
-      userStore.email = email
+      userEmail.set(email)
 
       const id = await this.createBrightId(email)
 
-      userStore.brightId = id
-      userStore.firstName = firstName ?? 'Unknown'
-      userStore.lastName = lastName ?? ''
-      userStore.profilePicture = ''
-      userStore.phoneNumber = ''
+      userBrightId.set(id)
+      userFirstName.set(firstName ?? 'Unknown')
+      userLastName.set(lastName ?? '')
+      userProfilePicture.set('')
+      userPhoneNumber.set('')
 
       router.get()?.goto('/home')
     } catch (error) {

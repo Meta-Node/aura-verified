@@ -1,9 +1,11 @@
-import "../components/common/verification-card.ts"
-import { css, html, LitElement, type CSSResultGroup } from "lit"
-import { customElement } from "lit/decorators.js"
-import "@/components/common/profile-card.ts"
+import '../components/common/verification-card.ts'
+import { css, html, LitElement, type CSSResultGroup } from 'lit'
+import { customElement } from 'lit/decorators.js'
+import '@/components/common/profile-card.ts'
+import { StateController } from '@lit-app/state'
+import { userEmail, userFirstName, userLastName, userProfilePicture } from '@/states/user.ts'
 
-@customElement("my-home")
+@customElement('my-home')
 export class HomeElement extends LitElement {
   static styles?: CSSResultGroup = css`
     .status-bar {
@@ -43,9 +45,20 @@ export class HomeElement extends LitElement {
   protected render() {
     return html` <div class="body">
       <div class="profile-card-wrapper">
-        <profile-card></profile-card>
+        <profile-card
+          .firstName=${userFirstName.get()}
+          .lastName=${userLastName.get()}
+          .email=${userEmail.get()}
+          .image=${userProfilePicture.get()}
+        ></profile-card>
 
-        <profile-card class="profile-card-bg"></profile-card>
+        <profile-card
+          .firstName=${userFirstName.get()}
+          .lastName=${userLastName.get()}
+          .email=${userEmail.get()}
+          .image=${userProfilePicture.get()}
+          class="profile-card-bg"
+        ></profile-card>
       </div>
 
       <div class="apps-section">

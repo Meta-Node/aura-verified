@@ -1,29 +1,8 @@
-import { State, property, storage } from '@lit-app/state'
+import { localStorageSignal } from '@/lib/state'
 
-class UserState extends State {
-  @storage({ key: 'email' })
-  @property({})
-  email = ''
-
-  @storage({ key: 'brightId' })
-  @property({})
-  brightId = ''
-
-  @storage({ key: 'firstName' })
-  @property({})
-  firstName = ''
-
-  @storage({ key: 'lastName' })
-  @property({})
-  lastName = ''
-
-  @storage({ key: 'profilePicture' })
-  @property({})
-  profilePicture = ''
-
-  @storage({ key: 'phoneNumber' })
-  @property({})
-  phoneNumber = ''
-}
-
-export const userStore = new UserState()
+export const userEmail = localStorageSignal('_email', '')
+export const userBrightId = localStorageSignal('_brightId', '')
+export const userFirstName = localStorageSignal('_firstName', '')
+export const userLastName = localStorageSignal('_lastName', '')
+export const userProfilePicture = localStorageSignal('_profilePicture', '')
+export const userPhoneNumber = localStorageSignal('_phoneNumber', '')

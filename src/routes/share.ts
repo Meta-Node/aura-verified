@@ -8,9 +8,12 @@ import smsIcon from '@/assets/icons/thirdparties/sms.svg'
 import telegramIcon from '@/assets/icons/thirdparties/telegram.svg'
 import whatsappIcon from '@/assets/icons/thirdparties/whatsapp.svg'
 import xIcon from '@/assets/icons/thirdparties/x.svg'
+import QrCodeWithLogo from 'qrcode-with-logos'
+import { userBrightId } from '@/states/user'
+import { signal, SignalWatcher } from '@lit-labs/signals'
 
 @customElement('share-page')
-export class SharePage extends LitElement {
+export class SharePage extends SignalWatcher(LitElement) {
   static styles?: CSSResultGroup = css`
     .container {
       display: flex;
@@ -159,6 +162,9 @@ export class SharePage extends LitElement {
 
     .qr-image {
       object-fit: contain;
+      width: 280px;
+      height: 280px;
+      border-radius: 12px;
     }
 
     .qr-logo {
@@ -205,7 +211,6 @@ export class SharePage extends LitElement {
       text-decoration: underline;
     }
 
-    /* Social buttons */
     .social-buttons {
       display: flex;
       justify-content: space-around;
@@ -237,9 +242,29 @@ export class SharePage extends LitElement {
       font-size: 0.875rem;
       margin-top: 0.25rem;
     }
-
-    /* Footer */
   `
+
+  constructor() {
+    super()
+
+    const qrCode = new QrCodeWithLogo({
+      width: 300,
+      content: this.profileLink,
+      logo: {
+        src: '/images/brightId.svg'
+      }
+    })
+
+    qrCode.getImage().then((res) => {
+      this.linkImage.set(res.src)
+    })
+  }
+
+  private get profileLink() {
+    return `https://aura.brightid.org/subject/${userBrightId.get()}/`
+  }
+
+  linkImage = signal('')
 
   protected render() {
     return html` <div class="container">
@@ -300,7 +325,7 @@ export class SharePage extends LitElement {
           <div class="qr-code">
             <div class="qr-logo-container">
               <div class="qr-logo">
-                <img src="/images/qr-code.svg" />
+                <img class="qr-image" .src="${this.linkImage.get()}" alt="qr code" />
               </div>
             </div>
           </div>
@@ -311,7 +336,7 @@ export class SharePage extends LitElement {
           </div>
 
           <div class="profile-link">
-            <a href="#" class="link"> Aura Profile Link </a>
+            <a href="${this.profileLink}" target="_blank" class="link"> Aura Profile Link </a>
           </div>
         </div>
         <div class="social-buttons">

@@ -209,6 +209,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
       align-items: center;
       padding: 24px;
       z-index: 10;
+      width: 100%;
       margin-top: 40px;
     }
     .brand {

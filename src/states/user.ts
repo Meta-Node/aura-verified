@@ -16,6 +16,14 @@ class UserState extends State {
   @storage({ key: 'lastName' })
   @property({})
   lastName = ''
+
+  @storage({ key: 'profilePicture' })
+  @property({})
+  profilePicture = ''
+
+  @storage({ key: 'phoneNumber' })
+  @property({})
+  phoneNumber = ''
 }
 
 export const userStore = new UserState()

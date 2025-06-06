@@ -3,6 +3,7 @@ import { customElement } from 'lit/decorators.js'
 import externalLinkIcon from '@/assets/icons/external-link.svg'
 import googleIcon from '@/assets/icons/google.svg'
 import appleIcon from '@/assets/icons/apple.svg'
+import spinnerIcon from '@/assets/icons/spinner.svg'
 import { SignalWatcher } from '@lit-labs/signals'
 import { inputText, isLoginLoading } from '@/states/login'
 import { clientAPI } from '@/utils/apis'
@@ -206,6 +207,30 @@ export class HomePage extends SignalWatcher(LitElement) {
       opacity: 0.6;
       cursor: not-allowed;
     }
+
+    .loading-wrapper {
+      height: 369px;
+      display: grid;
+      place-items: center;
+    }
+
+    .loading-wrapper h2 {
+      margin: 0;
+    }
+
+    .loading-wrapper img {
+      margin-top: 20px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
   `
 
   state = new StateController(this, userStore)
@@ -216,24 +241,33 @@ export class HomePage extends SignalWatcher(LitElement) {
     inputText.set(target.value)
   }
 
+  private async createBrightId(email: string) {
+    const res = await clientAPI.POST('/users/login', {
+      body: {
+        email,
+        integration: 'email'
+      }
+    })
+
+    if (res.response.status === 201 && res.data) {
+      userStore.email = email
+
+      const { id } = res.data
+
+      userStore.brightId = id
+      return id
+    }
+
+    throw new Error('Failed to create BrightID' + res.error)
+  }
+
   private async onSubmit() {
     isLoginLoading.set(true)
     const email = inputText.get()
     try {
-      const res = await clientAPI.POST('/users/login', {
-        body: {
-          email,
-          integration: 'email'
-        }
-      })
+      const res = await this.createBrightId(email)
 
-      if (res.response.status === 201 && res.data) {
-        userStore.email = email
-
-        const { id } = res.data
-
-        userStore.brightId = id
-
+      if (res) {
         router.get()?.goto('/home')
       }
     } catch (e) {
@@ -247,7 +281,26 @@ export class HomePage extends SignalWatcher(LitElement) {
     isLoginLoading.set(true)
     try {
       const provider = new GoogleAuthProvider()
-      await signInWithPopup(auth, provider)
+      const res = await signInWithPopup(auth, provider)
+
+      if (!res.user) {
+        isLoginLoading.set(false)
+        return
+      }
+
+      userStore.email = res.user.email!
+
+      const id = await this.createBrightId(userStore.email)
+
+      const [firstName, lastName] = res.user.displayName?.split(' ') ?? []
+
+      userStore.brightId = id
+      userStore.firstName = firstName ?? 'Unknown'
+      userStore.lastName = lastName ?? ''
+      userStore.profilePicture = res.user.photoURL ?? ''
+      userStore.phoneNumber = res.user.phoneNumber ?? ''
+
+      router.get()?.goto('/home')
     } catch (error) {
       console.error('Error signing in with Google:', error)
       isLoginLoading.set(false)
@@ -270,69 +323,80 @@ export class HomePage extends SignalWatcher(LitElement) {
         <div class="form-container">
           <div class="lamp-light"></div>
 
-          <h2 class="form-title">Sign In</h2>
-          <p class="form-desc">Use one of these integrations to login</p>
+          ${isLoginLoading.get()
+            ? html`
+                <div class="loading-wrapper">
+                  <div>
+                    <h2>Signing Up</h2>
+                    <img src="${spinnerIcon}" alt="spinner" />
+                  </div>
+                </div>
+              `
+            : html`
+              <h2 class="form-title">Sign In</h2>
+              <p class="form-desc">Use one of these integrations to login</p>
+              <div class="email-wrapper">
+                <div class="email-icon">
+                  <fa-icon class="fas fa-envelope" color="#2980B9"></fa-icon>
+                </div>
+                <input
+                  .value="${inputText.get()}"
+                  @change=${this.onInputChange}
+                  type="email"
+                  placeholder="Enter your email"
+                  class="email-input"
+                />
+              </div>
 
-          <div class="email-wrapper">
-            <div class="email-icon">
-              <fa-icon class="fas fa-envelope" color="#2980B9"></fa-icon>
+              <button @click=${this.onSubmit} .disabled=${isLoginLoading.get()} class="btn btn-email">
+                Sign in with Email
+              </button>
+
+              <div class="divider"></div>
+
+              <button @click=${this.signInWithGoogle} class="btn-google btn">
+                <div class="btn-icon">
+                  <img src="${googleIcon}" alt="Google" />
+                </div>
+                Sign in with Google
+              </button>
+
+              <button class="btn-apple btn">
+                <div class="btn-icon">
+                  <img src="${appleIcon}" alt="Apple" />
+                </div>
+                Sign in with Apple
+              </button>
+
+              <p class="form-footer">By Signing in you will agree to our privacy policy</p>
             </div>
-            <input
-              .value="${inputText.get()}"
-              @change=${this.onInputChange}
-              type="email"
-              placeholder="Enter your email"
-              class="email-input"
-            />
+            `}
+        </div>
+
+        <div class="bottom-bar">
+          <div class="brand">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M3.2 0H0V3.2H3.2V0Z" fill="#F4712F" />
+              <path
+                d="M9.6 0.16037C9.10736 0.0601906 8.60639 0.00649803 8.1037 0H5.2V3.2H8.04445C8.9938 3.2 9.92183 3.48151 10.7112 4.00895C11.5005 4.53638 12.1158 5.28603 12.4791 6.16312C12.8424 7.04021 12.9374 8.00532 12.7522 8.93643C12.567 9.86754 12.1098 10.7228 11.4386 11.3941C10.7673 12.0654 9.91199 12.5226 8.98088 12.7078C8.04977 12.893 7.08465 12.7979 6.20756 12.4346C5.33048 12.0713 4.58082 11.4561 4.05339 10.6667C3.52596 9.87738 3.24445 8.94935 3.24445 8V5.2H0.0444446V8C0.0440559 8.55252 0.100777 9.10359 0.213704 9.64444C0.965186 13.2415 4.13259 15.9511 7.94074 16H8.1037C12.4741 15.9444 16 12.3841 16 8C16 4.12963 13.2515 0.901482 9.6 0.16037Z"
+                fill="#F4712F"
+              />
+              <path
+                d="M7.58458 10.7921C7.14524 10.7265 6.72757 10.5582 6.36556 10.3007C5.99807 10.0401 5.69842 9.6952 5.49176 9.29488C5.28509 8.89456 5.17742 8.45052 5.17778 8V5.17852H8C8.44421 5.17835 8.88219 5.28304 9.2783 5.48407C9.67442 5.68509 10.0175 5.97679 10.2796 6.33542C10.5417 6.69405 10.7155 7.10949 10.7867 7.54794C10.858 7.98639 10.8248 8.43548 10.6897 8.85866C10.5547 9.28185 10.3217 9.66718 10.0096 9.98332C9.69759 10.2995 9.31532 10.5375 8.89393 10.678C8.47254 10.8185 8.02392 10.8576 7.58458 10.7921Z"
+                fill="#F4712F"
+              />
+            </svg>
+
+            <span class="brand-name">Bright ID</span>
           </div>
-
-          <button @click=${this.onSubmit} .disabled=${isLoginLoading.get()} class="btn btn-email">
-            Sign in with Email
-          </button>
-
-          <div class="divider"></div>
-
-          <button @click=${this.signInWithGoogle} class="btn-google btn">
-            <div class="btn-icon">
-              <img src="${googleIcon}" alt="Google" />
-            </div>
-            Sign in with Google
-          </button>
-
-          <button class="btn-apple btn">
-            <div class="btn-icon">
-              <img src="${appleIcon}" alt="Apple" />
-            </div>
-            Sign in with Apple
-          </button>
-
-          <p class="form-footer">By Signing in you will agree to our privacy policy</p>
+          <a href="#" class="privacy">Privacy Policy</a>
         </div>
-      </div>
-
-      <div class="bottom-bar">
-        <div class="brand">
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M3.2 0H0V3.2H3.2V0Z" fill="#F4712F" />
-            <path
-              d="M9.6 0.16037C9.10736 0.0601906 8.60639 0.00649803 8.1037 0H5.2V3.2H8.04445C8.9938 3.2 9.92183 3.48151 10.7112 4.00895C11.5005 4.53638 12.1158 5.28603 12.4791 6.16312C12.8424 7.04021 12.9374 8.00532 12.7522 8.93643C12.567 9.86754 12.1098 10.7228 11.4386 11.3941C10.7673 12.0654 9.91199 12.5226 8.98088 12.7078C8.04977 12.893 7.08465 12.7979 6.20756 12.4346C5.33048 12.0713 4.58082 11.4561 4.05339 10.6667C3.52596 9.87738 3.24445 8.94935 3.24445 8V5.2H0.0444446V8C0.0440559 8.55252 0.100777 9.10359 0.213704 9.64444C0.965186 13.2415 4.13259 15.9511 7.94074 16H8.1037C12.4741 15.9444 16 12.3841 16 8C16 4.12963 13.2515 0.901482 9.6 0.16037Z"
-              fill="#F4712F"
-            />
-            <path
-              d="M7.58458 10.7921C7.14524 10.7265 6.72757 10.5582 6.36556 10.3007C5.99807 10.0401 5.69842 9.6952 5.49176 9.29488C5.28509 8.89456 5.17742 8.45052 5.17778 8V5.17852H8C8.44421 5.17835 8.88219 5.28304 9.2783 5.48407C9.67442 5.68509 10.0175 5.97679 10.2796 6.33542C10.5417 6.69405 10.7155 7.10949 10.7867 7.54794C10.858 7.98639 10.8248 8.43548 10.6897 8.85866C10.5547 9.28185 10.3217 9.66718 10.0096 9.98332C9.69759 10.2995 9.31532 10.5375 8.89393 10.678C8.47254 10.8185 8.02392 10.8576 7.58458 10.7921Z"
-              fill="#F4712F"
-            />
-          </svg>
-
-          <span class="brand-name">Bright ID</span>
-        </div>
-        <a href="#" class="privacy">Privacy Policy</a>
       </div>
     </div>`
   }

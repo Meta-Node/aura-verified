@@ -8,6 +8,11 @@ if (!('URLPattern' in globalThis)) {
   await import('urlpattern-polyfill')
 }
 
+export const pushRouter = (path: string) => {
+  history.pushState('', '', path)
+  router.get()?.goto(path)
+}
+
 export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) => {
   const routerValue = new Router(classThis, [
     {

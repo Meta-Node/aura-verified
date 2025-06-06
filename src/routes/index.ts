@@ -8,7 +8,7 @@ import { SignalWatcher } from '@lit-labs/signals'
 import { inputText, isLoginLoading } from '@/states/login'
 import { clientAPI } from '@/utils/apis'
 import { StateController } from '@lit-app/state'
-import { router } from '@/router'
+import { pushRouter, router } from '@/router'
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import {
@@ -295,8 +295,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
       const res = await this.createBrightId(email)
 
       if (res) {
-        history.pushState('', '', '/home')
-        router.get()?.goto('/home')
+        pushRouter('/home')
       }
     } catch (e) {
       console.error(e)
@@ -327,8 +326,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
       userProfilePicture.set(res.user.photoURL ?? '')
       userPhoneNumber.set(res.user.phoneNumber ?? '')
 
-      history.pushState('', '', '/home')
-      router.get()?.goto('/home')
+      pushRouter('/home')
     } catch (error) {
       console.error('Error signing in with Google:', error)
       isLoginLoading.set(false)
@@ -362,8 +360,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
       userProfilePicture.set('')
       userPhoneNumber.set('')
 
-      history.pushState('', '', '/home')
-      router.get()?.goto('/home')
+      pushRouter('/home')
     } catch (error) {
       console.error('Error signing in with Apple:', error)
     } finally {

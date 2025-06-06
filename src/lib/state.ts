@@ -8,7 +8,7 @@ export const localStorageSignal = <T = string>(key: string, initialValue: T) => 
   return {
     get: () => state.get(),
     set: (value: T) => {
-      localStorage.setItem(key, JSON.stringify(value))
+      localStorage.setItem(key, (value as string).toString())
       state.set(value)
     }
   }

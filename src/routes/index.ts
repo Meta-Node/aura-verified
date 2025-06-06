@@ -9,6 +9,8 @@ import { clientAPI } from '@/utils/apis'
 import { StateController } from '@lit-app/state'
 import { userStore } from '@/states/user'
 import { router } from '@/router'
+import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
+import { auth } from '@/lib/firebase'
 
 @customElement('home-page')
 export class HomePage extends SignalWatcher(LitElement) {
@@ -241,6 +243,17 @@ export class HomePage extends SignalWatcher(LitElement) {
     }
   }
 
+  private async signInWithGoogle() {
+    isLoginLoading.set(true)
+    try {
+      const provider = new GoogleAuthProvider()
+      await signInWithPopup(auth, provider)
+    } catch (error) {
+      console.error('Error signing in with Google:', error)
+      isLoginLoading.set(false)
+    }
+  }
+
   render() {
     return html` <div class="wrapper">
       <img src="/favicon.png" class="logo" alt="Aura" />
@@ -279,7 +292,7 @@ export class HomePage extends SignalWatcher(LitElement) {
 
           <div class="divider"></div>
 
-          <button class="btn-google btn">
+          <button @click=${this.signInWithGoogle} class="btn-google btn">
             <div class="btn-icon">
               <img src="${googleIcon}" alt="Google" />
             </div>

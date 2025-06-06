@@ -295,6 +295,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
       const res = await this.createBrightId(email)
 
       if (res) {
+        history.pushState('', '', '/home')
         router.get()?.goto('/home')
       }
     } catch (e) {
@@ -326,6 +327,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
       userProfilePicture.set(res.user.photoURL ?? '')
       userPhoneNumber.set(res.user.phoneNumber ?? '')
 
+      history.pushState('', '', '/home')
       router.get()?.goto('/home')
     } catch (error) {
       console.error('Error signing in with Google:', error)
@@ -360,6 +362,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
       userProfilePicture.set('')
       userPhoneNumber.set('')
 
+      history.pushState('', '', '/home')
       router.get()?.goto('/home')
     } catch (error) {
       console.error('Error signing in with Apple:', error)

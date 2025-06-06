@@ -15,7 +15,7 @@ import { auth } from '@/lib/firebase'
 
 const appleSignInOptions = {
   clientID: 'org.brightid.get-verified',
-  redirectUri: window.location.origin + '/auth/apple/callback',
+  redirectUri: 'https://aura-get-verified.vercel.app/sign-in-with-apple',
   state: crypto.randomUUID(),
   responseMode: 'form_post',
   scope: 'name email'

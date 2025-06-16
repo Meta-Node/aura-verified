@@ -2,11 +2,16 @@ import '../components/common/verification-card.ts'
 import { css, html, LitElement, type CSSResultGroup } from 'lit'
 import { customElement } from 'lit/decorators.js'
 import '@/components/common/profile-card.ts'
-import { StateController } from '@lit-app/state'
 import { userEmail, userFirstName, userLastName, userProfilePicture } from '@/states/user.ts'
+import { getProjects, queryClient } from '@/utils/apis/index.ts'
+import { signal, SignalWatcher } from '@lit-labs/signals'
+import type { Project } from '@/types/projects.ts'
+import { map } from 'lit/directives/map.js'
+
+const projects = signal<Project[]>([])
 
 @customElement('my-home')
-export class HomeElement extends LitElement {
+export class HomeElement extends SignalWatcher(LitElement) {
   static styles?: CSSResultGroup = css`
     .status-bar {
       display: flex;
@@ -42,6 +47,19 @@ export class HomeElement extends LitElement {
     }
   `
 
+  constructor() {
+    super()
+
+    const fetchData = queryClient
+      .fetchQuery({
+        queryKey: ['projects'],
+        queryFn: getProjects
+      })
+      .then((res) => {
+        projects.set(res)
+      })
+  }
+
   protected render() {
     return html` <div class="body">
       <div class="profile-card-wrapper">
@@ -63,22 +81,19 @@ export class HomeElement extends LitElement {
 
       <div class="apps-section">
         <h2>Apps needing verification</h2>
-        <verification-card
-          name="UBI Raffle Verification"
-          status="In Progress"
-          levelRequirement="4"
-          stepsCompleted="2"
-          totalSteps="5"
-          projectId="2"
-        ></verification-card>
-        <verification-card
-          name="Unitap Raffle Verification"
-          status="Completed"
-          levelRequirement="4"
-          stepsCompleted="5"
-          totalSteps="5"
-          projectId="1"
-        ></verification-card>
+        ${map(
+          projects.get(),
+          (project) => html`
+            <verification-card
+              status="In progress"
+              .name=${project.name}
+              .levelRequirement=${project.requirementLevel}
+              stepsCompleted="2"
+              totalSteps="5"
+              .projectId=${project.id}
+            ></verification-card>
+          `
+        )}
       </div>
     </div>`
   }

@@ -1,17 +1,18 @@
 import { css, html, LitElement } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 import profileIcon from '@/assets/icons/profile.svg'
-import { signal } from '@lit-labs/signals'
+import { signal, SignalWatcher } from '@lit-labs/signals'
 import { getBrightId, queryClient } from '@/utils/apis'
 import { EvaluationCategory, getAuraVerification } from '@/utils/aura'
 import { compactFormat } from '@/utils/number'
-import { subjectLevelPoints, userLevelPoints } from '@/lib/data/levels'
+import { subjectLevelPoints } from '@/lib/data/levels'
+import { userBrightId } from '@/states/user'
 
 const score = signal(0)
 const level = signal(0)
 
 @customElement('profile-card')
-export class ProfileCard extends LitElement {
+export class ProfileCard extends SignalWatcher(LitElement) {
   static styles = css`
     .profile-card {
       background-image: linear-gradient(
@@ -125,9 +126,11 @@ export class ProfileCard extends LitElement {
   constructor() {
     super()
 
+    const brightId = userBrightId.get()
+
     const fetchData = queryClient.fetchQuery({
-      queryKey: ['profile', this.id],
-      queryFn: () => getBrightId(this.id)
+      queryKey: ['profile', brightId],
+      queryFn: () => getBrightId(brightId)
     })
 
     fetchData.then((res) => {

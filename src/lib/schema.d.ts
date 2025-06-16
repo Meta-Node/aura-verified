@@ -4,6 +4,22 @@
  */
 
 export interface paths {
+    "/users/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["UsersController_getNotifications"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/users/login": {
         parameters: {
             query?: never;
@@ -20,32 +36,16 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/users/share": {
+    "/projects": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        get: operations["ProjectsController_getAllProjects"];
         put?: never;
-        post: operations["UsersController_share"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/users/query-contacts": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["UsersController_queryContacts"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -60,13 +60,6 @@ export interface components {
             email: string;
             integration: string;
         };
-        ShareDto: {
-            brightId: string;
-            contactInfo: string;
-        };
-        ContactsDto: {
-            contacts: string[];
-        };
     };
     responses: never;
     parameters: never;
@@ -76,6 +69,25 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    UsersController_getNotifications: {
+        parameters: {
+            query: {
+                userId: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     UsersController_login: {
         parameters: {
             query?: never;
@@ -97,41 +109,16 @@ export interface operations {
             };
         };
     };
-    UsersController_share: {
+    ProjectsController_getAllProjects: {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ShareDto"];
-            };
-        };
+        requestBody?: never;
         responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    UsersController_queryContacts: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ContactsDto"];
-            };
-        };
-        responses: {
-            201: {
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };

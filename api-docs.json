@@ -1,6 +1,27 @@
 {
   "openapi": "3.0.0",
   "paths": {
+    "/users/notifications": {
+      "get": {
+        "operationId": "UsersController_getNotifications",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["Users"]
+      }
+    },
     "/users/login": {
       "post": {
         "operationId": "UsersController_login",
@@ -23,48 +44,16 @@
         "tags": ["Users"]
       }
     },
-    "/users/share": {
-      "post": {
-        "operationId": "UsersController_share",
+    "/projects": {
+      "get": {
+        "operationId": "ProjectsController_getAllProjects",
         "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ShareDto"
-              }
-            }
-          }
-        },
         "responses": {
-          "201": {
+          "200": {
             "description": ""
           }
         },
-        "tags": ["Users"]
-      }
-    },
-    "/users/query-contacts": {
-      "post": {
-        "operationId": "UsersController_queryContacts",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ContactsDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": ["Users"]
+        "tags": ["Projects"]
       }
     }
   },
@@ -89,30 +78,6 @@
           }
         },
         "required": ["email", "integration"]
-      },
-      "ShareDto": {
-        "type": "object",
-        "properties": {
-          "brightId": {
-            "type": "string"
-          },
-          "contactInfo": {
-            "type": "string"
-          }
-        },
-        "required": ["brightId", "contactInfo"]
-      },
-      "ContactsDto": {
-        "type": "object",
-        "properties": {
-          "contacts": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        },
-        "required": ["contacts"]
       }
     }
   }

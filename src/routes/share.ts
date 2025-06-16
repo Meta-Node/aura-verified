@@ -275,7 +275,7 @@ export class SharePage extends SignalWatcher(LitElement) {
           <p class="text-muted">Need at least 1 more evaluation to level up</p>
         </div>
 
-        <div class="card">
+        <!-- <div class="card">
           <div class="card-header">
             <div class="icon-wrapper">
               <svg
@@ -319,7 +319,7 @@ export class SharePage extends SignalWatcher(LitElement) {
               <span class="platform-label">Contacts</span>
             </button>
           </div>
-        </div>
+        </div> -->
 
         <div class="qr-container">
           <div class="qr-code">

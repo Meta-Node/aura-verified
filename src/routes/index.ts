@@ -7,7 +7,6 @@ import spinnerIcon from '@/assets/icons/spinner.svg'
 import { SignalWatcher } from '@lit-labs/signals'
 import { inputText, isLoginLoading } from '@/states/login'
 import { clientAPI } from '@/utils/apis'
-import { StateController } from '@lit-app/state'
 import { pushRouter, router } from '@/router'
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
@@ -20,10 +19,22 @@ import {
   userProfilePicture
 } from '@/states/user'
 
+const generateUUID = () => {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID()
+  }
+
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0
+    const v = c === 'x' ? r : (r & 0x3) | 0x8
+    return v.toString(16)
+  })
+}
+
 const appleSignInOptions = {
   clientID: 'org.brightid.get-verified',
   redirectUri: 'https://aura-get-verified.vercel.app/sign-in-with-apple',
-  state: crypto.randomUUID(),
+  state: generateUUID(),
   responseMode: 'form_post',
   scope: 'name email'
 } as const
@@ -338,35 +349,51 @@ export class LoginPage extends SignalWatcher(LitElement) {
     try {
       const data = await AppleID.auth.signIn()
 
-      if (!data.authorization || !data.user) {
-        isLoginLoading.set(false)
-        return
+      // Debug log
+      console.log('Apple Sign In Response:', JSON.stringify(data, null, 2))
+
+      if (!data.authorization) {
+        throw new Error('Authorization data is missing')
       }
 
-      const { email } = data.user
-      const { firstName, lastName } = data.user.name || {}
+      // Apple might not return user info on subsequent sign-ins
+      const email = data.user?.email
+      const firstName = data.user?.name?.firstName
+      const lastName = data.user?.name?.lastName
+
+      console.log('Sign in status:', {
+        isLoading: isLoginLoading.get(),
+        hasAuth: !!data?.authorization,
+        hasUser: !!data?.user,
+        hasEmail: !!data?.user?.email
+      })
 
       if (!email) {
         throw new Error('Email is required for registration')
       }
 
       userEmail.set(email)
-
       const id = await this.createBrightId(email)
 
       userBrightId.set(id)
-      userFirstName.set(firstName ?? 'Unknown')
-      userLastName.set(lastName ?? '')
+      // Only update name if provided by Apple
+      if (firstName) userFirstName.set(firstName)
+      if (lastName) userLastName.set(lastName)
       userProfilePicture.set('')
       userPhoneNumber.set('')
 
       pushRouter('/home')
     } catch (error) {
       console.error('Error signing in with Apple:', error)
+      // Add more detailed error logging
+      if (error instanceof Error) {
+        console.error('Error details:', error.message)
+      }
     } finally {
       isLoginLoading.set(false)
     }
   }
+
   render() {
     return html`
       <div class="wrapper">

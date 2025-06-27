@@ -121,8 +121,8 @@ export class HomeElement extends SignalWatcher(LitElement) {
                     : 'Completed'}
                   .name=${project.name}
                   .levelRequirement=${project.requirementLevel}
-                  stepsCompleted="${stepsCompleted}"
-                  totalSteps="${totalSteps.length}"
+                  .stepsCompleted="${stepsCompleted}"
+                  .totalSteps="${totalSteps.length}"
                   .projectId=${project.id}
                 ></verification-card>
               `

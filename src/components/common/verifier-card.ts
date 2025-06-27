@@ -1,9 +1,36 @@
 import { css, html, LitElement } from 'lit'
-import { customElement } from 'lit/decorators.js'
+import { customElement, property } from 'lit/decorators.js'
 import thumbsUpGreen from '@/assets/icons/thumbs-up.svg'
 
 @customElement('verifier-card')
 export class VerifierCard extends LitElement {
+  @property({ type: String })
+  verifierName = 'Ali Maktabi'
+
+  @property({ type: String })
+  verifierEmail = 'maktabi876@gmail.com'
+
+  @property({ type: String })
+  verifierPicture = '/images/profile-photo.png?height=64&width=64'
+
+  @property({ type: Number })
+  verifierLevel = 3
+
+  @property({ type: Number })
+  progressPercent = 30
+
+  @property({ type: Number })
+  evaluationScore = 4
+
+  @property({ type: String })
+  evaluationText = 'Very High'
+
+  @property({ type: String })
+  evaluationIcon = thumbsUpGreen
+
+  @property({ type: String })
+  evaluationNote = 'Evaluated you'
+
   static styles = css`
     .verifier-card {
       background-image: linear-gradient(
@@ -121,26 +148,23 @@ export class VerifierCard extends LitElement {
       <div class="verifier-card">
         <div class="verifier-header">
           <div class="verifier-picture">
-            <img src="/images/profile-photo.png?height=64&width=64" alt="verifier picture" />
+            <img src="${this.verifierPicture}" alt="verifier picture" />
           </div>
           <div class="verifier-info">
-            <h2>Ali Maktabi</h2>
-            <p class="mt-2">maktabi876@gmail.com</p>
+            <h2>${this.verifierName}</h2>
+            <p class="mt-2">${this.verifierEmail}</p>
           </div>
-          <p>Verifier level <strong>3</strong></p>
+          <p>Verifier level <strong>${this.verifierLevel}</strong></p>
         </div>
         <div class="progress-bar">
-          <div class="progress" style="width: 30%;"></div>
+          <div class="progress" style="width: ${this.progressPercent}%;"></div>
         </div>
-
         <section>
           <div class="evaluation-high">
-            <img width="16" height="16" src="${thumbsUpGreen}" alt="thumbs up" />
-
-            +4 Veriy High
+            <img width="16" height="16" src="${this.evaluationIcon}" alt="thumbs up" />
+            +${this.evaluationScore} ${this.evaluationText}
           </div>
-
-          <small>Evaluated you</small>
+          <small>${this.evaluationNote}</small>
         </section>
       </div>
     `

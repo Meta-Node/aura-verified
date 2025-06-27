@@ -1,7 +1,7 @@
-import { css, html, LitElement } from "lit"
-import { customElement } from "lit/decorators.js"
+import { css, html, LitElement } from 'lit'
+import { customElement } from 'lit/decorators.js'
 
-@customElement("verification-card-skeleton")
+@customElement('verification-card-skeleton')
 export class VerificationCardSkeleton extends LitElement {
   static styles = css`
     .verification-card {

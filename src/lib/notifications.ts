@@ -53,7 +53,7 @@ export const fetchNewNotifications = async (brightId: string) => {
     return
   }
 
-  const res = await queryClient.fetchQuery({
+  const res = await queryClient.ensureQueryData({
     queryKey: ['notifications', { since: lastFetchedDate }],
     queryFn: () => fetchInboundConnections(brightId)
   })

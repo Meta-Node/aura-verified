@@ -54,7 +54,7 @@ export const getSubjectVerifications = async (
   subjectId: string,
   evaluationCategory: EvaluationCategory
 ) => {
-  const profileQuery = await queryClient.fetchQuery({
+  const profileQuery = await queryClient.ensureQueryData({
     queryKey: ['profile', subjectId],
     queryFn: () => getBrightId(subjectId)
   })

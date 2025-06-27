@@ -128,7 +128,7 @@ export class ProfileCard extends SignalWatcher(LitElement) {
 
     const brightId = userBrightId.get()
 
-    const fetchData = queryClient.fetchQuery({
+    const fetchData = queryClient.ensureQueryData({
       queryKey: ['profile', brightId],
       queryFn: () => getBrightId(brightId)
     })

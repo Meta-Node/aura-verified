@@ -1,14 +1,14 @@
-import { css, html, LitElement } from "lit"
-import { customElement, property } from "lit/decorators.js"
-import checkboxGreenIcon from "@/assets/icons/checkbox-green.svg"
+import { css, html, LitElement } from 'lit'
+import { customElement, property } from 'lit/decorators.js'
+import checkboxGreenIcon from '@/assets/icons/checkbox-green.svg'
 
-@customElement("verification-card")
+@customElement('verification-card')
 export class VerificationCard extends LitElement {
   @property({})
-  name = "UBI Raffle Verification"
+  name = 'UBI Raffle Verification'
 
   @property({})
-  status = "In Progress"
+  status = 'In Progress'
 
   @property({ type: Number })
   levelRequirement = 4
@@ -170,9 +170,7 @@ export class VerificationCard extends LitElement {
         <div class="card-header">
           <h3>${this.name}</h3>
           <div
-            class="status ${this.stepsCompleted === this.totalSteps
-              ? "completed"
-              : "in-progress"}"
+            class="status ${this.stepsCompleted === this.totalSteps ? 'completed' : 'in-progress'}"
           >
             ${this.status}
           </div>
@@ -189,7 +187,7 @@ export class VerificationCard extends LitElement {
                 <span>${this.stepsCompleted}/${this.totalSteps} completed</span>
               </div>
             `
-          : ""}
+          : ''}
         ${this.stepsCompleted === this.totalSteps
           ? html`
               <img src="${checkboxGreenIcon}" class="status-icon" />
@@ -199,11 +197,12 @@ export class VerificationCard extends LitElement {
               <div class="progress-bar">
                 <div
                   class="progress"
-                  style="width: ${(this.stepsCompleted / this.totalSteps) *
-                  100}%;"
+                  style="width: ${(this.stepsCompleted / this.totalSteps) * 100}%;"
                 ></div>
               </div>
-              <button class="continue-button">Continue</button>
+              <button class="continue-button">
+                ${this.stepsCompleted === 0 ? 'Start Now!' : 'Continue'}
+              </button>
             `}
       </a>
     `

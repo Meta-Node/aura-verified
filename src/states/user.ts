@@ -1,4 +1,5 @@
 import { localStorageSignal } from '@/lib/state'
+import { signal } from '@lit-labs/signals'
 
 export const userEmail = localStorageSignal('_email', '')
 export const userBrightId = localStorageSignal('_brightId', '')
@@ -11,3 +12,11 @@ export const userProfilePicture = localStorageSignal(
   (value) => value?.toString() ?? ''
 )
 export const userPhoneNumber = localStorageSignal('_phoneNumber', '')
+
+export const levelUpProgress = signal(
+  [] as {
+    reason: string
+    status: 'passed' | 'needs passing'
+    level: number
+  }[]
+)

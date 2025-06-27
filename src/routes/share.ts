@@ -251,7 +251,12 @@ export class SharePage extends SignalWatcher(LitElement) {
       width: 300,
       content: this.profileLink,
       logo: {
-        src: '/images/brightId.svg'
+        src: '/images/brightId.svg',
+        bgColor: '#333',
+        borderWidth: 5
+      },
+      dotsOptions: {
+        color: '#111'
       }
     })
 
@@ -265,6 +270,45 @@ export class SharePage extends SignalWatcher(LitElement) {
   }
 
   linkImage = signal('')
+
+  private handleShare(platform: string) {
+    const url = this.profileLink
+    const text = 'Check out my Aura profile!'
+    let shareUrl = ''
+
+    switch (platform) {
+      case 'twitter':
+        shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+          url
+        )}&text=${encodeURIComponent(text)}`
+        window.open(shareUrl, '_blank')
+        break
+      case 'whatsapp':
+        shareUrl = `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`
+        window.open(shareUrl, '_blank')
+        break
+      case 'telegram':
+        shareUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(
+          text
+        )}`
+        window.open(shareUrl, '_blank')
+        break
+      case 'sms':
+        shareUrl = `sms:?body=${encodeURIComponent(text + ' ' + url)}`
+        window.open(shareUrl)
+        break
+      case 'more':
+        if (navigator.share) {
+          navigator.share({ title: 'Aura Profile', text, url })
+        } else {
+          navigator.clipboard.writeText(url)
+          alert('Link copied to clipboard!')
+        }
+        break
+      default:
+        break
+    }
+  }
 
   protected render() {
     return html` <div class="container">
@@ -340,31 +384,31 @@ export class SharePage extends SignalWatcher(LitElement) {
           </div>
         </div>
         <div class="social-buttons">
-          <button class="social-button">
+          <button class="social-button" @click=${() => this.handleShare('twitter')}>
             <div class="social-icon twitter">
               <img src="${xIcon}" width="24" height="24" alt="x" />
             </div>
             <span class="social-label">Twitter</span>
           </button>
-          <button class="social-button">
+          <button class="social-button" @click=${() => this.handleShare('whatsapp')}>
             <div class="social-icon whatsapp">
               <img src="${whatsappIcon}" width="24" height="24" alt="whatsapp" />
             </div>
             <span class="social-label">Whatsapp</span>
           </button>
-          <button class="social-button">
+          <button class="social-button" @click=${() => this.handleShare('telegram')}>
             <div class="social-icon telegram">
               <img src="${telegramIcon}" width="24" height="24" alt="telegram" />
             </div>
             <span class="social-label">Telegram</span>
           </button>
-          <button class="social-button">
+          <button class="social-button" @click=${() => this.handleShare('sms')}>
             <div class="social-icon sms">
               <img src="${smsIcon}" width="24" height="24" alt="sms" />
             </div>
             <span class="social-label">SMS</span>
           </button>
-          <button class="social-button">
+          <button class="social-button" @click=${() => this.handleShare('more')}>
             <div class="social-icon more">
               <img src="${moreIcon}" width="24" height="24" alt="x" />
             </div>

@@ -87,10 +87,14 @@ const generateNotification = (
 ): Notification => {
   const changeDescription =
     changeType === 'level'
-      ? `Level ${newValue > oldValue ? 'increased' : 'decreased'} by ${Math.abs(newValue - oldValue)}`
+      ? `Level ${newValue > oldValue ? 'increased' : 'decreased'} by ${Math.abs(
+          newValue - oldValue
+        )}`
       : changeType === 'score'
-        ? `Score ${newValue > oldValue ? 'increased' : 'decreased'} by ${Math.abs(newValue - oldValue)} points`
-        : `Evaluation changed from ${oldValue} to ${newValue}`
+      ? `Score ${newValue > oldValue ? 'increased' : 'decreased'} by ${Math.abs(
+          newValue - oldValue
+        )} points`
+      : `Evaluation changed from ${oldValue} to ${newValue}`
 
   const explorivyInfo = explorivity ? ` (Profile explorivity: ${explorivity.toFixed(1)}%)` : ''
 
@@ -109,10 +113,10 @@ const generateNotification = (
           ? 'level-up'
           : 'level-down'
         : changeType === 'score'
-          ? newValue > oldValue
-            ? 'trending-up'
-            : 'trending-down'
-          : 'evaluation',
+        ? newValue > oldValue
+          ? 'trending-up'
+          : 'trending-down'
+        : 'evaluation',
     evaluationCategory
   }
 }
@@ -208,12 +212,21 @@ export function updateProfileState(payload: AuraNodeBrightIdConnection) {
   if (notifications.length > 0) {
     notificationItems.set([...notificationItems.get(), ...notifications])
   }
-  trackedProfile.set({
-    ...oldProfiles,
-    [id]: {
-      id,
-      categories: newCategories,
-      lastUpdated: Date.now()
-    }
-  })
+
+  // console.log({
+  //   ...oldProfiles,
+  //   [id]: {
+  //     id,
+  //     categories: newCategories,
+  //     lastUpdated: Date.now()
+  //   }
+  // })
+  // trackedProfile.set({
+  //   ...oldProfiles,
+  //   [id]: {
+  //     id,
+  //     categories: newCategories,
+  //     lastUpdated: Date.now()
+  //   }
+  // })
 }

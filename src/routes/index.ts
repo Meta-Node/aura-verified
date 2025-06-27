@@ -52,6 +52,10 @@ export class LoginPage extends SignalWatcher(LitElement) {
       state: appleSignInOptions.state,
       usePopup: true
     })
+
+    if (userBrightId.get()) {
+      router.get()?.goto('/home')
+    }
   }
 
   static styles?: CSSResultGroup = css`

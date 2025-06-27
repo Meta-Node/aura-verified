@@ -1,3 +1,5 @@
+import type { EvaluationCategory } from '@/utils/aura'
+
 interface Impact {
   evaluator: string
   score: number
@@ -59,4 +61,37 @@ interface Profile {
 
 export interface BrightID {
   data: Profile
+}
+
+export enum EvaluationValue {
+  POSITIVE = 'positive',
+  NEGATIVE = 'negative'
+}
+
+export type ConnectionLevel =
+  | 'reported'
+  | 'suspicious'
+  | 'just met'
+  | 'already known'
+  | 'recovery'
+  | 'aura only'
+
+export type BrightIdConnection = {
+  id: string
+  level: ConnectionLevel
+  reportReason: string | null
+  timestamp: number
+}
+
+export type AuraEvaluation = {
+  evaluation: EvaluationValue
+  confidence: number
+  domain: 'BrightID'
+  category: EvaluationCategory
+  modified: number
+}
+
+export type AuraNodeBrightIdConnection = BrightIdConnection & {
+  auraEvaluations?: AuraEvaluation[]
+  verifications: Verification[]
 }

@@ -39,8 +39,8 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
         await import('@/routes/verification')
         return true
       },
-      render: () =>
-        html`<verification-page></verification-page>
+      render: ({ id }) =>
+        html`<verification-page .projectId=${Number(id)}></verification-page>
           <app-footer></app-footer> `
     },
     {

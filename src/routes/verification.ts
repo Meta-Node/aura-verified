@@ -1,12 +1,28 @@
-import { css, html, LitElement, type CSSResultGroup } from "lit"
-import { property, customElement } from "lit/decorators.js"
-import levelImage from "@/assets/images/level.png"
-import thumbsUpImage from "@/assets/images/thumbs-up.png"
-import ratingImage from "@/assets/images/rating.png"
-import checkboxIcon from "@/assets/icons/checkbox-green.svg"
+import { css, html, LitElement, type CSSResultGroup } from 'lit'
+import { property, customElement } from 'lit/decorators.js'
+import levelImage from '@/assets/images/level.png'
+import thumbsUpImage from '@/assets/images/thumbs-up.png'
+import ratingImage from '@/assets/images/rating.png'
+import checkboxIcon from '@/assets/icons/checkbox-green.svg'
+import { getProjects, queryClient } from '@/utils/apis'
+import { projects } from '@/states/projects'
+import { getLevelupProgress } from '@/utils/score'
+import { EvaluationCategory } from '@/utils/aura'
+import { levelUpProgress } from '@/states/user'
+import { signal, SignalWatcher } from '@lit-labs/signals'
+import type { Project } from '@/types/projects'
 
-@customElement("verification-page")
-export class VerificationPage extends LitElement {
+const focusedProject = signal(null as Project | null)
+
+const isPassed = signal(false)
+
+@customElement('verification-page')
+export class VerificationPage extends SignalWatcher(LitElement) {
+  @property({
+    type: Number
+  })
+  projectId!: number
+
   static styles?: CSSResultGroup = css`
     .app-container {
       text-align: left;
@@ -221,15 +237,53 @@ export class VerificationPage extends LitElement {
       color: var(--muted);
     }
 
+    .back-btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 24px;
+      background: var(--accent, #144bb9);
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 500;
+      box-shadow: 0 2px 8px rgba(20, 75, 185, 0.08);
+      transition: background 0.2s;
+    }
+
+    .back-btn:hover {
+      background-color: #0d3466;
+    }
+
     .nav-button.active {
       color: var(--foreground);
     }
   `
 
+  connectedCallback(): void {
+    super.connectedCallback()
+
+    const fetchData = queryClient
+      .ensureQueryData({
+        queryKey: ['projects'],
+        queryFn: getProjects
+      })
+      .then((res) => {
+        projects.set(res)
+
+        focusedProject.set(res.find((item) => item.id === this.projectId) ?? null)
+      })
+
+    getLevelupProgress({ evaluationCategory: EvaluationCategory.SUBJECT }).then((res) => {
+      isPassed.set(res.isUnlocked)
+      levelUpProgress.set(res.requirements)
+    })
+  }
+
   protected render() {
     return html` <div class="app-container">
       <div class="main-content">
-        <h1 class="title">UBI Raffle Verification</h1>
+        <h1 class="title">${focusedProject.get()?.name}</h1>
 
         <div class="image-container">
           <img
@@ -242,93 +296,57 @@ export class VerificationPage extends LitElement {
 
         <div class="level-requirement">
           <span class="highlight-text">Requires Level: </span>
-          <span>4</span>
+          <span>${focusedProject.get()?.requirementLevel}</span>
         </div>
 
-        <h2 class="steps-heading">Steps to achieving Level 4</h2>
+        ${!focusedProject.get()
+          ? 'Loading ....'
+          : levelUpProgress
+              .get()
+              .filter((item) => item.level <= focusedProject.get()!.requirementLevel).length === 0
+          ? html`<div
+              style="text-align:center;margin:32px 0;color:lightgreen;font-size:20px;font-weight:600;"
+            >
+              🎉 You are already verified!<br />
+              <span style="color:#dadada;font-size:16px;font-weight:400;"
+                >You can continue your progress in the app.</span
+              >
+              <br />
+              <a href="/home" class="back-btn">Back to Main App</a>
+            </div>`
+          : html`
+              <div class="timeline">
+                <div class="timeline-line"></div>
 
-        <div class="timeline">
-          <div class="timeline-line"></div>
-
-          <div class="step">
-            <div class="step-icon">
-              <img
-                class=""
-                width="40px"
-                height="40px"
-                alt="xp-levelup"
-                src="${levelImage}"
-              />
-            </div>
-            <div class="step-content">
-              <h5 class="step-title">Reach Aura Level 1</h5>
-              <ul class="step-list">
-                <li class="step-list-item">
-                  <span class="step-list-bullet">•</span>
-                  <span>Find verifiers to evaluate you</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="step">
-            <div class="step-icon">
-              <img
-                class=""
-                width="30px"
-                height="30px"
-                alt="high-evaluation"
-                src="${thumbsUpImage}"
-              />
-            </div>
-            <div class="step-content">
-              <h3 class="step-title">Get 2 medium evaluations</h3>
-              <ul class="step-list">
-                <li class="step-list-item">
-                  <span class="step-list-bullet">•</span>
-                  <span
-                    >Get two evaluations of +2 from verifiers with level 2 or
-                    higher</span
-                  >
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="step">
-            <div class="step-icon">
-              <img
-                class=""
-                width="30px"
-                height="30px"
-                alt="star"
-                src="${ratingImage}"
-              />
-            </div>
-            <div class="step-content">
-              <h3 class="step-title">Get a score of 350M+</h3>
-              <p class="step-description">
-                Get enough evaluations to raise your score to 350M
-              </p>
-            </div>
-          </div>
-
-          <div class="step">
-            <div class="step-icon">
-              <img
-                class=""
-                width="40px"
-                height="40px"
-                alt="checkbox"
-                src="${checkboxIcon}"
-              />
-            </div>
-            <div class="step-content">
-              <h3 class="step-title">Get Verified</h3>
-              <p class="step-description">Receive your verification status.</p>
-            </div>
-          </div>
-        </div>
+                ${levelUpProgress
+                  .get()
+                  .filter((item) => item.level <= focusedProject.get()!.requirementLevel)
+                  .map(
+                    (req, idx) => html`
+                      <div class="step">
+                        <div class="step-icon">
+                          <img
+                            class=""
+                            width="40px"
+                            height="40px"
+                            alt="${req.status === 'passed' ? 'checkbox' : 'levelup'}"
+                            src="${req.status === 'passed' ? checkboxIcon : levelImage}"
+                          />
+                        </div>
+                        <div class="step-content">
+                          <h5 class="step-title">${req.reason}</h5>
+                          <p class="step-description">
+                            Status:
+                            <span style="color:${req.status === 'passed' ? 'lightgreen' : 'orange'}"
+                              >${req.status}</span
+                            >
+                          </p>
+                        </div>
+                      </div>
+                    `
+                  )}
+              </div>
+            `}
       </div>
     </div>`
   }

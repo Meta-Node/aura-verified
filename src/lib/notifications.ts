@@ -16,11 +16,18 @@ export const NOTIFICATION_THRESHOLDS = {
   MIN_SCORE_CHANGE: 50 // Minimum absolute score change to trigger notification
 }
 
-export const notificationItems = localStorageSignal(
+export const notificationItems = localStorageSignal<Notification[]>(
   'notifications',
   [] as Notification[],
   (value) => (value ? JSON.parse(value) : []),
   (value) => (value ? JSON.stringify(value) : '[]')
+)
+
+export const hasInitialized = localStorageSignal(
+  'isNotificationInitialized',
+  false,
+  (value) => !!Number(value),
+  (value) => (value ? '1' : '0')
 )
 
 export const trackedProfile = localStorageSignal<Record<string, TrackedProfileState>>(
@@ -122,7 +129,7 @@ const generateNotification = (
 }
 
 export function updateProfileState(payload: AuraNodeBrightIdConnection) {
-  const { id, verifications } = payload
+  const { id, verifications, auraEvaluations } = payload
   const oldProfiles = trackedProfile.get()
   const oldState = oldProfiles[id]
   const categories: EvaluationCategory[] = [
@@ -159,6 +166,10 @@ export function updateProfileState(payload: AuraNodeBrightIdConnection) {
     }
   }
 
+  const isInitialized = hasInitialized.get()
+
+  hasInitialized.set(true)
+
   categories.forEach((cat) => {
     const data = getAuraVerification(verifications, cat)
     const score = data?.score || 0
@@ -173,8 +184,8 @@ export function updateProfileState(payload: AuraNodeBrightIdConnection) {
     newCategories[cat] = { score, level, evaluators, explorivity }
   })
 
-  // Gather notifications
   let notifications: Notification[] = []
+
   categories.forEach((cat) => {
     const newCat = newCategories[cat]
     const oldCat = oldState?.categories?.[cat]
@@ -206,6 +217,19 @@ export function updateProfileState(payload: AuraNodeBrightIdConnection) {
           )
         }
       })
+    } else if (isInitialized) {
+      if (auraEvaluations?.length && auraEvaluations[0]?.category) {
+        notifications.push(
+          generateNotification(
+            id,
+            'evaluation',
+            0,
+            auraEvaluations[0].confidence,
+            100,
+            auraEvaluations[0].category
+          )
+        )
+      }
     }
   })
 
@@ -213,20 +237,12 @@ export function updateProfileState(payload: AuraNodeBrightIdConnection) {
     notificationItems.set([...notificationItems.get(), ...notifications])
   }
 
-  // console.log({
-  //   ...oldProfiles,
-  //   [id]: {
-  //     id,
-  //     categories: newCategories,
-  //     lastUpdated: Date.now()
-  //   }
-  // })
-  // trackedProfile.set({
-  //   ...oldProfiles,
-  //   [id]: {
-  //     id,
-  //     categories: newCategories,
-  //     lastUpdated: Date.now()
-  //   }
-  // })
+  trackedProfile.set({
+    ...oldProfiles,
+    [id]: {
+      id,
+      categories: newCategories,
+      lastUpdated: Date.now()
+    }
+  })
 }

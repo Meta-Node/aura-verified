@@ -54,7 +54,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
     })
 
     if (userBrightId.get()) {
-      router.get()?.goto('/home')
+      pushRouter('/home')
     }
   }
 
@@ -440,7 +440,9 @@ export class LoginPage extends SignalWatcher(LitElement) {
                 />
               </div>
 
-              <button @click=${this.onSubmit} .disabled=${isLoginLoading.get()} class="btn btn-email">
+              <button @click=${
+                this.onSubmit
+              } .disabled=${isLoginLoading.get()} class="btn btn-email">
                 Sign in with Email
               </button>
 
@@ -453,7 +455,9 @@ export class LoginPage extends SignalWatcher(LitElement) {
                 Sign in with Google
               </button>
 
-              <button @click=${this.signInWithApple} id="appleid-signin" data-color="black" data-border="true" data-type="sign in" class="btn-apple btn">
+              <button @click=${
+                this.signInWithApple
+              } id="appleid-signin" data-color="black" data-border="true" data-type="sign in" class="btn-apple btn">
                 <div class="btn-icon">
                   <img src="${appleIcon}" alt="Apple" />
                 </div>

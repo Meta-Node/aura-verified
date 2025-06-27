@@ -315,7 +315,7 @@ export class SharePage extends SignalWatcher(LitElement) {
       <main class="main-content">
         <div class="header">
           <h1 class="title">Find Verifiers</h1>
-          <p class="subtitle">Found 2 verifiers. 1 evaluated you.</p>
+          <!-- <p class="subtitle">Found 2 verifiers. 1 evaluated you.</p> -->
           <p class="text-muted">Need at least 1 more evaluation to level up</p>
         </div>
 

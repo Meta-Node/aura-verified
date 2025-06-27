@@ -32,7 +32,7 @@ export const localStorageSignal = <T>(
   let parsedStorage: T | null = null
 
   try {
-    parsedStorage = parseFn ? parseFn(JSON.parse(storage as string)) : ((storage as never) ?? null)
+    parsedStorage = parseFn ? parseFn(storage as string) : (storage as never) ?? null
   } catch (e) {
     parsedStorage = (storage as never) ?? null
     console.warn(`Failed to parse stored value for key "${key}". Using initial value.`)
@@ -46,9 +46,7 @@ export const localStorageSignal = <T>(
       if (!isJSONSerializable(value)) {
         throw new Error('Value must be JSON serializable')
       }
-      const serialized = serializeFn
-        ? (serializeFn(value) ?? JSON.stringify(value))
-        : JSON.stringify(value)
+      const serialized = serializeFn ? serializeFn(value) ?? value!.toString() : value!.toString()
       localStorage.setItem(key, serialized)
       state.set(value)
     }

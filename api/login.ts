@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
-import { usersTable } from '../lib/schema'
+import { usersTable } from './lib/schema'
 import { eq } from 'drizzle-orm'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

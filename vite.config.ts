@@ -9,4 +9,5 @@ export default defineConfig({
     target: 'es2022'
   },
   plugins: [tsconfigPaths(), litHMRPlugin()]
+  // assetsInclude: ['**/*.html']
 })

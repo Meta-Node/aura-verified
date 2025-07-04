@@ -1,23 +1,5 @@
 {
-  "builds": [
-    {
-      "src": "api/login.ts",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/projects.ts",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "public/**/*",
-      "use": "@vercel/static"
-    }
-  ],
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
-    },
     {
       "source": "/(.*)",
       "destination": "/index.html"

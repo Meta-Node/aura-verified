@@ -35,6 +35,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.json({
       id: brightId
     })
+    return
   }
   res.json({
     id: res[0].id as string

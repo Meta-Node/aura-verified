@@ -5,7 +5,7 @@ import { QueryClient } from '@tanstack/query-core'
 import type { Project } from '@/types/projects'
 
 export const clientAPI = createClient<paths>({
-  baseUrl: import.meta.env.VITE_SOME_GET_VERIFIED_API
+  baseUrl: '/api'
 })
 
 export const auraNodeAPI = createClient({

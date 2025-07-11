@@ -8,6 +8,9 @@ export default defineConfig({
     outDir: 'dist',
     target: 'es2022'
   },
+  define: {
+    'process.env': {}
+  },
   plugins: [tsconfigPaths(), litHMRPlugin()]
   // assetsInclude: ['**/*.html']
 })

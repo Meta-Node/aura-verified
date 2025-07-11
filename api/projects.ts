@@ -1,12 +1,12 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
-import { db } from './lib/db.ts'
-import { projectsTable } from './lib/schema.ts'
+import { db } from './lib/db.js'
+import { projectsTable } from './lib/schema.js'
 import { eq } from 'drizzle-orm'
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+const handler = async (req: VercelRequest, res: VercelResponse) => {
   const projects = await db.select().from(projectsTable).where(eq(projectsTable.isActive, true))
-
-  console.log(projects)
 
   res.send(projects)
 }
+
+export default handler

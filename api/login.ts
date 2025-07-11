@@ -1,17 +1,18 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
-import { usersTable } from './lib/schema.ts'
+import { usersTable } from './lib/schema.js'
 import { eq } from 'drizzle-orm'
-import { db } from './lib/db.ts'
+import { db } from './lib/db.js'
 import * as crypto from 'crypto'
 
 function createBrightId(email: string) {
-  const secretKey = process.env['SECRET_KEY'] || import.meta.env['SECRET_KEY']
+  const secretKey = process.env['SECRET_KEY']
+
   if (!secretKey) throw new Error('Secret key must be present in env variables')
 
   return crypto.scryptSync(email, secretKey, 32).toString('base64').slice(0, 43)
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+const handler = async (req: VercelRequest, res: VercelResponse) => {
   if (req.method !== 'POST') {
     res.status(405).send('Method not allowed')
     return
@@ -24,7 +25,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const result = await db.select().from(usersTable).where(eq(usersTable.id, hashedEmail))
 
   if (!result.length) {
-    const brightId = this.createBrightId(email)
+    const brightId = createBrightId(email)
 
     await db.insert(usersTable).values({
       id: brightId,
@@ -36,6 +37,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     })
   }
   res.send({
-    id: res[0].id
+    id: result?.[0]?.id
   })
 }
+
+export default handler

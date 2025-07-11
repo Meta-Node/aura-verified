@@ -12,9 +12,10 @@ function createBrightId(email: string) {
   return crypto.scryptSync(email, secretKey, 32).toString('base64').slice(0, 43)
 }
 
-export const POST = async (req: VercelRequest) => {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
-    return new Response('Method not allowed')
+    res.status(405).send('Method not allowed')
+    return
   }
 
   const { email, integration } = req.body
@@ -31,26 +32,11 @@ export const POST = async (req: VercelRequest) => {
       integrations: [integration]
     })
 
-    return Response.json(
-      { id: brightId },
-      {
-        status: 201,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
-    )
+    res.json({
+      id: brightId
+    })
   }
-
-  return Response.json(
-    {
-      id: result?.[0]?.id
-    },
-    {
-      status: 201,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }
-  )
+  res.json({
+    id: res[0].id as string
+  })
 }

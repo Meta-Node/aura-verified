@@ -354,23 +354,14 @@ export class LoginPage extends SignalWatcher(LitElement) {
       const data = await AppleID.auth.signIn()
 
       // Debug log
-      console.log('Apple Sign In Response:', JSON.stringify(data, null, 2))
 
       if (!data.authorization) {
         throw new Error('Authorization data is missing')
       }
 
-      // Apple might not return user info on subsequent sign-ins
-      const email = data.user?.email
-      const firstName = data.user?.name?.firstName
-      const lastName = data.user?.name?.lastName
-
-      console.log('Sign in status:', {
-        isLoading: isLoginLoading.get(),
-        hasAuth: !!data?.authorization,
-        hasUser: !!data?.user,
-        hasEmail: !!data?.user?.email
-      })
+      const email = data.authorization.user?.email
+      const firstName = data.authorization.user?.name?.firstName
+      const lastName = data.authorization.user?.name?.lastName
 
       if (!email) {
         throw new Error('Email is required for registration')

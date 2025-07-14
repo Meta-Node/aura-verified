@@ -1,4 +1,4 @@
-import type { EvaluationCategory } from '@/utils/aura'
+import type { EvaluationCategory } from '@/utils/aura.js'
 
 interface Impact {
   evaluator: string
@@ -46,7 +46,7 @@ interface RecoveryConnection {
   activeAfter: number
 }
 
-interface Profile {
+export interface Profile {
   id: string
   sponsored: boolean
   verifications: Verification[]

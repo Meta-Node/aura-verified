@@ -1,8 +1,8 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
-import { usersTable } from './lib/schema.js'
+import * as crypto from 'crypto'
 import { eq } from 'drizzle-orm'
 import { db } from './lib/db.js'
-import * as crypto from 'crypto'
+import { usersTable } from './lib/schema.js'
 
 function createBrightId(email: string) {
   const secretKey = process.env['SECRET_KEY']
@@ -24,7 +24,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const result = await db.select().from(usersTable).where(eq(usersTable.id, hashedEmail))
 
-  if (!result.length) {
+  if (result.length === 0) {
     const brightId = createBrightId(email)
 
     await db.insert(usersTable).values({
@@ -38,6 +38,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return
   }
   res.json({
-    id: res[0].id as string
+    id: result[0].id
   })
 }

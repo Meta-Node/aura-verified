@@ -1,15 +1,10 @@
-import { css, html, LitElement, type CSSResultGroup } from 'lit'
-import { customElement } from 'lit/decorators.js'
+import appleIcon from '@/assets/icons/apple.svg'
 import externalLinkIcon from '@/assets/icons/external-link.svg'
 import googleIcon from '@/assets/icons/google.svg'
-import appleIcon from '@/assets/icons/apple.svg'
 import spinnerIcon from '@/assets/icons/spinner.svg'
-import { SignalWatcher } from '@lit-labs/signals'
-import { inputText, isLoginLoading } from '@/states/login'
-import { clientAPI } from '@/utils/apis'
-import { pushRouter, router } from '@/router'
-import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
+import { pushRouter } from '@/router'
+import { inputText, isLoginLoading } from '@/states/login'
 import {
   userBrightId,
   userEmail,
@@ -18,6 +13,11 @@ import {
   userPhoneNumber,
   userProfilePicture
 } from '@/states/user'
+import { clientAPI } from '@/utils/apis'
+import { SignalWatcher } from '@lit-labs/signals'
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
+import { css, html, LitElement, type CSSResultGroup } from 'lit'
+import { customElement } from 'lit/decorators.js'
 
 const generateUUID = () => {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {
@@ -284,7 +284,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
   }
 
   private async createBrightId(email: string) {
-    const res = await clientAPI.POST('/users/login', {
+    const res = await clientAPI.POST('/login', {
       body: {
         email,
         integration: 'email'

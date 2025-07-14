@@ -22,7 +22,7 @@
         "tags": ["Users"]
       }
     },
-    "/users/login": {
+    "/login": {
       "post": {
         "operationId": "UsersController_login",
         "parameters": [],

@@ -20,7 +20,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/users/login": {
+    "/login": {
         parameters: {
             query?: never;
             header?: never;

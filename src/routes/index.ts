@@ -291,7 +291,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
       }
     })
 
-    if (res.response.status === 201 && res.data) {
+    if (res.response.status === 200 && res.data) {
       userEmail.set(email)
 
       const { id } = res.data

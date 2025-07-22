@@ -1,8 +1,8 @@
-import createClient from 'openapi-fetch'
 import type { paths } from '@/lib/schema'
 import type { BrightID } from '@/types/brightid'
-import { QueryClient } from '@tanstack/query-core'
 import type { Project } from '@/types/projects'
+import { QueryClient } from '@tanstack/query-core'
+import createClient from 'openapi-fetch'
 
 export const clientAPI = createClient<paths>({
   baseUrl: '/api'

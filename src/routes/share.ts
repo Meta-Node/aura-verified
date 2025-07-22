@@ -1,16 +1,29 @@
-import { css, html, LitElement, type CSSResultGroup } from 'lit'
-import { customElement } from 'lit/decorators.js'
-import googleIcon from '@/assets/icons/google.svg'
-import appleIcon from '@/assets/icons/apple.svg'
-import contactsIcon from '@/assets/icons/contacts.svg'
 import moreIcon from '@/assets/icons/thirdparties/more.svg'
 import smsIcon from '@/assets/icons/thirdparties/sms.svg'
 import telegramIcon from '@/assets/icons/thirdparties/telegram.svg'
 import whatsappIcon from '@/assets/icons/thirdparties/whatsapp.svg'
 import xIcon from '@/assets/icons/thirdparties/x.svg'
-import QrCodeWithLogo from 'qrcode-with-logos'
 import { userBrightId } from '@/states/user'
 import { signal, SignalWatcher } from '@lit-labs/signals'
+import { css, html, LitElement, type CSSResultGroup } from 'lit'
+import { customElement } from 'lit/decorators.js'
+import QrCodeWithLogo from 'qrcode-with-logos'
+
+const gravatarEmail = signal('')
+
+const nickname = signal('')
+
+const hashedEmail = signal('')
+
+const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+
+async function getGravatarHash(email: string) {
+  const msgBuffer = new TextEncoder().encode(email.trim().toLowerCase())
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer)
+  return Array.from(new Uint8Array(hashBuffer))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('')
+}
 
 @customElement('share-page')
 export class SharePage extends SignalWatcher(LitElement) {
@@ -242,11 +255,35 @@ export class SharePage extends SignalWatcher(LitElement) {
       font-size: 0.875rem;
       margin-top: 0.25rem;
     }
+
+    .share-input {
+      display: block;
+      width: 100%;
+      background: rgba(46, 51, 90, 0.26);
+      border: none;
+      outline: none;
+      height: 40px;
+      font-size: 1.05rem;
+      border-radius: 5px;
+      margin-bottom: 12px;
+      color: white;
+      padding: 0 10px;
+    }
+    label {
+      display: block;
+      text-align: left;
+      margin-bottom: 2px;
+      font-size: small;
+    }
   `
 
   constructor() {
     super()
 
+    this.generateQRCodeLink()
+  }
+
+  protected generateQRCodeLink() {
     const qrCode = new QrCodeWithLogo({
       width: 300,
       content: this.profileLink,
@@ -266,7 +303,43 @@ export class SharePage extends SignalWatcher(LitElement) {
   }
 
   private get profileLink() {
-    return `https://aura.brightid.org/subject/${userBrightId.get()}/`
+    let queryParams = ''
+
+    if (this.isEmailValid()) {
+      queryParams = '?gravatar=' + hashedEmail.get()
+    }
+    const name = nickname.get()
+    if (name) {
+      queryParams = queryParams.length > 0 ? queryParams + '&name=' + name : '?name=' + name
+    }
+
+    return `https://aura.brightid.org/subject/${userBrightId.get()}/` + queryParams
+  }
+
+  private isEmailValid() {
+    return emailRegex.test(gravatarEmail.get())
+  }
+
+  private onNicknameChange(event: InputEvent) {
+    if (!event.target || !('value' in event.target)) return
+
+    nickname.set(event.target.value as string)
+    this.generateQRCodeLink()
+  }
+
+  private onEmailChange(event: InputEvent) {
+    if (!event.target || !('value' in event.target)) return
+
+    gravatarEmail.set(event.target.value as string)
+    if (this.isEmailValid()) {
+      getGravatarHash(event.target.value as string).then((res) => {
+        hashedEmail.set(res)
+        this.generateQRCodeLink()
+      })
+    } else {
+      this.generateQRCodeLink()
+      hashedEmail.set('')
+    }
   }
 
   linkImage = signal('')
@@ -315,55 +388,28 @@ export class SharePage extends SignalWatcher(LitElement) {
       <main class="main-content">
         <div class="header">
           <h1 class="title">Find Verifiers</h1>
-          <!-- <p class="subtitle">Found 2 verifiers. 1 evaluated you.</p> -->
-          <p class="text-muted">Need at least 1 more evaluation to level up</p>
+          <p class="text-muted">
+            Share your profile to relative aura players and ask for evaluation
+          </p>
         </div>
 
-        <!-- <div class="card">
-          <div class="card-header">
-            <div class="icon-wrapper">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect x="3" y="4" width="18" height="16" rx="2" stroke="white" strokeWidth="2" />
-                <circle cx="9" cy="10" r="2" stroke="white" strokeWidth="2" />
-                <path d="M15 8H17" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                <path d="M15 12H17" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                <path d="M5 16H19" stroke="white" strokeWidth="2" strokeLinecap="round" />
-              </svg>
-            </div>
-            <div class="card-content">
-              <h2 class="card-title">Search Contacts for Verifiers</h2>
-              <p class="card-description">Discover who in your contacts is in Aura.</p>
-              <button class="link-button">Why is this private?</button>
-            </div>
-          </div>
+        <label for="gravatar-email"> Gravatar Email </label>
+        <input
+          id="gravatar-email"
+          placeholder="gravatar@email.com"
+          .value=${gravatarEmail.get()}
+          @change=${this.onEmailChange}
+          class="share-input"
+        />
 
-          <div class="platform-buttons">
-            <button class="platform-button">
-              <div class="platform-icon google">
-                <img src="${googleIcon}" width="24" height="24" alt="apple" />
-              </div>
-              <span class="platform-label">Google</span>
-            </button>
-            <button class="platform-button">
-              <div class="platform-icon apple">
-                <img src="${appleIcon}" width="24" height="24" alt="apple" />
-              </div>
-              <span class="platform-label">Apple</span>
-            </button>
-            <button class="platform-button">
-              <div class="platform-icon contacts">
-                <img src="${contactsIcon}" alt="contacts" />
-              </div>
-              <span class="platform-label">Contacts</span>
-            </button>
-          </div>
-        </div> -->
+        <label for="nickname"> Your nickname </label>
+        <input
+          .value=${nickname.get()}
+          @change=${this.onNicknameChange}
+          id="nickname"
+          placeholder="Your name"
+          class="share-input"
+        />
 
         <div class="qr-container">
           <div class="qr-code">

@@ -1,16 +1,14 @@
-import { css, html, LitElement, type CSSResultGroup } from 'lit'
-import { property, customElement } from 'lit/decorators.js'
-import levelImage from '@/assets/images/level.png'
-import thumbsUpImage from '@/assets/images/thumbs-up.png'
-import ratingImage from '@/assets/images/rating.png'
 import checkboxIcon from '@/assets/icons/checkbox-green.svg'
-import { getProjects, queryClient } from '@/utils/apis'
+import levelImage from '@/assets/images/level.png'
 import { projects } from '@/states/projects'
-import { getLevelupProgress } from '@/utils/score'
-import { EvaluationCategory } from '@/utils/aura'
 import { levelUpProgress } from '@/states/user'
-import { signal, SignalWatcher } from '@lit-labs/signals'
 import type { Project } from '@/types/projects'
+import { getProjects, queryClient } from '@/utils/apis'
+import { EvaluationCategory } from '@/utils/aura'
+import { getLevelupProgress } from '@/utils/score'
+import { signal, SignalWatcher } from '@lit-labs/signals'
+import { css, html, LitElement, type CSSResultGroup } from 'lit'
+import { customElement, property } from 'lit/decorators.js'
 
 const focusedProject = signal(null as Project | null)
 
@@ -108,7 +106,9 @@ export class VerificationPage extends SignalWatcher(LitElement) {
     }
 
     .image {
-      object-fit: cover;
+      object-fit: contain;
+      height: 208px;
+      width: 368px;
     }
 
     .level-requirement {
@@ -287,9 +287,8 @@ export class VerificationPage extends SignalWatcher(LitElement) {
 
         <div class="image-container">
           <img
-            src="/images/project-image.png?height=208&width=368"
+            src=${focusedProject.get()?.image ?? '/images/project-image.png?height=208&width=368'}
             alt="Business people in conversation"
-            fill
             class="image"
           />
         </div>

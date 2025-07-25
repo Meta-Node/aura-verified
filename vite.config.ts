@@ -11,6 +11,15 @@ export default defineConfig({
   define: {
     'process.env': {}
   },
-  plugins: [tsconfigPaths(), litHMRPlugin()]
+  plugins: [tsconfigPaths(), litHMRPlugin()],
+  server: {
+    proxy: {
+      '^/api(/.*)?$': {
+        target: 'https://aura-get-verified.vercel.app',
+        changeOrigin: true,
+        secure: process.env.NODE_ENV?.toLowerCase() !== 'development'
+      }
+    }
+  }
   // assetsInclude: ['**/*.html']
 })

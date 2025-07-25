@@ -1,21 +1,21 @@
-import '../components/common/verification-card.ts'
-import '../components/common/verification-card-skeleton.ts'
-import { css, html, LitElement, type CSSResultGroup } from 'lit'
-import { customElement } from 'lit/decorators.js'
 import '@/components/common/profile-card.ts'
+import { projects } from '@/states/projects'
 import {
   levelUpProgress,
   userEmail,
   userFirstName,
   userLastName,
   userProfilePicture
-} from '@/states/user.ts'
-import { getProjects, queryClient } from '@/utils/apis/index.ts'
+} from '@/states/user'
+import { getProjects, queryClient } from '@/utils/apis/index'
+import { EvaluationCategory } from '@/utils/aura'
+import { getLevelupProgress } from '@/utils/score'
 import { signal, SignalWatcher } from '@lit-labs/signals'
+import { css, html, LitElement, type CSSResultGroup } from 'lit'
+import { customElement } from 'lit/decorators.js'
 import { map } from 'lit/directives/map.js'
-import { projects } from '@/states/projects.ts'
-import { getLevelupProgress } from '@/utils/score.ts'
-import { EvaluationCategory } from '@/utils/aura.ts'
+import '../components/common/verification-card-skeleton.ts'
+import '../components/common/verification-card.ts'
 
 const isLoading = signal(true)
 

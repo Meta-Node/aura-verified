@@ -1,12 +1,12 @@
-import { css, html, LitElement } from 'lit'
-import { customElement, property } from 'lit/decorators.js'
-import profileIcon from '@/assets/icons/profile.svg'
-import { signal, SignalWatcher } from '@lit-labs/signals'
-import { getBrightId, queryClient } from '@/utils/apis'
-import { EvaluationCategory, getAuraVerification } from '@/utils/aura'
-import { compactFormat } from '@/utils/number'
 import { subjectLevelPoints } from '@/lib/data/levels'
 import { userBrightId } from '@/states/user'
+import { getBrightId, queryClient } from '@/utils/apis'
+import { EvaluationCategory, getAuraVerification } from '@/utils/aura'
+import { createBlockiesImage } from '@/utils/image'
+import { compactFormat } from '@/utils/number'
+import { signal, SignalWatcher } from '@lit-labs/signals'
+import { css, html, LitElement } from 'lit'
+import { customElement, property } from 'lit/decorators.js'
 
 const score = signal(0)
 const level = signal(0)
@@ -121,7 +121,7 @@ export class ProfileCard extends SignalWatcher(LitElement) {
   email = 'user@email.com'
 
   @property({})
-  image = profileIcon
+  image = createBlockiesImage(userBrightId.get())
 
   constructor() {
     super()

@@ -398,7 +398,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
           <h1 class="title">Aura Get Verified</h1>
           <p class="info-text">Decentralized verification platform</p>
 
-          <a href="/home" class="desc-btn">
+          <a href="https://brightid.gitbook.io/aura" target="_blank" class="desc-btn">
             <span>What is Aura?</span>
             <img src=${externalLinkIcon} alt="Aura" />
           </a>

@@ -14,5 +14,3 @@ export const userLevelPoints = {
   [EvaluationCategory.SUBJECT]: subjectLevelPoints,
   [EvaluationCategory.TRAINER]: trainerLevelPoints
 }
-
-export const getProgressPercentForLevel = () => {}

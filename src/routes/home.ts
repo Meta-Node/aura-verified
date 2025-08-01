@@ -2,6 +2,7 @@ import '@/components/common/profile-card.ts'
 import { projects } from '@/states/projects'
 import {
   levelUpProgress,
+  userBrightId,
   userEmail,
   userFirstName,
   userLastName,
@@ -9,6 +10,7 @@ import {
 } from '@/states/user'
 import { getProjects, queryClient } from '@/utils/apis/index'
 import { EvaluationCategory } from '@/utils/aura'
+import { createBlockiesImage } from '@/utils/image.js'
 import { getLevelupProgress } from '@/utils/score'
 import { signal, SignalWatcher } from '@lit-labs/signals'
 import { css, html, LitElement, type CSSResultGroup } from 'lit'
@@ -84,7 +86,7 @@ export class HomeElement extends SignalWatcher(LitElement) {
           .firstName=${userFirstName.get()}
           .lastName=${userLastName.get()}
           .email=${userEmail.get()}
-          .image=${userProfilePicture.get()}
+          .image=${userProfilePicture.get() || createBlockiesImage(userBrightId.get())}
         ></profile-card>
 
         <profile-card

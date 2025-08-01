@@ -9,6 +9,8 @@ import { css, html, LitElement, type CSSResultGroup } from 'lit'
 import { customElement } from 'lit/decorators.js'
 import QrCodeWithLogo from 'qrcode-with-logos'
 
+import '@/components/common/gravatar-profile'
+
 const gravatarEmail = signal('')
 
 const nickname = signal('')
@@ -305,15 +307,18 @@ export class SharePage extends SignalWatcher(LitElement) {
   private get profileLink() {
     let queryParams = ''
 
-    if (this.isEmailValid()) {
-      queryParams = '?gravatar=' + hashedEmail.get()
+    if (hashedEmail.get()) {
+      queryParams = '?gravatar=' + encodeURIComponent(hashedEmail.get())
     }
     const name = nickname.get()
     if (name) {
-      queryParams = queryParams.length > 0 ? queryParams + '&name=' + name : '?name=' + name
+      queryParams =
+        queryParams.length > 0 ? queryParams + '&name=' + encodeURIComponent(name) : '?name=' + name
     }
 
-    return `https://aura.brightid.org/subject/${userBrightId.get()}/` + queryParams
+    return (
+      `https://aura-dev.vercel.app/subject/${encodeURIComponent(userBrightId.get())}/` + queryParams
+    )
   }
 
   private isEmailValid() {
@@ -392,6 +397,8 @@ export class SharePage extends SignalWatcher(LitElement) {
             Share your profile to relative aura players and ask for evaluation
           </p>
         </div>
+
+        <gravatar-profile .hashedEmail=${hashedEmail.get()}></gravatar-profile>
 
         <label for="gravatar-email"> Gravatar Email </label>
         <input

@@ -18,7 +18,7 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
     {
       path: '/',
       enter: async () => {
-        await import('@/routes/index.ts')
+        await import('@/routes/index')
         return true
       },
       render: () => html`<home-page></home-page>`
@@ -72,6 +72,14 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
       render: () =>
         html`<share-page></share-page>
           <app-footer></app-footer> `
+    },
+    {
+      path: '/privacy-policy',
+      enter: async () => {
+        await import('@/routes/privacy-policy')
+        return true
+      },
+      render: () => html`<privacy-policy></privacy-policy> `
     },
     {
       path: '/profile',

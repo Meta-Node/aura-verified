@@ -11,9 +11,6 @@ Aura Get Verified ("we," "us," or "our") is committed to protecting your privacy
 
 ## Information We Collect
 - **Email Address**: When you sign up or log in using your email, Google, or Apple ID, we collect your email address.
-- **Hashed Email**: We create a unique identifier based on a hashed version of your email address for identity purposes.
-- **Verification Data**: Information provided by relatives or other Aura players evaluating your identity to determine if you are not a Sybil (fake account).
-- **Score and Level**: Each user’s profile includes a score and level reflecting their verification status within the Aura platform.
 
 ## How We Use Your Information
 - **Identity Creation**: The hashed email is used to create a unique identifier for your Aura profile.

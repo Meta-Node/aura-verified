@@ -29,126 +29,64 @@ export const getLevelupProgress = async ({
     throw new Error('Evaluation category is only supported for subject for now')
   }
 
-  let requirements: { reason: string; status: 'passed' | 'needs passing'; level: number }[] = []
+  const requirements: { reason: string; status: 'passed' | 'incomplete'; level: number }[] = []
   let percent = 0
   let isUnlocked = false
 
-  // Level 1
-  if (auraLevel === 1) {
-    // Score requirement
-    if (auraScore && auraScore >= 10000000) {
-      requirements.push({
-        reason: 'Score of 10M+ for levelup',
-        status: 'passed',
-        level: 2
-      })
-      // If user has enough score but still level 1, evaluation is missing
-      requirements.push({
-        reason: 'One low+ confidence evaluation from one level 1+ player',
-        status: 'needs passing',
-        level: 2
-      })
-    } else {
-      requirements.push({
-        reason: 'Score of 10M+ for levelup',
-        status: 'needs passing',
-        level: 2
-      })
-    }
+  const level = auraLevel || 0
 
-    percent = Math.round(
-      (requirements.filter((r) => r.status === 'passed').length / requirements.length) * 100
-    )
-    isUnlocked = requirements.every((r) => r.status === 'passed')
-    return { isUnlocked, percent, requirements }
-  }
+  const score = auraScore || 0
 
-  // Level 2
-  if (auraLevel === 2) {
-    if (auraScore && auraScore >= 50000000) {
-      requirements.push({
-        reason: 'Score of 50M+ for levelup',
-        status: 'passed',
-        level: 3
-      })
-    } else {
-      requirements.push({
-        reason: 'Score of 50M+ for levelup',
-        status: 'needs passing',
-        level: 3
-      })
-    }
-    requirements.push({
-      reason: 'One medium+ confidence evaluation from one level 1+ player',
-      status: 'needs passing',
-      level: 3
-    })
-    percent = Math.round(
-      (requirements.filter((r) => r.status === 'passed').length / requirements.length) * 100
-    )
-    isUnlocked = requirements.every((r) => r.status === 'passed')
-    return { isUnlocked, percent, requirements }
-  }
+  requirements.push({
+    reason: 'One low+ evaluation from a player',
+    status: level > 0 ? 'passed' : 'incomplete',
+    level: 1
+  })
 
-  // Level 3
-  if (auraLevel === 3) {
-    if (auraScore && auraScore >= 100000000) {
-      requirements.push({
-        reason: 'Score of 100M+ for levelup',
-        status: 'passed',
-        level: 4
-      })
-    } else {
-      requirements.push({
-        reason: 'Score of 100M+ for levelup',
-        status: 'needs passing',
-        level: 4
-      })
-    }
-    requirements.push({
-      reason:
-        'One high+ confidence evaluation from one level 2+ player OR two medium confidence evaluations from two level 2+ players',
-      status: 'needs passing',
-      level: 4
-    })
-    percent = Math.round(
-      (requirements.filter((r) => r.status === 'passed').length / requirements.length) * 100
-    )
-    isUnlocked = requirements.every((r) => r.status === 'passed')
-    return { isUnlocked, percent, requirements }
-  }
+  requirements.push({
+    reason: 'Score of 10M+ for levelup',
+    status: score > 10_000_000 ? 'passed' : 'incomplete',
+    level: 2
+  })
 
-  // Level 4
-  if (auraLevel === 4) {
-    if (auraScore && auraScore >= 150000000) {
-      requirements.push({
-        reason: 'Score of 150M+ for levelup',
-        status: 'passed',
-        level: 5
-      })
-    } else {
-      requirements.push({
-        reason: 'Score of 150M+ for levelup',
-        level: 5,
-        status: 'needs passing'
-      })
-    }
-    requirements.push({
-      reason:
-        'One high+ confidence evaluation from one level 3+ player OR two medium confidence evaluations from two level 3+ players',
-      level: 5,
-      status: 'needs passing'
-    })
-    percent = Math.round(
-      (requirements.filter((r) => r.status === 'passed').length / requirements.length) * 100
-    )
-    isUnlocked = requirements.every((r) => r.status === 'passed')
-    return { isUnlocked, percent, requirements }
-  }
+  const lowEvaluation = auraImpacts?.find((item) => item.level && item.level >= 1)
 
-  return {
-    isUnlocked: true,
-    percent: 100,
-    requirements: []
-  }
+  requirements.push({
+    reason: 'One low+ confidence evaluation from one level 1+ player',
+    status: lowEvaluation ? 'passed' : 'incomplete',
+    level: 2
+  })
+  requirements.push({
+    reason: 'Score of 50M+ for levelup',
+    status: score >= 50_000_000 ? 'passed' : 'incomplete',
+    level: 3
+  })
+
+  const mediumEvaluations =
+    auraImpacts?.filter((item) => item.level && item.level >= 1 && item.confidence >= 2).length ?? 0
+
+  requirements.push({
+    reason: 'One medium+ confidence evaluation from one level 1+ player',
+    status: mediumEvaluations > 0 ? 'passed' : 'incomplete',
+    level: 3
+  })
+
+  requirements.push({
+    reason: 'Score of 100M+ for levelup',
+    status: score >= 100_000_000 ? 'passed' : 'incomplete',
+    level: 4
+  })
+
+  const highEvaluations =
+    auraImpacts?.filter((item) => item.level && item.level >= 2 && item.confidence >= 3).length ?? 0
+
+  requirements.push({
+    reason:
+      'One high+ confidence evaluation from one level 2+ player OR two medium confidence evaluations from two level 2+ players',
+    status: highEvaluations > 0 || mediumEvaluations > 1 ? 'passed' : 'incomplete',
+    level: 4
+  })
+
+  isUnlocked = requirements.every((r) => r.status === 'passed')
+  return { isUnlocked, percent, requirements }
 }

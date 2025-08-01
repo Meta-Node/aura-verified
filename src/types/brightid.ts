@@ -8,14 +8,14 @@ interface Impact {
   level?: number
 }
 
-interface Category {
+export interface Category {
   name: string
   score: number
   level: number
   impacts: Impact[]
 }
 
-interface Domain {
+export interface Domain {
   name: string
   categories: Category[]
 }

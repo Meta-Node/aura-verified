@@ -1,4 +1,5 @@
 import '@/components/common/profile-card.ts'
+import { pushRouter } from '@/router.js'
 import { projects } from '@/states/projects'
 import {
   levelUpProgress,
@@ -60,6 +61,10 @@ export class HomeElement extends SignalWatcher(LitElement) {
 
   constructor() {
     super()
+
+    if (!userBrightId.get()) {
+      pushRouter('/')
+    }
   }
 
   connectedCallback(): void {

@@ -16,7 +16,7 @@ export const userPhoneNumber = localStorageSignal('_phoneNumber', '')
 export const levelUpProgress = signal(
   [] as {
     reason: string
-    status: 'passed' | 'needs passing'
+    status: 'passed' | 'incomplete'
     level: number
   }[]
 )

@@ -88,5 +88,8 @@ export const getLevelupProgress = async ({
   })
 
   isUnlocked = requirements.every((r) => r.status === 'passed')
+  percent = Math.round(
+    (requirements.filter((r) => r.status === 'passed').length / requirements.length) * 100
+  )
   return { isUnlocked, percent, requirements }
 }

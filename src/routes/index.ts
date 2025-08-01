@@ -482,7 +482,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
 
               <span class="brand-name">Bright ID</span>
             </div>
-            <a href="#" class="privacy">Privacy Policy</a>
+            <a href="/privacy-policy" class="privacy">Privacy Policy</a>
           </div>
         </div>
       </div>

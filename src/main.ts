@@ -2,20 +2,20 @@ import { LitElement, html } from 'lit'
 import { customElement } from 'lit/decorators.js'
 import './styles.css'
 
-import { createRouter } from '@/router.ts'
+import { createRouter } from '@/router'
 
 import './components/ui/layout.ts'
 
-import '@shoelace-style/shoelace/dist/themes/light.css'
-import '@shoelace-style/shoelace/dist/themes/dark.css'
 import '@shoelace-style/shoelace/dist/components/button/button.js'
 import '@shoelace-style/shoelace/dist/components/icon/icon.js'
 import '@shoelace-style/shoelace/dist/components/input/input.js'
 import '@shoelace-style/shoelace/dist/components/rating/rating.js'
+import '@shoelace-style/shoelace/dist/themes/dark.css'
+import '@shoelace-style/shoelace/dist/themes/light.css'
 
 import 'fa-icons'
-import { fetchNewNotifications } from './lib/notifications.ts'
-import { userBrightId } from './states/user.ts'
+import { fetchNewNotifications } from './lib/notifications'
+import { userBrightId } from './states/user'
 
 @customElement('my-app')
 export class MyApp extends LitElement {
@@ -35,12 +35,9 @@ export class MyApp extends LitElement {
 
     fetchNewNotifications(brightId)
 
-    this.interval = setInterval(
-      () => {
-        if (brightId) fetchNewNotifications(brightId)
-      },
-      5 * 60 * 1000
-    )
+    this.interval = setInterval(() => {
+      if (brightId) fetchNewNotifications(brightId)
+    }, 5 * 60 * 1000)
   }
 
   disconnectedCallback(): void {

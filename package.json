@@ -30,6 +30,7 @@
     "@lit-app/state": "^1.0.0",
     "@lit-labs/router": "^0.1.4",
     "@lit-labs/signals": "^0.1.2",
+    "@lit/task": "^1.0.3",
     "@neondatabase/serverless": "^1.0.1",
     "@shoelace-style/shoelace": "^2.20.1",
     "@tanstack/query-core": "^5.80.6",
@@ -39,6 +40,7 @@
     "fa-icons": "^0.2.0",
     "firebase": "^11.9.0",
     "lit": "^3.3.0",
+    "marked": "^16.1.1",
     "openapi-fetch": "^0.14.0",
     "qrcode-with-logos": "^1.1.1",
     "urlpattern-polyfill": "^10.1.0"

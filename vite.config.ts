@@ -14,6 +14,19 @@ export default defineConfig({
   plugins: [tsconfigPaths(), litHMRPlugin()],
   server: {
     proxy: {
+      '^/auranode(/.*)?$': {
+        target: 'https://aura-node.brightid.org',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/auranode/, ''),
+        secure: process.env.NODE_ENV?.toLowerCase() !== 'development'
+      },
+
+      '^/auranode-test(/.*)?$': {
+        target: 'https://aura-test.brightid.org',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/auranode-test/, ''), // Fixed regex
+        secure: process.env.NODE_ENV?.toLowerCase() !== 'development'
+      },
       '^/api(/.*)?$': {
         target: 'https://aura-get-verified.vercel.app',
         changeOrigin: true,

@@ -27,10 +27,10 @@ import {
   urlSafeRandomKey
 } from '@/utils/encoding'
 import '@a11d/lit-qr-code'
+import QrCodeWithLogo from 'qrcode-with-logos'
 
-const context = 'unitap'
-
-const brihgtIDQRLink = signal('')
+const brightIDQRLink = signal('')
+const brightIDQrImage = signal('')
 
 const interval = signal(null as null | number | NodeJS.Timeout)
 
@@ -42,12 +42,42 @@ export class BrightIDLoginElement extends SignalWatcher(LitElement) {
       color: #bfb3f8;
       font-weight: bold;
     }
+    a.back {
+      display: block;
+      margin-bottom: 12px;
+      text-align: left;
+    }
+
+    ol {
+      margin-top: 40px;
+    }
+
+    li {
+      margin: 12px;
+    }
+
+    .qr-code {
+      padding: 0;
+      border-radius: 20px;
+    }
+
+    .container {
+      position: relative;
+    }
+
+    .title {
+      margin: 40px;
+    }
+
+    .instructions {
+      text-align: left;
+    }
   `
 
   constructor() {
     super()
 
-    if (!brihgtIDQRLink.get()) this.setupBrightIDSuperAppLogin()
+    if (!brightIDQRLink.get()) this.setupBrightIDSuperAppLogin()
   }
 
   protected async setupRecovery() {
@@ -55,7 +85,7 @@ export class BrightIDLoginElement extends SignalWatcher(LitElement) {
 
     const key = await urlSafeRandomKey(16)
 
-    publicKey.set(_public.toString())
+    publicKey.set(_public)
     privateKey.set(btoa(uInt8ArrayToB64(_secret)))
     brightIDKeyGenerationTimestamp.set(Date.now())
 
@@ -67,8 +97,10 @@ export class BrightIDLoginElement extends SignalWatcher(LitElement) {
 
     const pubk = publicKey.get()
 
+    if (!pubk) return
+
     const dataObj = {
-      signingKey: pubk,
+      signingKey: uInt8ArrayToB64(pubk),
       timestamp: brightIDKeyGenerationTimestamp.get()
     }
 
@@ -103,10 +135,13 @@ export class BrightIDLoginElement extends SignalWatcher(LitElement) {
   protected async downloadBackup(channelId: string, aesKey: string, dataIds: Array<string>) {
     const prefix = `${IMPORT_PREFIX}userinfo_`
     const signingKey = publicKey.get()
+
+    if (!signingKey) return
     const isUserInfo = (id: string) => id.startsWith(prefix)
     const uploader = (id: string) => id.replace(prefix, '').split(':')[1]
     const userInfoDataId = dataIds.find(
-      (dataId) => isUserInfo(dataId) && uploader(dataId) !== b64ToUrlSafeB64(signingKey)
+      (dataId) =>
+        isUserInfo(dataId) && uploader(dataId) !== b64ToUrlSafeB64(uInt8ArrayToB64(signingKey))
     )
     if (!userInfoDataId) {
       return false
@@ -163,7 +198,7 @@ export class BrightIDLoginElement extends SignalWatcher(LitElement) {
 
   protected generateBrightIDQRCodeShare() {
     const baseUrl = AURA_NODE_URL_PROXY
-    const url = new URL(`${location + baseUrl}/profile`)
+    const url = new URL(`${location.origin + baseUrl}/profile`)
 
     if (aesKey.get()) {
       const channelUrl = url.href
@@ -189,12 +224,36 @@ export class BrightIDLoginElement extends SignalWatcher(LitElement) {
         name: `Aura Get Verified ${deviceInfo}`
       })
 
-      brihgtIDQRLink.set(newQrUrl.href)
+      const link = `https://app.brightid.org/connection-code/${encodeURIComponent(newQrUrl.href)}`
+
+      const qrCode = new QrCodeWithLogo({
+        width: 350,
+        content: link,
+        logo: {
+          src: '/images/brightid-qrcode-logo.svg',
+          bgColor: '#333',
+          borderWidth: 5
+        },
+        cornersOptions: {
+          radius: 50
+        },
+        nodeQrCodeOptions: {},
+        dotsOptions: {
+          color: '#111',
+          type: 'dot-small'
+        }
+      })
+
+      qrCode.getImage().then((res) => {
+        brightIDQrImage.set(res.src)
+      })
+
+      brightIDQRLink.set(link)
     }
   }
 
   protected async setupBrightIDSuperAppLogin() {
-    if (!privateKey.get() || !aesKey.get() || !publicKey.get()) this.setupRecovery()
+    if (!privateKey.get() || !aesKey.get() || !publicKey.get()) await this.setupRecovery()
 
     this.generateBrightIDQRCodeShare()
 
@@ -226,8 +285,21 @@ export class BrightIDLoginElement extends SignalWatcher(LitElement) {
   }
 
   protected render() {
-    return html` <a href="/">Back</a>
+    return html`
+      <a class="back" href="/">Back</a>
 
-      <lit-qr-code .value=${brihgtIDQRLink.get()} color="dark"></lit-qr-code>`
+      <h1 class="title">Login with BrightID</h1>
+      <div class="container">
+        <img class="qr-code" .src=${brightIDQrImage.get()} />
+      </div>
+      <div class="instructions">
+        <p>Steps to complete:</p>
+
+        <ol>
+          <li>Download the brightid application from here: <a href="#">Link</a></li>
+          <li>Scan the qr code above or click <a href="#">Here</a> to open the app</li>
+        </ol>
+      </div>
+    `
   }
 }

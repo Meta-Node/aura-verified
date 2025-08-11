@@ -1,13 +1,27 @@
 import { signal, SignalWatcher } from '@lit-labs/signals'
-import { generateDeeplink } from 'brightid_sdk_v6/dist/appMethods'
 import { css, CSSResultGroup, html, LitElement } from 'lit'
 import { customElement } from 'lit/decorators.js'
+import platform from 'platform'
 import nacl from 'tweetnacl'
-import { v4 as uuidv4 } from 'uuid'
 
-import { aesKey, privateKey, publicKey } from '@/lib/data/brightid'
+import { AURA_NODE_URL, AURA_NODE_URL_PROXY } from '@/lib/constants/domains'
+import { IMPORT_PREFIX, RECOVERY_CHANNEL_TTL } from '@/lib/constants/time'
+import {
+  aesKey,
+  brightIDKeyGenerationTimestamp,
+  privateKey,
+  publicKey,
+  recoveryId
+} from '@/lib/data/brightid'
+import { pushRouter } from '@/router'
+import { userBrightId, userFirstName } from '@/states/user'
+import { auraNodeAPI } from '@/utils/apis'
+import { buildRecoveryChannelQrUrl, urlTypesOfActions } from '@/utils/brightid'
+import { decryptData } from '@/utils/decoding'
 import {
   b64ToUint8Array,
+  b64ToUrlSafeB64,
+  hash,
   UInt8ArrayEqual,
   uInt8ArrayToB64,
   urlSafeRandomKey
@@ -18,7 +32,7 @@ const context = 'unitap'
 
 const brihgtIDQRLink = signal('')
 
-const interval = signal(null as null | number)
+const interval = signal(null as null | number | NodeJS.Timeout)
 
 @customElement('brightid-login')
 export class BrightIDLoginElement extends SignalWatcher(LitElement) {
@@ -33,7 +47,7 @@ export class BrightIDLoginElement extends SignalWatcher(LitElement) {
   constructor() {
     super()
 
-    if (!brihgtIDQRLink.get()) this.generateBrightIDLink()
+    if (!brihgtIDQRLink.get()) this.setupBrightIDSuperAppLogin()
   }
 
   protected async setupRecovery() {
@@ -43,11 +57,81 @@ export class BrightIDLoginElement extends SignalWatcher(LitElement) {
 
     publicKey.set(_public.toString())
     privateKey.set(btoa(uInt8ArrayToB64(_secret)))
+    brightIDKeyGenerationTimestamp.set(Date.now())
 
     aesKey.set(key)
   }
 
-  protected createRecoveryChannel(location: string) {}
+  protected async createRecoveryChannel(location: string) {
+    const channelId = hash(aesKey.get())
+
+    const pubk = publicKey.get()
+
+    const dataObj = {
+      signingKey: pubk,
+      timestamp: brightIDKeyGenerationTimestamp.get()
+    }
+
+    const requestedTtl = RECOVERY_CHANNEL_TTL
+
+    const requestedTtlSecs = requestedTtl ? Math.floor(requestedTtl / 1000) : undefined
+
+    const body = {
+      data: dataObj,
+      uuid: 'data',
+      requestedTtl: requestedTtlSecs
+    }
+
+    let retries = 0
+    let result = await auraNodeAPI.POST(`/upload/${channelId}` as never, { body } as never)
+  }
+
+  protected async checkRecoveryState() {
+    const channelId = hash(aesKey.get())
+
+    const listRes = await auraNodeAPI.GET(`/list/${channelId}` as never)
+
+    const data: any | undefined = listRes.data
+
+    if (!!data && 'profileIds' in data) {
+      return data.profileIds
+    } else {
+      throw new Error(`list for channel ${channelId}: Unexpected response format`)
+    }
+  }
+
+  protected async downloadBackup(channelId: string, aesKey: string, dataIds: Array<string>) {
+    const prefix = `${IMPORT_PREFIX}userinfo_`
+    const signingKey = publicKey.get()
+    const isUserInfo = (id: string) => id.startsWith(prefix)
+    const uploader = (id: string) => id.replace(prefix, '').split(':')[1]
+    const userInfoDataId = dataIds.find(
+      (dataId) => isUserInfo(dataId) && uploader(dataId) !== b64ToUrlSafeB64(signingKey)
+    )
+    if (!userInfoDataId) {
+      return false
+    }
+
+    const res = await auraNodeAPI.GET(`/download/${channelId}/${userInfoDataId}` as never)
+
+    const encryptedData: any | undefined = res.data
+
+    if (!encryptedData?.data) return false
+
+    await auraNodeAPI.DELETE(`/${channelId}/${userInfoDataId}` as never)
+
+    const info = decryptData(encryptedData.data, aesKey)
+
+    recoveryId.set(info.id)
+    if (info.name) {
+      userFirstName.set(info.name)
+    }
+
+    console.log({ info })
+    userBrightId.set(info.id)
+
+    return true
+  }
 
   protected verifyKeyPair(publicKey: string, pk: Uint8Array) {
     let pubKeyUInt8: Uint8Array
@@ -77,14 +161,59 @@ export class BrightIDLoginElement extends SignalWatcher(LitElement) {
     }
   }
 
-  protected generateBrightIDLink() {
-    const contextId = uuidv4()
-    const deepLink = generateDeeplink(context, contextId)
+  protected generateBrightIDQRCodeShare() {
+    const baseUrl = AURA_NODE_URL_PROXY
+    const url = new URL(`${location + baseUrl}/profile`)
 
-    brihgtIDQRLink.set(deepLink)
+    if (aesKey.get()) {
+      const channelUrl = url.href
+      const browser = platform.name
+      const os = platform.os?.family
+      const now = new Date()
+      const monthYear = now.toLocaleString('en-US', {
+        month: 'short',
+        year: 'numeric'
+      })
+
+      const deviceInfo = `${browser} ${os} ${monthYear}`
+
+      const newQrUrl = buildRecoveryChannelQrUrl({
+        aesKey: aesKey.get(),
+        url: channelUrl.startsWith('/')
+          ? {
+              href: channelUrl.replace(AURA_NODE_URL_PROXY, AURA_NODE_URL)
+            }
+          : { href: channelUrl },
+        t: urlTypesOfActions['superapp'],
+        changePrimaryDevice: false,
+        name: `Aura Get Verified ${deviceInfo}`
+      })
+
+      brihgtIDQRLink.set(newQrUrl.href)
+    }
   }
 
-  protected async onFetchSponsorStatus() {}
+  protected async setupBrightIDSuperAppLogin() {
+    if (!privateKey.get() || !aesKey.get() || !publicKey.get()) this.setupRecovery()
+
+    this.generateBrightIDQRCodeShare()
+
+    await this.createRecoveryChannel(window.location.href)
+
+    interval.set(
+      setInterval(async () => {
+        const res = await this.checkRecoveryState()
+
+        const channelId = hash(aesKey.get())
+
+        const isCompleted = await this.downloadBackup(channelId, aesKey.get(), res)
+
+        if (isCompleted) {
+          pushRouter('/home')
+        }
+      }, 5000)
+    )
+  }
 
   protected clearInterval() {
     if (!interval.get()) return

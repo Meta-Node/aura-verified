@@ -1,4 +1,5 @@
 import appleIcon from '@/assets/icons/apple.svg'
+import brightIDIcon from '@/assets/icons/brightid.svg'
 import externalLinkIcon from '@/assets/icons/external-link.svg'
 import googleIcon from '@/assets/icons/google.svg'
 import spinnerIcon from '@/assets/icons/spinner.svg'
@@ -200,6 +201,20 @@ export class LoginPage extends SignalWatcher(LitElement) {
       color: #fff;
       border: 1px solid #545454;
     }
+    .btn-brightid {
+      background: #202020;
+      color: white;
+      transition: all;
+      border: 1px solid #545454;
+    }
+
+    .btn-brightid:hover {
+      background: #1f1f1f;
+    }
+
+    .btn-brightid .btn-icon {
+      margin-bottom: 0;
+    }
     .btn-icon {
       margin-right: 15px;
       margin-bottom: 5px;
@@ -348,6 +363,10 @@ export class LoginPage extends SignalWatcher(LitElement) {
     }
   }
 
+  private async signInWithBrightID() {
+    pushRouter('/brightid')
+  }
+
   private async signInWithApple() {
     isLoginLoading.set(true)
     try {
@@ -453,6 +472,13 @@ export class LoginPage extends SignalWatcher(LitElement) {
                   <img src="${appleIcon}" alt="Apple" />
                 </div>
                 Sign in with Apple
+              </button>
+
+              <button @click=${
+                this.signInWithBrightID
+              } id="brightid-signin" data-color="black" data-border="true" data-type="sign in" class="btn-brightid btn">
+                  <img class="btn-icon" width="20" height="20" src="${brightIDIcon}" alt="bright id" />
+                Sign in with BrightID
               </button>
 
               <p class="form-footer">By Signing in you will agree to our privacy policy</p>

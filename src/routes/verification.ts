@@ -319,7 +319,7 @@ export class VerificationPage extends SignalWatcher(LitElement) {
 
                 ${levelUpProgress
                   .get()
-                  .filter((item) => item.level <= focusedProject.get()!.requirementLevel)
+                  .filter((item) => item.level >= focusedProject.get()!.requirementLevel)
                   .map(
                     (req, idx) => html`
                       <div class="step">

@@ -92,14 +92,20 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
           <app-footer></app-footer> `
     },
     {
+      path: '/brightid',
+      enter: async () => {
+        await import('@/routes/brightid')
+        return true
+      },
+      render: () => html`<brightid-login></brightid-login>`
+    },
+    {
       path: '*',
       enter: async () => {
         await import('@/routes/not-found')
         return true
       },
-      render: () =>
-        html`<not-found></not-found>
-          <app-footer></app-footer> `
+      render: () => html`<not-found></not-found>`
     }
   ])
 

@@ -94,7 +94,7 @@ export class ContactsSection extends SignalWatcher(LitElement) {
       for (const hash of curr) {
         prev[hash] = {
           name: contact?.names.at(0)?.displayName,
-          value: infos[index]
+          value: infos[count]?.value
         }
 
         count++

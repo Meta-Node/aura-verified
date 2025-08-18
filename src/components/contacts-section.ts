@@ -65,6 +65,35 @@ export class ContactsSection extends SignalWatcher(LitElement) {
       border: none;
       color: white;
     }
+
+    .contact-card {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 10px;
+      margin: 8px;
+      background: #ffffff1a;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .contact-header {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #ffffff;
+      margin: 0 0 8px;
+    }
+
+    .contact-value {
+      font-size: 1rem;
+      color: #cfcfcf;
+      margin: 0;
+    }
+
+    hr {
+      border-color: #45454b;
+      margin: 20px;
+    }
   `
 
   constructor() {
@@ -125,6 +154,16 @@ export class ContactsSection extends SignalWatcher(LitElement) {
     foundAuraPlayersFromContact.set(importedContacts)
   }
 
+  protected openContactMethod(contact: string): void {
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(contact)) {
+      window.location.href = `mailto:${contact}`
+    } else if (/^\+?[\d\s-]{10,}$/.test(contact)) {
+      window.location.href = `sms:${contact}`
+    } else {
+      console.error('Invalid email or phone number')
+    }
+  }
+
   protected render() {
     return html` <div class="card">
       <div class="title">
@@ -133,26 +172,33 @@ export class ContactsSection extends SignalWatcher(LitElement) {
       </div>
 
       <p class="muted">Discover who in your contacts is in Aura.</p>
-      <p class="muted text-xs">This is completely private, <a href="#">learn more</a></p>
 
       ${isTried.get() && foundAuraPlayersFromContact.get().length === 0
         ? html`<p>No Contacts Found in aura</p>`
-        : null}
+        : foundAuraPlayersFromContact.get().length > 0
+        ? html`<p>Aura Players List</p>`
+        : ``}
       ${map(
         foundAuraPlayersFromContact.get(),
         (contact) => html`
-          <div>
-            <h5>${contact.name}</h5>
-            <p>${contact.value}</p>
+          <div class="contact-card">
+            <div>
+              <h5 class="contact-header">${contact.name}</h5>
+              <p class="contact-value">${contact.value}</p>
+            </div>
+            <button @click=${this.openContactMethod.bind(null, contact.value)}>Contact</button>
           </div>
         `
       )}
+      <hr />
       <div class="integrations">
         <button @click=${this.onGoogleContactsClick}>
           <img .src=${googleIcon} width="39" height="39px" alt="google" />
           <p>Google</p>
         </button>
       </div>
+
+      <p class="muted text-xs">This is completely private, <a href="#">learn more</a></p>
     </div>`
   }
 }

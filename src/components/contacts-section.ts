@@ -116,7 +116,7 @@ export class ContactsSection extends SignalWatcher(LitElement) {
 
     isTried.set(true)
 
-    const players = (playersFetch as { data: string[] }).data
+    const players = (playersFetch as { data: { hash: string }[] }).data.map((item) => item.hash)
 
     const importedContacts = players.map((hash) => {
       return contactsHashMap[hash]

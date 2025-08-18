@@ -1,8 +1,8 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
-import { db } from './lib/db'
-import { auraPlayersSocialTable } from './lib/schema'
+import { db } from './lib/db.js'
+import { auraPlayersSocialTable } from './lib/schema.js'
 
 const hashSchema = z.string().regex(/^\$2[ab]\$[0-9]{2}\$[A-Za-z0-9./]{53}$/, 'Invalid bcrypt hash')
 

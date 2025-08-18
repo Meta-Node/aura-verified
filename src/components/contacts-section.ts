@@ -6,9 +6,12 @@ import { extractHashsedSocialsFromContact } from '@/utils/integrations/contacts'
 import { getContactsList } from '@/utils/integrations/google'
 // import appleIcon from '@/assets/icons/apple.svg'
 
-import { SignalWatcher } from '@lit-labs/signals'
+import { signal, SignalWatcher } from '@lit-labs/signals'
 import { css, CSSResultGroup, html, LitElement } from 'lit'
 import { customElement } from 'lit/decorators.js'
+import { map } from 'lit/directives/map.js'
+
+const isTried = signal(false)
 
 @customElement('contacts-section')
 export class ContactsSection extends SignalWatcher(LitElement) {
@@ -111,6 +114,8 @@ export class ContactsSection extends SignalWatcher(LitElement) {
 
     if (!playersFetch.data) return
 
+    isTried.set(true)
+
     const players = (playersFetch as { data: string[] }).data
 
     const importedContacts = players.map((hash) => {
@@ -130,6 +135,18 @@ export class ContactsSection extends SignalWatcher(LitElement) {
       <p class="muted">Discover who in your contacts is in Aura.</p>
       <p class="muted text-xs">This is completely private, <a href="#">learn more</a></p>
 
+      ${isTried.get() && foundAuraPlayersFromContact.get().length === 0
+        ? html`<p>No Contacts Found in aura</p>`
+        : null}
+      ${map(
+        foundAuraPlayersFromContact.get(),
+        (contact) => html`
+          <div>
+            <h5>${contact.name}</h5>
+            <p>${contact.value}</p>
+          </div>
+        `
+      )}
       <div class="integrations">
         <button @click=${this.onGoogleContactsClick}>
           <img .src=${googleIcon} width="39" height="39px" alt="google" />

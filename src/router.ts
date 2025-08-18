@@ -82,6 +82,14 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
       render: () => html`<privacy-policy></privacy-policy> `
     },
     {
+      path: '/dev',
+      enter: async () => {
+        await import('@/routes/dev')
+        return true
+      },
+      render: () => html`<dev-page></dev-page> `
+    },
+    {
       path: '/profile',
       enter: async () => {
         await import('@/routes/profile')

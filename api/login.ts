@@ -4,6 +4,8 @@ import { eq } from 'drizzle-orm'
 import { db } from './lib/db.js'
 import { usersTable } from './lib/schema.js'
 
+const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+
 function createBrightId(email: string) {
   const secretKey = process.env['SECRET_KEY']
 
@@ -19,6 +21,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const { email, integration } = req.body
+
+  if (!email || !emailRegex.test(email)) {
+    res.status(400).send('Email is Required')
+    return
+  }
 
   const hashedEmail = createBrightId(email)
 

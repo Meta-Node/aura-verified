@@ -18,7 +18,7 @@ import { clientAPI } from '@/utils/apis'
 import { SignalWatcher } from '@lit-labs/signals'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { css, html, LitElement, type CSSResultGroup } from 'lit'
-import { customElement } from 'lit/decorators.js'
+import { customElement, property } from 'lit/decorators.js'
 
 const generateUUID = () => {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {
@@ -44,6 +44,11 @@ declare const AppleID: any
 
 @customElement('home-page')
 export class LoginPage extends SignalWatcher(LitElement) {
+  @property({
+    type: Boolean
+  })
+  withoutTitle: boolean = false
+
   constructor() {
     super()
     AppleID.auth.init({
@@ -180,6 +185,12 @@ export class LoginPage extends SignalWatcher(LitElement) {
       margin: 24px 0;
     }
 
+    .mini-divider {
+      margin: 24px 0;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #a5a5a575;
+    }
+
     .btn-google,
     .btn-apple {
       display: flex;
@@ -194,7 +205,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
     .btn-google {
       background: #fff;
       color: #000;
-      border: none;
+      border: 1px solid #5c5c5c;
     }
     .btn-apple {
       background: #000;
@@ -217,7 +228,6 @@ export class LoginPage extends SignalWatcher(LitElement) {
     }
     .btn-icon {
       margin-right: 15px;
-      margin-bottom: 5px;
       height: 24px;
       width: 24px;
     }
@@ -282,6 +292,22 @@ export class LoginPage extends SignalWatcher(LitElement) {
       animation: spin 1s linear infinite;
     }
 
+    .mini-integrations {
+      display: flex;
+      gap: 5px;
+    }
+
+    .mini-integrations button {
+      justify-content: center !important;
+      height: 50px !important;
+      margin-bottom: 0 !important;
+      padding: 0 !important;
+    }
+
+    .mini-integrations button .btn-icon {
+      margin: 0 !important;
+    }
+
     @keyframes spin {
       0% {
         transform: rotate(0deg);
@@ -324,7 +350,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
     try {
       const res = await this.createBrightId(email)
 
-      if (res) {
+      if (res && !this.withoutTitle) {
         pushRouter('/home')
       }
     } catch (e) {
@@ -356,7 +382,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
       userProfilePicture.set(res.user.photoURL ?? '')
       userPhoneNumber.set(res.user.phoneNumber ?? '')
 
-      pushRouter('/home')
+      if (!this.withoutTitle) pushRouter('/home')
     } catch (error) {
       console.error('Error signing in with Google:', error)
       isLoginLoading.set(false)
@@ -364,7 +390,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
   }
 
   private async signInWithBrightID() {
-    pushRouter('/brightid')
+    if (!this.withoutTitle) pushRouter('/brightid')
   }
 
   private async signInWithApple() {
@@ -409,6 +435,84 @@ export class LoginPage extends SignalWatcher(LitElement) {
   }
 
   render() {
+    if (this.withoutTitle) {
+      return html` <div class="">
+        ${isLoginLoading.get()
+          ? html`
+              <div class="loading-wrapper">
+                <div>
+                  <h2>Signing Up</h2>
+                  <img src="${spinnerIcon}" alt="spinner" />
+                </div>
+              </div>
+            `
+          : html`
+              <h2 class="form-title">Sign In</h2>
+              <p class="form-desc">Use one of these integrations to login</p>
+              <div class="email-wrapper">
+                <div class="email-icon">
+                  <fa-icon class="fas fa-envelope" color="#2980B9"></fa-icon>
+                </div>
+                <input
+                  .value="${inputText.get()}"
+                  @change=${this.onInputChange}
+                  type="email"
+                  placeholder="Enter your email"
+                  class="email-input"
+                />
+              </div>
+
+              <button
+                @click=${this.onSubmit}
+                .disabled=${isLoginLoading.get()}
+                class="btn btn-email"
+              >
+                Sign in with Email
+              </button>
+
+              <div class="mini-divider">Or</div>
+
+              <div class="mini-integrations">
+                <button @click=${this.signInWithGoogle} class="btn-google btn">
+                  <div class="btn-icon">
+                    <img src="${googleIcon}" width="24" height="24" alt="Google" />
+                  </div>
+                </button>
+
+                <button
+                  @click=${this.signInWithApple}
+                  id="appleid-signin"
+                  data-color="black"
+                  data-border="true"
+                  data-type="sign in"
+                  class="btn-apple btn"
+                >
+                  <div class="btn-icon">
+                    <img src="${appleIcon}" width="24" height="24" alt="Apple" />
+                  </div>
+                </button>
+
+                <button
+                  @click=${this.signInWithBrightID}
+                  id="brightid-signin"
+                  data-color="black"
+                  data-border="true"
+                  data-type="sign in"
+                  class="btn-brightid btn"
+                >
+                  <img
+                    class="btn-icon"
+                    width="20"
+                    height="20"
+                    src="${brightIDIcon}"
+                    alt="bright id"
+                  />
+                </button>
+              </div>
+            `}
+      </div>`
+    }
+
     return html`
       <div class="wrapper">
         <img src="/favicon.png" class="logo" alt="Aura" />
@@ -460,7 +564,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
 
               <button @click=${this.signInWithGoogle} class="btn-google btn">
                 <div class="btn-icon">
-                  <img src="${googleIcon}" alt="Google" />
+                  <img src="${googleIcon}" width="24" height="24" alt="Google" />
                 </div>
                 Sign in with Google
               </button>
@@ -469,7 +573,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
                 this.signInWithApple
               } id="appleid-signin" data-color="black" data-border="true" data-type="sign in" class="btn-apple btn">
                 <div class="btn-icon">
-                  <img src="${appleIcon}" alt="Apple" />
+                  <img src="${appleIcon}" width="24" height="24" alt="Apple" />
                 </div>
                 Sign in with Apple
               </button>

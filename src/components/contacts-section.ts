@@ -87,7 +87,7 @@ export class ContactsSection extends SignalWatcher(LitElement) {
     const contactsHashMap = hashContacts.reduce((prev, curr, index) => {
       const contact = res[index]
 
-      const infos = [...(contact?.emailAddresses ?? []), ...(contact?.emailAddresses ?? [])]
+      const infos = [...(contact?.phoneNumbers ?? []), ...(contact?.emailAddresses ?? [])]
 
       let count = 0
 

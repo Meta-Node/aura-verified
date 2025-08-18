@@ -10,6 +10,7 @@ import { customElement } from 'lit/decorators.js'
 import QrCodeWithLogo from 'qrcode-with-logos'
 
 import '@/components/common/gravatar-profile'
+import '@/components/contacts-section'
 
 const gravatarEmail = signal('')
 
@@ -397,6 +398,8 @@ export class SharePage extends SignalWatcher(LitElement) {
             Share your profile to relative aura players and ask for evaluation
           </p>
         </div>
+
+        <contacts-section></contacts-section>
 
         <gravatar-profile .hashedEmail=${hashedEmail.get()}></gravatar-profile>
 

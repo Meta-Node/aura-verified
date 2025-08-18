@@ -7,6 +7,10 @@ export const usersTable = pgTable('users', {
   integrations: varchar({ length: 255 }).notNull().array().default([])
 })
 
+export const auraPlayersSocialTable = pgTable('socialRecords', {
+  hash: varchar({ length: 300 }).primaryKey()
+})
+
 export const projectsTable = pgTable('projects', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: varchar({ length: 255 }).notNull(),

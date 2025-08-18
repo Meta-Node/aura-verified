@@ -1,5 +1,8 @@
 import contactsIcon from '@/assets/icons/contacts.svg'
 import googleIcon from '@/assets/icons/google.svg'
+import { contactsList, foundAuraPlayersFromContact, hashedContactsList } from '@/lib/data/contacts'
+import { clientAPI } from '@/utils/apis'
+import { extractHashsedSocialsFromContact } from '@/utils/integrations/contacts'
 import { getContactsList } from '@/utils/integrations/google'
 // import appleIcon from '@/assets/icons/apple.svg'
 
@@ -65,8 +68,56 @@ export class ContactsSection extends SignalWatcher(LitElement) {
     super()
   }
 
-  protected onGoogleContactsClick() {
-    getContactsList().then(console.log)
+  protected async onGoogleContactsClick() {
+    const res = await getContactsList()
+
+    if (!res?.length) return
+
+    contactsList.set(res)
+
+    const hashContacts = await Promise.all(
+      res.map((item) => extractHashsedSocialsFromContact(item))
+    )
+
+    hashedContactsList.set(hashContacts.flat())
+
+    const contactsHashMap = hashContacts.reduce((prev, curr, index) => {
+      const contact = res[index]
+
+      const infos = [...(contact?.emailAddresses ?? []), ...(contact?.emailAddresses ?? [])]
+
+      let count = 0
+
+      for (const hash of curr) {
+        prev[hash] = {
+          name: contact?.names.at(0)?.displayName,
+          value: infos[index]
+        }
+
+        count++
+      }
+
+      return prev
+    }, {} as Record<string, any>)
+
+    const playersFetch = await clientAPI.POST(
+      '/check-aura-player' as never,
+      {
+        body: {
+          hashes: hashedContactsList.get()
+        }
+      } as never
+    )
+
+    if (!playersFetch.data) return
+
+    const players = (playersFetch as { data: string[] }).data
+
+    const importedContacts = players.map((hash) => {
+      return contactsHashMap[hash]
+    })
+
+    foundAuraPlayersFromContact.set(importedContacts)
   }
 
   protected render() {

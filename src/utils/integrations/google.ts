@@ -1,5 +1,6 @@
 import { auth } from '@/lib/firebase'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
+import { Contact } from './contacts'
 
 export async function getContactsList() {
   const provider = new GoogleAuthProvider()
@@ -31,7 +32,8 @@ export async function getContactsList() {
     }
 
     const data = await response.json()
-    console.log(data.connections) // Here are your contacts!
+
+    return data.connections as Contact[]
   } catch (error) {
     console.error('Error during sign-in:', error)
   }

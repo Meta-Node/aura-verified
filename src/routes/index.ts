@@ -390,7 +390,12 @@ export class LoginPage extends SignalWatcher(LitElement) {
   }
 
   private async signInWithBrightID() {
-    if (!this.withoutTitle) pushRouter('/brightid')
+    if (!this.withoutTitle) {
+      pushRouter('/brightid')
+      return
+    }
+
+    this.dispatchEvent(new CustomEvent('onBrightLogin', { bubbles: true, composed: true }))
   }
 
   private async signInWithApple() {

@@ -8,6 +8,7 @@ import { signal, SignalWatcher } from '@lit-labs/signals'
 import { css, CSSResultGroup, html, LitElement } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 
+import '@/routes/brightid'
 import '@/routes/index'
 
 const focusedProject = signal(null as Project | null)
@@ -115,6 +116,10 @@ export class ProjectVerificationElement extends SignalWatcher(LitElement) {
     .back-btn:hover {
       background-color: #0d3466;
     }
+
+    .mt-5 {
+      margin-top: 20px;
+    }
   `
 
   connectedCallback(): void {
@@ -144,8 +149,24 @@ export class ProjectVerificationElement extends SignalWatcher(LitElement) {
       })
   }
 
+  protected onLoginWithBrightID() {
+    isBrightIDSection.set(true)
+  }
+
+  protected offLoginWithBrightID() {
+    isBrightIDSection.set(false)
+  }
+
   protected render() {
     if (!userBrightId.get()) {
+      if (isBrightIDSection.get()) {
+        return html` <div class="mt-5"></div>
+          <brightid-login
+            @offBrightIDSection=${this.offLoginWithBrightID}
+            withoutTitle
+          ></brightid-login>`
+      }
+
       return html`
         <h1 class="title">${focusedProject.get()?.name}</h1>
 
@@ -162,7 +183,7 @@ export class ProjectVerificationElement extends SignalWatcher(LitElement) {
           <span>${focusedProject.get()?.requirementLevel}</span>
         </div>
 
-        <home-page withoutTitle></home-page>
+        <home-page @onBrightLogin=${this.onLoginWithBrightID} withoutTitle></home-page>
       `
     }
 
@@ -184,9 +205,7 @@ export class ProjectVerificationElement extends SignalWatcher(LitElement) {
 
       ${!focusedProject.get()
         ? 'Loading ...'
-        : levelUpProgress
-            .get()
-            .filter((item) => item.level <= focusedProject.get()!.requirementLevel).length === 0
+        : levelUpProgress.get().filter((item) => item.status === 'incomplete').length === 0
         ? html` <div style="text-align:center;color:lightgreen;font-size:18px;font-weight:600;">
             🎉 You are already verified!<br />
             <span style="color:#dadada;font-size:14px;font-weight:400;">

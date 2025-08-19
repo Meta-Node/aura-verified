@@ -1,6 +1,6 @@
 import { signal, SignalWatcher } from '@lit-labs/signals'
 import { css, CSSResultGroup, html, LitElement } from 'lit'
-import { customElement } from 'lit/decorators.js'
+import { customElement, property } from 'lit/decorators.js'
 import platform from 'platform'
 import nacl from 'tweetnacl'
 
@@ -37,12 +37,18 @@ const interval = signal(null as null | number | NodeJS.Timeout)
 @customElement('brightid-login')
 export class BrightIDLoginElement extends SignalWatcher(LitElement) {
   static styles?: CSSResultGroup | undefined = css`
-    a {
+    a,
+    .back {
+      background-color: transparent;
+      box-shadow: none;
+      border: none;
       text-decoration: none;
       color: #bfb3f8;
       font-weight: bold;
+      cursor: pointer;
     }
-    a.back {
+
+    .back {
       display: block;
       margin-bottom: 12px;
       text-align: left;
@@ -73,6 +79,9 @@ export class BrightIDLoginElement extends SignalWatcher(LitElement) {
       text-align: left;
     }
   `
+
+  @property({ type: Boolean })
+  withoutTitle = false
 
   constructor() {
     super()
@@ -227,7 +236,7 @@ export class BrightIDLoginElement extends SignalWatcher(LitElement) {
       const link = `https://app.brightid.org/connection-code/${encodeURIComponent(newQrUrl.href)}`
 
       const qrCode = new QrCodeWithLogo({
-        width: 350,
+        width: this.withoutTitle ? 300 : 350,
         content: link,
         logo: {
           src: '/images/brightid-qrcode-logo.svg',
@@ -284,7 +293,32 @@ export class BrightIDLoginElement extends SignalWatcher(LitElement) {
     this.clearInterval()
   }
 
+  protected offBrightIDSection() {
+    this.dispatchEvent(new CustomEvent('offBrightIDSection', { bubbles: true, composed: true }))
+  }
+
   protected render() {
+    if (this.withoutTitle) {
+      return html` <button @click=${this.offBrightIDSection} class="back">Back</button>
+        <h3 class="">Login with BrightID</h3>
+        <div class="container">
+          <img class="qr-code" .src=${brightIDQrImage.get()} />
+        </div>
+        <div class="instructions">
+          <p>Steps to complete:</p>
+
+          <ol>
+            <li>
+              Download the brightid application from here:
+              <a href="https://www.brightid.org/">Link</a>
+            </li>
+            <li>
+              Scan the qr code above or click <a href="${brightIDQRLink.get()}">Here</a> to open the
+              app
+            </li>
+          </ol>
+        </div>`
+    }
     return html`
       <a class="back" href="/">Back</a>
 
@@ -296,8 +330,14 @@ export class BrightIDLoginElement extends SignalWatcher(LitElement) {
         <p>Steps to complete:</p>
 
         <ol>
-          <li>Download the brightid application from here: <a href="#">Link</a></li>
-          <li>Scan the qr code above or click <a href="#">Here</a> to open the app</li>
+          <li>
+            Download the brightid application from here:
+            <a href="https://www.brightid.org/">Link</a>
+          </li>
+          <li>
+            Scan the qr code above or click <a href="${brightIDQRLink.get()}">Here</a> to open the
+            app
+          </li>
         </ol>
       </div>
     `

@@ -259,10 +259,7 @@ export class VerifyWithoutProjectPageElement extends SignalWatcher(LitElement) {
                     `
                   )}
               </div>
-              <a
-                target="_blank"
-                class="highlight-text"
-                href="https://aura-get-verified.vercel.app/share"
+              <a target="_blank" class="highlight-text" href="https://aura-get-verified.vercel.app/"
                 >Get Verified Here</a
               >
             `}

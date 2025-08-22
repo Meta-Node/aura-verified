@@ -159,7 +159,7 @@ export class EmbeddedVerificationPageElement extends SignalWatcher(LitElement) {
               id="iframe"
               @load=${this.onIframeLoad}
               height="525"
-              src="/embed/projects/4"
+              src="https://aura-get-verified.vercel.app/embed/projects/4"
             ></iframe>
           </div>
         </div>

@@ -98,6 +98,11 @@ export class DevPageElement extends LitElement {
       top: 10px;
       cursor: pointer;
     }
+
+    iframe {
+      border: none;
+      width: 100%;
+    }
   `
 
   private toggleModal() {
@@ -112,7 +117,8 @@ export class DevPageElement extends LitElement {
         <div class="modal ${this.isModalOpen ? 'open' : ''}">
           <div class="modal-content">
             <div class="close-btn" @click=${this.toggleModal}>X</div>
-            <project-verification projectId=${3}></project-verification>
+
+            <iframe height="525" src="/embed/projects/2"></iframe>
           </div>
         </div>
       </div>

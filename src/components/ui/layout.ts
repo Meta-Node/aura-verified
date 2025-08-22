@@ -1,5 +1,5 @@
 import { css, html, LitElement } from 'lit'
-import { customElement } from 'lit/decorators.js'
+import { customElement, property } from 'lit/decorators.js'
 
 import './footer.ts'
 
@@ -12,7 +12,15 @@ export class AppLayout extends LitElement {
     left: Math.random() * 100 + '%'
   }))
 
+  @property({
+    type: Boolean
+  })
+  isEmbeded = false
+
   static styles = css`
+    .layout-wrapper {
+      background-color: #0d0d1b;
+    }
     .layout {
       text-align: center;
       min-height: 100vh;
@@ -21,6 +29,14 @@ export class AppLayout extends LitElement {
       margin: 0 auto;
       max-width: 400px;
       padding-bottom: 50px;
+    }
+
+    .embed-layout {
+      text-align: center;
+      position: relative;
+      margin: 0 auto;
+      max-width: 400px;
+      padding-bottom: 10px;
     }
 
     .lamp-bg {
@@ -41,13 +57,13 @@ export class AppLayout extends LitElement {
       height: 300px;
       width: 400px;
       background: url('/images/bg-linear-dashes.svg');
-      z-index: -10;
+      pointer-events: none;
     }
 
     .stars {
       position: absolute;
       inset: 0;
-      z-index: -10;
+      pointer-events: none;
     }
 
     .star {
@@ -63,24 +79,31 @@ export class AppLayout extends LitElement {
   `
 
   render() {
+    if (this.isEmbeded) {
+      return html` <div class="embed-layout">
+        <slot></slot>
+      </div>`
+    }
     return html`
-      <div class="layout">
-        <div class="lamp-bg"></div>
-        <div class="bg-lines"></div>
+      <div class="layout-wrapper">
+        <div class="layout">
+          <div class="lamp-bg"></div>
+          <div class="bg-lines"></div>
 
-        <div class="stars">
-          ${this.particlePositions.map(
-            (particle, key) =>
-              html` <div
-                class="star"
-                style="width: ${particle.width}; height: ${particle.height}; top: ${particle.top}; left: ${particle.left};"
-              ></div>`
-          )}
+          <div class="stars">
+            ${this.particlePositions.map(
+              (particle, key) =>
+                html` <div
+                  class="star"
+                  style="width: ${particle.width}; height: ${particle.height}; top: ${particle.top}; left: ${particle.left};"
+                ></div>`
+            )}
+          </div>
+
+          <main>
+            <slot></slot>
+          </main>
         </div>
-
-        <main>
-          <slot></slot>
-        </main>
       </div>
     `
   }

@@ -47,6 +47,6 @@ export class MyApp extends LitElement {
   }
 
   render() {
-    return html` <app-layout> ${this.router.outlet()} </app-layout>`
+    return html` ${this.router.outlet()} `
   }
 }

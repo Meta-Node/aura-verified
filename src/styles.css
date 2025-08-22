@@ -2,7 +2,7 @@ body {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  background: #0d0d1b;
+  /* background: #0d0d1b; */
   color: white;
   font-family: "Inter", "Roboto", sans-serif;
   font-optical-sizing: auto;

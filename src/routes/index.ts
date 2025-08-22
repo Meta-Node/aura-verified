@@ -1,5 +1,6 @@
 import appleIcon from '@/assets/icons/apple.svg'
 import brightIDIcon from '@/assets/icons/brightid.svg'
+import EmailIcon from '@/assets/icons/email.svg'
 import externalLinkIcon from '@/assets/icons/external-link.svg'
 import googleIcon from '@/assets/icons/google.svg'
 import spinnerIcon from '@/assets/icons/spinner.svg'
@@ -91,7 +92,6 @@ export class LoginPage extends SignalWatcher(LitElement) {
       font-size: 11px;
     }
 
-    /* “What is Aura?” button */
     .desc-btn {
       display: inline-flex;
       align-items: center;
@@ -109,10 +109,11 @@ export class LoginPage extends SignalWatcher(LitElement) {
       margin: 30px 0 16px;
       position: relative;
       border-radius: 12px;
-      border: 1px solid #fff;
+      border: 1px solid #5f5f5f;
       background: rgba(255, 255, 255, 0.05);
       overflow: hidden;
       width: 369px;
+      max-width: 100vw;
       padding: 10px;
       box-sizing: border-box;
     }
@@ -186,7 +187,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
     }
 
     .mini-divider {
-      margin: 24px 0;
+      margin: 10px 0;
       padding-bottom: 12px;
       border-bottom: 1px solid #a5a5a575;
     }
@@ -196,7 +197,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 16px;
+      /* margin-bottom: 16px; */
       border-radius: 12px;
       padding: 12px 0;
       font-size: 1rem;
@@ -249,8 +250,8 @@ export class LoginPage extends SignalWatcher(LitElement) {
       align-items: center;
       padding: 24px;
       z-index: 10;
-      width: 100%;
       margin-top: 40px;
+      gap: 50px;
     }
     .brand {
       display: flex;
@@ -315,6 +316,57 @@ export class LoginPage extends SignalWatcher(LitElement) {
       100% {
         transform: rotate(360deg);
       }
+    }
+
+    .integration-info {
+      display: flex;
+      flex-direction: column;
+      font-size: 0.8rem;
+      color: #acb5bb;
+      margin-left: 10px;
+    }
+
+    .mini-integration-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1 1 auto;
+    }
+
+    .mini-info {
+      position: absolute;
+      bottom: -13px;
+      font-size: 0.7rem;
+      color: #acb5bb;
+      white-space: nowrap;
+    }
+
+    .btn-wrapper {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 8px;
+    }
+
+    .btn-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: #acb5bb;
+      margin-top: 4px;
+      margin-bottom: 5px;
+    }
+
+    .green {
+      color: #00ffbb;
+    }
+
+    .yellow {
+      color: #ffe81a;
+    }
+
+    .orange {
+      color: #ff811a;
     }
   `
 
@@ -456,63 +508,78 @@ export class LoginPage extends SignalWatcher(LitElement) {
               <p class="form-desc">Use one of these integrations to login</p>
               <div class="email-wrapper">
                 <div class="email-icon">
-                  <fa-icon class="fas fa-envelope" color="#2980B9"></fa-icon>
+                  <img width="25" height="25" src="${EmailIcon}" alt="email" />
                 </div>
                 <input
                   .value="${inputText.get()}"
-                  @change=${this.onInputChange}
+                  @input=${this.onInputChange}
                   type="email"
                   placeholder="Enter your email"
                   class="email-input"
                 />
               </div>
 
-              <button
-                @click=${this.onSubmit}
-                .disabled=${isLoginLoading.get()}
-                class="btn btn-email"
-              >
-                Sign in with Email
-              </button>
+              <div class="btn-wrapper">
+                <button
+                  @click=${this.onSubmit}
+                  .disabled=${isLoginLoading.get()}
+                  class="btn btn-email"
+                >
+                  Sign in with Email
+                </button>
+                <div class="btn-info">
+                  <span>Security: Medium</span>
+                  <span>Setup: 1 min</span>
+                </div>
+              </div>
 
               <div class="mini-divider">Or</div>
 
               <div class="mini-integrations">
-                <button @click=${this.signInWithGoogle} class="btn-google btn">
-                  <div class="btn-icon">
-                    <img src="${googleIcon}" width="24" height="24" alt="Google" />
-                  </div>
-                </button>
+                <div class="mini-integration-wrapper">
+                  <button @click=${this.signInWithGoogle} class="btn-google btn">
+                    <div class="btn-icon">
+                      <img src="${googleIcon}" width="24" height="24" alt="Google" />
+                    </div>
+                  </button>
+                  <div class="mini-info">Security: Low</div>
+                </div>
 
-                <button
-                  @click=${this.signInWithApple}
-                  id="appleid-signin"
-                  data-color="black"
-                  data-border="true"
-                  data-type="sign in"
-                  class="btn-apple btn"
-                >
-                  <div class="btn-icon">
-                    <img src="${appleIcon}" width="24" height="24" alt="Apple" />
-                  </div>
-                </button>
+                <div class="mini-integration-wrapper">
+                  <button
+                    @click=${this.signInWithApple}
+                    id="appleid-signin"
+                    data-color="black"
+                    data-border="true"
+                    data-type="sign in"
+                    class="btn-apple btn"
+                  >
+                    <div class="btn-icon">
+                      <img src="${appleIcon}" width="24" height="24" alt="Apple" />
+                    </div>
+                  </button>
+                  <div class="mini-info">Security: Medium</div>
+                </div>
 
-                <button
-                  @click=${this.signInWithBrightID}
-                  id="brightid-signin"
-                  data-color="black"
-                  data-border="true"
-                  data-type="sign in"
-                  class="btn-brightid btn"
-                >
-                  <img
-                    class="btn-icon"
-                    width="20"
-                    height="20"
-                    src="${brightIDIcon}"
-                    alt="bright id"
-                  />
-                </button>
+                <div class="mini-integration-wrapper">
+                  <button
+                    @click=${this.signInWithBrightID}
+                    id="brightid-signin"
+                    data-color="black"
+                    data-border="true"
+                    data-type="sign in"
+                    class="btn-brightid btn"
+                  >
+                    <img
+                      class="btn-icon"
+                      width="20"
+                      height="20"
+                      src="${brightIDIcon}"
+                      alt="bright id"
+                    />
+                  </button>
+                  <div class="mini-info green">Security: High</div>
+                </div>
               </div>
             `}
       </div>`
@@ -539,7 +606,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
                   <div class="loading-wrapper">
                     <div>
                       <h2>Signing Up</h2>
-                      <img src="${spinnerIcon}" alt="spinner" />
+                      <img width="25" height="25" src="${spinnerIcon}" alt="spinner" />
                     </div>
                   </div>
                 `
@@ -548,47 +615,71 @@ export class LoginPage extends SignalWatcher(LitElement) {
               <p class="form-desc">Use one of these integrations to login</p>
               <div class="email-wrapper">
                 <div class="email-icon">
-                  <fa-icon class="fas fa-envelope" color="#2980B9"></fa-icon>
+                  <img width="20" height="20" src="${EmailIcon}" alt="email" />
                 </div>
                 <input
                   .value="${inputText.get()}"
-                  @change=${this.onInputChange}
+                  @input=${this.onInputChange}
                   type="email"
                   placeholder="Enter your email"
                   class="email-input"
                 />
               </div>
 
-              <button @click=${
-                this.onSubmit
-              } .disabled=${isLoginLoading.get()} class="btn btn-email">
-                Sign in with Email
-              </button>
+              <div class="btn-wrapper">
+                <button @click=${
+                  this.onSubmit
+                } .disabled=${isLoginLoading.get()} class="btn btn-email">
+                  Sign in with Email
+                </button>
+                <div class="btn-info">
+                  <span>Security: Medium</span>
+                  <span>Setup: 1 min</span>
+                </div>
+              </div>
 
               <div class="divider"></div>
 
-              <button @click=${this.signInWithGoogle} class="btn-google btn">
-                <div class="btn-icon">
-                  <img src="${googleIcon}" width="24" height="24" alt="Google" />
+              <div class="btn-wrapper">
+                <button @click=${this.signInWithGoogle} class="btn-google btn">
+                  <div class="btn-icon">
+                    <img src="${googleIcon}" width="24" height="24" alt="Google" />
+                  </div>
+                  Sign in with Google
+                </button>
+                <div class="btn-info">
+                  <span>Security: Low</span>
+                  <span>Setup: 1 min</span>
                 </div>
-                Sign in with Google
-              </button>
+              </div>
 
-              <button @click=${
-                this.signInWithApple
-              } id="appleid-signin" data-color="black" data-border="true" data-type="sign in" class="btn-apple btn">
-                <div class="btn-icon">
-                  <img src="${appleIcon}" width="24" height="24" alt="Apple" />
+              <div class="btn-wrapper">
+                <button @click=${
+                  this.signInWithApple
+                } id="appleid-signin" data-color="black" data-border="true" data-type="sign in" class="btn-apple btn">
+                  <div class="btn-icon">
+                    <img src="${appleIcon}" width="24" height="24" alt="Apple" />
+                  </div>
+                  Sign in with Apple
+                </button>
+                <div class="btn-info">
+                  <span>Security: Medium</span>
+                  <span>Setup: 1 min</span>
                 </div>
-                Sign in with Apple
-              </button>
+              </div>
 
-              <button @click=${
-                this.signInWithBrightID
-              } id="brightid-signin" data-color="black" data-border="true" data-type="sign in" class="btn-brightid btn">
-                  <img class="btn-icon" width="20" height="20" src="${brightIDIcon}" alt="bright id" />
-                Sign in with BrightID
-              </button>
+              <div class="btn-wrapper">
+                <button @click=${
+                  this.signInWithBrightID
+                } id="brightid-signin" data-color="black" data-border="true" data-type="sign in" class="btn-brightid btn">
+                    <img class="btn-icon" width="20" height="20" src="${brightIDIcon}" alt="bright id" />
+                  Sign in with BrightID
+                </button>
+                <div class="btn-info green">
+                  <span>Security: High</span>
+                  <span>Setup: 5 min</span>
+                </div>
+              </div>
 
               <p class="form-footer">By Signing in you will agree to our privacy policy</p>
             </div>

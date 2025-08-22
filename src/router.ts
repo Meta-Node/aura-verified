@@ -21,7 +21,7 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
         await import('@/routes/index')
         return true
       },
-      render: () => html`<home-page></home-page>`
+      render: () => html` <app-layout> <home-page></home-page></app-layout>`
     },
     {
       path: '/home',
@@ -29,9 +29,7 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
         await import('@/routes/home')
         return true
       },
-      render: () =>
-        html`<my-home></my-home>
-          <app-footer></app-footer> `
+      render: () => html`<app-layout> <my-home></my-home> <app-footer></app-footer> </app-layout> `
     },
     {
       path: '/projects/:id',
@@ -40,8 +38,9 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
         return true
       },
       render: ({ id }) =>
-        html`<verification-page .projectId=${Number(id)}></verification-page>
-          <app-footer></app-footer> `
+        html`<app-layout>
+          <verification-page .projectId=${Number(id)}></verification-page> <app-footer></app-footer>
+        </app-layout> `
     },
     {
       path: '/activities',
@@ -50,8 +49,9 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
         return true
       },
       render: () =>
-        html`<verifiers-page></verifiers-page>
-          <app-footer></app-footer> `
+        html`<app-layout>
+          <verifiers-page></verifiers-page> <app-footer></app-footer>
+        </app-layout> `
     },
     {
       path: '/notifications',
@@ -60,8 +60,9 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
         return true
       },
       render: () =>
-        html`<notifications-page></notifications-page>
-          <app-footer></app-footer> `
+        html`<app-layout>
+          <notifications-page></notifications-page> <app-footer></app-footer>
+        </app-layout> `
     },
     {
       path: '/share',
@@ -70,8 +71,7 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
         return true
       },
       render: () =>
-        html`<share-page></share-page>
-          <app-footer></app-footer> `
+        html`<app-layout> <share-page></share-page> <app-footer></app-footer> </app-layout> `
     },
     {
       path: '/privacy-policy',
@@ -79,7 +79,7 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
         await import('@/routes/privacy-policy')
         return true
       },
-      render: () => html`<privacy-policy></privacy-policy> `
+      render: () => html`<app-layout> <privacy-policy></privacy-policy> </app-layout> `
     },
     {
       path: '/dev',
@@ -87,7 +87,7 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
         await import('@/routes/dev')
         return true
       },
-      render: () => html`<dev-page></dev-page> `
+      render: () => html`<app-layout> <dev-page></dev-page> </app-layout> `
     },
     {
       path: '/profile',
@@ -96,8 +96,7 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
         return true
       },
       render: () =>
-        html`<profile-page></profile-page>
-          <app-footer></app-footer> `
+        html`<app-layout> <profile-page></profile-page> <app-footer></app-footer> </app-layout> `
     },
     {
       path: '/brightid',
@@ -105,7 +104,18 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
         await import('@/routes/brightid')
         return true
       },
-      render: () => html`<brightid-login></brightid-login>`
+      render: () => html`<app-layout> <brightid-login></brightid-login></app-layout>`
+    },
+    {
+      path: '/embed/projects/:id',
+      enter: async () => {
+        await import('@/components/project-verification')
+        return true
+      },
+      render: ({ id }) =>
+        html`<app-layout isEmbeded>
+          <project-verification .projectId=${Number(id)}></project-verification
+        ></app-layout>`
     },
     {
       path: '*',
@@ -113,7 +123,7 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
         await import('@/routes/not-found')
         return true
       },
-      render: () => html`<not-found></not-found>`
+      render: () => html`<app-layout> <not-found></not-found></app-layout>`
     }
   ])
 

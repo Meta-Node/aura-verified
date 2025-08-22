@@ -124,6 +124,8 @@ export class ProjectVerificationElement extends SignalWatcher(LitElement) {
 
   connectedCallback(): void {
     super.connectedCallback()
+
+    window.parent.postMessage(JSON.stringify({ type: 'app-ready', app: 'aura-get-verified' }), '*')
     queryClient
       .ensureQueryData({
         queryKey: ['projects'],
@@ -157,14 +159,20 @@ export class ProjectVerificationElement extends SignalWatcher(LitElement) {
     isBrightIDSection.set(false)
   }
 
+  protected onUserVerified() {
+    window.parent.postMessage('{"type": "verification-success", "app": "aura-get-verified"}', '*')
+  }
+
   protected render() {
     if (!userBrightId.get()) {
       if (isBrightIDSection.get()) {
-        return html` <div class="mt-5"></div>
+        return html`
+          <div class="mt-5"></div>
           <brightid-login
             @offBrightIDSection=${this.offLoginWithBrightID}
             withoutTitle
-          ></brightid-login>`
+          ></brightid-login>
+        `
       }
 
       return html`
@@ -212,7 +220,7 @@ export class ProjectVerificationElement extends SignalWatcher(LitElement) {
               You can continue your progress in the app.
             </span>
             <br />
-            <a href="/home" class="back-btn">Back to Main App</a>
+            <!-- <a href="/home" class="back-btn">Back to Main App</a> -->
           </div>`
         : html`
             <h3 class="steps-heading">Verification Steps</h3>

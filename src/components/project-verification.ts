@@ -257,13 +257,13 @@ export class ProjectVerificationElement extends SignalWatcher(LitElement) {
                     </div>
                   `
                 )}
-              <!-- 
+
               <a
                 target="_blank"
                 class="highlight-text"
-                href="https://aura-get-verified.vercel.app/login?id=${btoa(userBrightId.get())}"
-                >Get Verified</a
-              > -->
+                href="https://aura-get-verified.vercel.app/share"
+                >Get Verified Here</a
+              >
             </div>
           `}
     `

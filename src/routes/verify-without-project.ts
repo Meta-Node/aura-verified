@@ -3,9 +3,18 @@ import { getLevelupProgress } from '@/utils/score'
 import { css, CSSResultGroup, html, LitElement, PropertyValues } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 
+import '@/components/common/profile-card'
 import '@/routes/brightid'
 import '@/routes/index'
-import { levelUpProgress, userBrightId } from '@/states/user'
+
+import {
+  levelUpProgress,
+  userBrightId,
+  userEmail,
+  userFirstName,
+  userLastName,
+  userProfilePicture
+} from '@/states/user'
 import { signal, SignalWatcher } from '@lit-labs/signals'
 
 const isPassed = signal(false)
@@ -236,7 +245,12 @@ export class VerifyWithoutProjectPageElement extends SignalWatcher(LitElement) {
               <br />
             </div>`
           : html`
-              <h3 class="steps-heading">Verification Steps</h3>
+              <profile-card
+                .firstName=${userFirstName.get()}
+                .lastName=${userLastName.get()}
+                .email=${userEmail.get()}
+                .image=${userProfilePicture.get()}
+              ></profile-card>
               <div class="timeline">
                 ${levelUpProgress
                   .get()

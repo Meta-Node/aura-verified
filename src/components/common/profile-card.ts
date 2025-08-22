@@ -123,6 +123,8 @@ export class ProfileCard extends SignalWatcher(LitElement) {
   @property({})
   image = createBlockiesImage(userBrightId.get())
 
+  defaultUserImage = createBlockiesImage(userBrightId.get())
+
   constructor() {
     super()
 
@@ -157,7 +159,7 @@ export class ProfileCard extends SignalWatcher(LitElement) {
       <div class="profile-card">
         <div class="profile-header">
           <div class="profile-picture">
-            <img src=${this.image} alt="Profile picture" />
+            <img src=${this.image || this.defaultUserImage} alt="Profile picture" />
           </div>
           <div class="profile-info">
             <h2>${this.firstName + ' ' + this.lastName}</h2>

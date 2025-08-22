@@ -147,6 +147,10 @@ export class ProjectVerificationElement extends SignalWatcher(LitElement) {
           isPassed.set(isPassedRequirements)
 
           levelUpProgress.set(stepsToComplete)
+
+          if (stepsToComplete.filter((c) => c.status === 'incomplete').length === 0) {
+            this.onUserVerified()
+          }
         })
       })
   }
@@ -178,13 +182,13 @@ export class ProjectVerificationElement extends SignalWatcher(LitElement) {
       return html`
         <h1 class="title">${focusedProject.get()?.name}</h1>
 
-        <div class="image-container">
-          <img
-            src=${focusedProject.get()?.image ?? '/images/project-image.png'}
-            alt="Project image"
-            class="image"
-          />
-        </div>
+        ${focusedProject.get()?.image
+          ? html`
+              <div class="image-container">
+                <img src=${focusedProject.get()!.image!} alt="Project image" class="image" />
+              </div>
+            `
+          : ''}
 
         <div class="level-requirement">
           <span class="highlight-text">Requires Level: </span>
@@ -198,13 +202,11 @@ export class ProjectVerificationElement extends SignalWatcher(LitElement) {
     return html`
       <h1 class="title">${focusedProject.get()?.name}</h1>
 
-      <div class="image-container">
-        <img
-          src=${focusedProject.get()?.image ?? '/images/project-image.png?height=160&width=300'}
-          alt="Project image"
-          class="image"
-        />
-      </div>
+      ${focusedProject.get()?.image
+        ? html` <div class="image-container">
+            <img src=${focusedProject.get()!.image!} alt="Project image" class="image" />
+          </div>`
+        : ''}
 
       <div class="level-requirement">
         <span class="highlight-text">Requires Level: </span>

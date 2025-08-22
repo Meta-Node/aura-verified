@@ -1,7 +1,7 @@
 import type { Verification } from '@/types/brightid'
+import type { AuraImpact } from '@/types/evaluation'
 import { getBrightId, queryClient } from './apis'
 import type { EvaluationCategory } from './aura'
-import type { AuraImpact } from '@/types/evaluation'
 
 export const getUserHasRecovery = (verifications: Verification[] | undefined) => {
   if (!verifications) return null
@@ -51,9 +51,10 @@ export function parseBrightIdVerificationData(
 }
 
 export const getSubjectVerifications = async (
-  subjectId: string,
+  subjectId: string | undefined,
   evaluationCategory: EvaluationCategory
 ) => {
+  if (!subjectId) return
   const profileQuery = await queryClient.ensureQueryData({
     queryKey: ['profile', subjectId],
     queryFn: () => getBrightId(subjectId)

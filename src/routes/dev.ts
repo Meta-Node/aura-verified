@@ -3,9 +3,11 @@ import { customElement, state } from 'lit/decorators.js'
 
 import '@/components/project-verification'
 
-@customElement('dev-page')
-export class DevPageElement extends LitElement {
+@customElement('verification-project')
+export class EmbeddedVerificationPageElement extends LitElement {
   @state() private isModalOpen = false
+
+  protected iframeElement: null | HTMLIFrameElement = null
 
   static styles?: CSSResultGroup | undefined = css`
     .container {
@@ -105,8 +107,42 @@ export class DevPageElement extends LitElement {
     }
   `
 
+  override connectedCallback(): void {
+    super.connectedCallback()
+    window.addEventListener('message', this.onWindowMessage)
+  }
+
+  override disconnectedCallback(): void {
+    window.removeEventListener('message', this.onWindowMessage)
+  }
+
+  onIframeLoad() {
+    this.iframeElement = this.renderRoot.querySelector('#iframe')
+  }
+
   private toggleModal() {
     this.isModalOpen = !this.isModalOpen
+  }
+
+  protected onWindowMessage(e: MessageEvent<any>) {
+    const message = e.data
+
+    try {
+      const data = JSON.parse(message)
+
+      if (data.app !== 'aura-get-verified') return
+
+      switch (data.type) {
+        case 'app-ready':
+          this.dispatchEvent(new CustomEvent('on-ready'))
+          return
+        case 'verification-success':
+          this.dispatchEvent(new CustomEvent('on-verification-success'))
+          return
+      }
+    } catch {
+      return
+    }
   }
 
   protected render() {
@@ -118,7 +154,12 @@ export class DevPageElement extends LitElement {
           <div class="modal-content">
             <div class="close-btn" @click=${this.toggleModal}>X</div>
 
-            <iframe height="525" src="/embed/projects/2"></iframe>
+            <iframe
+              id="iframe"
+              @load=${this.onIframeLoad}
+              height="525"
+              src="/embed/projects/4"
+            ></iframe>
           </div>
         </div>
       </div>

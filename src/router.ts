@@ -13,6 +13,11 @@ export const pushRouter = (path: string) => {
   router.get()?.goto(path)
 }
 
+export function getQueryParams() {
+  const params = new URLSearchParams(window.location.search)
+  return Object.fromEntries(params.entries())
+}
+
 export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) => {
   const routerValue = new Router(classThis, [
     {
@@ -87,7 +92,7 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
         await import('@/routes/dev')
         return true
       },
-      render: () => html`<app-layout> <dev-page></dev-page> </app-layout> `
+      render: () => html`<app-layout> <verification-project></verification-project> </app-layout> `
     },
     {
       path: '/profile',
@@ -116,6 +121,25 @@ export const createRouter = (classThis: ReactiveControllerHost & HTMLElement) =>
         html`<app-layout isEmbeded>
           <project-verification .projectId=${Number(id)}></project-verification
         ></app-layout>`
+    },
+    {
+      path: '/embed/verification',
+      enter: async () => {
+        await import('@/routes/verify-without-project')
+        return true
+      },
+      render: ({}) => {
+        const params = getQueryParams()
+
+        return html`<app-layout isEmbeded>
+          <verify-without-project-page
+            .description=${params.description}
+            .image=${params.image}
+            .projectName=${params.name ?? 'Get Verified'}
+            .level=${Number(params.level) || 1}
+          ></verify-without-project-page
+        ></app-layout>`
+      }
     },
     {
       path: '*',

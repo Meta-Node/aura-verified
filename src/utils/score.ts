@@ -23,6 +23,8 @@ export const getLevelupProgress = async ({
 }) => {
   const subjectId = userBrightId.get()
   const profileQuery = await getSubjectVerifications(subjectId, evaluationCategory)
+  if (!profileQuery) return { isUnlocked: false, percent: 0, requirements: [] }
+
   const { auraLevel, auraScore, auraImpacts } = profileQuery
 
   if (evaluationCategory !== EvaluationCategory.SUBJECT) {

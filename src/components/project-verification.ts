@@ -5,7 +5,7 @@ import { getProjects, queryClient } from '@/utils/apis'
 import { EvaluationCategory } from '@/utils/aura'
 import { getLevelupProgress } from '@/utils/score'
 import { signal, SignalWatcher } from '@lit-labs/signals'
-import { css, CSSResultGroup, html, LitElement } from 'lit'
+import { css, CSSResultGroup, html, LitElement, PropertyValues } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 
 import '@/routes/brightid'
@@ -22,6 +22,8 @@ export class ProjectVerificationElement extends SignalWatcher(LitElement) {
     type: Number
   })
   projectId!: number
+
+  previousBrightID = signal(userBrightId.get())
 
   static styles?: CSSResultGroup = css`
     .title {
@@ -136,23 +138,33 @@ export class ProjectVerificationElement extends SignalWatcher(LitElement) {
         focusedProject.set(res.find((item) => item.id === this.projectId) ?? null)
       })
       .then(() => {
-        getLevelupProgress({ evaluationCategory: EvaluationCategory.SUBJECT }).then((res) => {
-          const stepsToComplete = res.requirements.filter(
-            (item) => item.level === focusedProject.get()?.requirementLevel
-          )
-
-          const isPassedRequirements =
-            stepsToComplete.filter((item) => item.status === 'passed').length === 0
-
-          isPassed.set(isPassedRequirements)
-
-          levelUpProgress.set(stepsToComplete)
-
-          if (stepsToComplete.filter((c) => c.status === 'incomplete').length === 0) {
-            this.onUserVerified()
-          }
-        })
+        this.updateLevelUpProgress()
       })
+  }
+
+  protected updated(_changedProperties: PropertyValues): void {
+    super.updated(_changedProperties)
+    if (userBrightId.get() === this.previousBrightID.get()) return
+
+    this.updateLevelUpProgress()
+    this.previousBrightID.set(userBrightId.get())
+  }
+
+  private updateLevelUpProgress() {
+    getLevelupProgress({ evaluationCategory: EvaluationCategory.SUBJECT }).then((res) => {
+      const stepsToComplete = res.requirements.filter(
+        (item) => item.level === focusedProject.get()?.requirementLevel
+      )
+
+      const isPassedRequirements =
+        stepsToComplete.filter((item) => item.status === 'passed').length === 0
+      isPassed.set(isPassedRequirements)
+      levelUpProgress.set(stepsToComplete)
+
+      if (stepsToComplete.filter((c) => c.status === 'incomplete').length === 0) {
+        this.onUserVerified()
+      }
+    })
   }
 
   protected onLoginWithBrightID() {
@@ -245,6 +257,13 @@ export class ProjectVerificationElement extends SignalWatcher(LitElement) {
                     </div>
                   `
                 )}
+              <!-- 
+              <a
+                target="_blank"
+                class="highlight-text"
+                href="https://aura-get-verified.vercel.app/login?id=${btoa(userBrightId.get())}"
+                >Get Verified</a
+              > -->
             </div>
           `}
     `

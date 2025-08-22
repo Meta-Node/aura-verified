@@ -2,9 +2,10 @@ import { css, CSSResultGroup, html, LitElement } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
 
 import '@/components/project-verification'
+import { SignalWatcher } from '@lit-labs/signals'
 
 @customElement('verification-project')
-export class EmbeddedVerificationPageElement extends LitElement {
+export class EmbeddedVerificationPageElement extends SignalWatcher(LitElement) {
   @state() private isModalOpen = false
 
   protected iframeElement: null | HTMLIFrameElement = null

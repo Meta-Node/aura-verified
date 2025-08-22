@@ -1,6 +1,6 @@
 import { EvaluationCategory } from '@/utils/aura'
 import { getLevelupProgress } from '@/utils/score'
-import { css, CSSResultGroup, html, LitElement } from 'lit'
+import { css, CSSResultGroup, html, LitElement, PropertyValues } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 
 import '@/routes/brightid'
@@ -33,6 +33,8 @@ export class VerifyWithoutProjectPageElement extends SignalWatcher(LitElement) {
     type: String
   })
   image?: string
+
+  previousBrightID = signal(userBrightId.get())
 
   static styles?: CSSResultGroup = css`
     .title {
@@ -137,14 +139,25 @@ export class VerifyWithoutProjectPageElement extends SignalWatcher(LitElement) {
     super.connectedCallback()
 
     window.parent.postMessage(JSON.stringify({ type: 'app-ready', app: 'aura-get-verified' }), '*')
+
+    this.updateLevelUpProgress()
+  }
+
+  protected override updated(_changedProperties: PropertyValues): void {
+    super.updated(_changedProperties)
+    if (userBrightId.get() === this.previousBrightID.get()) return
+
+    this.updateLevelUpProgress()
+    this.previousBrightID.set(userBrightId.get())
+  }
+
+  private updateLevelUpProgress() {
     getLevelupProgress({ evaluationCategory: EvaluationCategory.SUBJECT }).then((res) => {
       const stepsToComplete = res.requirements.filter((item) => item.level === this.level)
 
       const isPassedRequirements =
         stepsToComplete.filter((item) => item.status === 'passed').length === 0
-
       isPassed.set(isPassedRequirements)
-
       levelUpProgress.set(stepsToComplete)
 
       if (stepsToComplete.filter((c) => c.status === 'incomplete').length === 0) {

@@ -66,6 +66,8 @@ export class ProjectVerificationElement extends SignalWatcher(LitElement) {
     }
 
     .highlight-text {
+      background-color: transparent;
+      border: none;
       color: var(--highlight, #15c8ec);
     }
 

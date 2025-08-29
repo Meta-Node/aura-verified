@@ -3,31 +3,33 @@
 ### web components and utility functionalities for aura verification system.
 
 ---
+
 ### What is Aura?
 
-Aura is a decentralized platform for verifiying human uniqueness and identity 
+Aura is a decentralized platform for verifiying human uniqueness and identity
 
 ### [More on whats Aura](https://brightid.gitbook.io/aura)
-
 
 <br>
 
 ## Get started
 
-1. Install the package 
-
+1. Install the package
 
 Bun
+
 ```bash
 bun add aura-get-verified
 ```
 
 Yarn
+
 ```bash
 yarn add aura-get-verified
 ```
 
 npm
+
 ```bash
 npm i aura-get-verified --save
 ```
@@ -36,7 +38,26 @@ npm i aura-get-verified --save
 
 2. Usage
 
-
 ```tsx
-import "aura-get-verified"
+import 'aura-get-verified'
+
+function VerificationFunction() {
+  const onFrameReady = () => {
+    console.log('Iframe verification is ready')
+  }
+
+  const onUserVerified = (timestamp: number, _v: number, _r: number, _s: number) => {
+    console.log('user is verified')
+  }
+  return (
+    <iframe-project-verification
+      onReady={onFrameReady}
+      verificationSuccess={onUserVerified}
+      height={550}
+      projectId={4}
+    ></iframe-project-verification>
+  )
+}
 ```
+
+For getting a project id contact us on the [discord channel](https://discord.gg/kjjE5epB)

@@ -53,22 +53,25 @@ export class MyApp extends LitElement {
     super.connectedCallback()
 
     window.addEventListener('message', (event) => {
-      console.log('[New Message]', event.data)
-      if (event.origin !== 'https://aura-get-verified.vercel.app') return
+      if (!event.origin || event.origin !== 'https://aura-get-verified.vercel.app') return
 
-      const data = JSON.parse(event.data)
+      try {
+        const data = JSON.parse(event.data)
 
-      if (data.type !== 'signin-sync') return
+        if (data.type !== 'signin-sync') return
 
-      const loginData = data.data
+        const loginData = data.data
 
-      onInjectLogin(
-        loginData.brightId,
-        loginData.email,
-        loginData.firstName,
-        loginData.lastName,
-        loginData.picture
-      )
+        onInjectLogin(
+          loginData.brightId,
+          loginData.email,
+          loginData.firstName,
+          loginData.lastName,
+          loginData.picture
+        )
+      } catch (e) {
+        console.log(event)
+      }
     })
     const brightId = userBrightId.get()
 

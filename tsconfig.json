@@ -8,7 +8,7 @@
     "moduleDetection": "auto",
     "jsx": "preserve",
     "allowJs": true,
-    "incremental": true,
+    // "incremental": true,
     "esModuleInterop": true,
     // Bundler mode
     "moduleResolution": "bundler",

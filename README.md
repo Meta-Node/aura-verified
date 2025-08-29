@@ -1,15 +1,42 @@
-# get-verified
+# Aura Get Verified App
 
-To install dependencies:
+### web components and utility functionalities for aura verification system.
 
+---
+### What is Aura?
+
+Aura is a decentralized platform for verifiying human uniqueness and identity 
+
+### [More on whats Aura](https://brightid.gitbook.io/aura)
+
+
+<br>
+
+## Get started
+
+1. Install the package 
+
+
+Bun
 ```bash
-bun install
+bun add aura-get-verified
 ```
 
-To run:
-
+Yarn
 ```bash
-bun run index.ts
+yarn add aura-get-verified
 ```
 
-This project was created using `bun init` in bun v1.2.11. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+npm
+```bash
+npm i aura-get-verified --save
+```
+
+<br>
+
+2. Usage
+
+
+```tsx
+import "aura-get-verified"
+```

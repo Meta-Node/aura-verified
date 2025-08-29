@@ -158,6 +158,23 @@ export class ProjectVerificationElement extends SignalWatcher(LitElement) {
     this.previousBrightID.set(userBrightId.get())
   }
 
+  protected onGoToApp() {
+    const auraTab = window.open('https://aura-get-verified.vercel.app')
+
+    auraTab?.postMessage(
+      JSON.stringify({
+        type: 'signin-sync',
+        data: {
+          brightId: userBrightId.get(),
+          email: userEmail.get(),
+          firstName: userFirstName.get(),
+          lastName: userLastName.get(),
+          picture: userProfilePicture.get()
+        }
+      })
+    )
+  }
+
   private updateLevelUpProgress() {
     getLevelupProgress({ evaluationCategory: EvaluationCategory.SUBJECT }).then((res) => {
       const stepsToComplete = res.requirements.filter(
@@ -271,8 +288,7 @@ export class ProjectVerificationElement extends SignalWatcher(LitElement) {
                   `
                 )}
 
-              <a target="_blank" class="highlight-text" href="https://aura-get-verified.vercel.app/"
-                >Get Verified Here</a
+              <button @click=${this.onGoToApp} class="highlight-text">Get Verified Here</button>
               >
             </div>
           `}

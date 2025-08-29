@@ -26,7 +26,6 @@ import {
   uInt8ArrayToB64,
   urlSafeRandomKey
 } from '@/utils/encoding'
-import '@a11d/lit-qr-code'
 import QrCodeWithLogo from 'qrcode-with-logos'
 
 const brightIDQRLink = signal('')

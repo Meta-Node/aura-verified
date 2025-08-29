@@ -2,7 +2,7 @@ import { LitElement, html } from 'lit'
 import { customElement } from 'lit/decorators.js'
 import './styles.css'
 
-import { createRouter } from '@/router'
+import { createRouter } from '@/app'
 
 import './components/ui/layout.ts'
 
@@ -13,9 +13,31 @@ import '@shoelace-style/shoelace/dist/components/rating/rating.js'
 import '@shoelace-style/shoelace/dist/themes/dark.css'
 import '@shoelace-style/shoelace/dist/themes/light.css'
 
-import 'fa-icons'
 import { fetchNewNotifications } from './lib/notifications'
-import { userBrightId } from './states/user'
+import {
+  userBrightId,
+  userEmail,
+  userFirstName,
+  userLastName,
+  userProfilePicture
+} from './states/user'
+
+function onInjectLogin(
+  brightId: string,
+  email: string | null,
+  firstName: string | undefined,
+  lastName: string | undefined,
+  profilePicture: string | null
+) {
+  userBrightId.set(brightId)
+  if (email) userEmail.set(email)
+
+  if (firstName) userFirstName.set(firstName)
+
+  if (lastName) userLastName.set(lastName)
+
+  if (profilePicture) userProfilePicture.set(profilePicture)
+}
 
 @customElement('my-app')
 export class MyApp extends LitElement {
@@ -29,6 +51,24 @@ export class MyApp extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback()
+
+    window.addEventListener('message', (event) => {
+      if (event.origin !== 'https://aura-get-verified.vercel.app') return
+
+      const data = JSON.parse(event.data)
+
+      if (data.type !== 'signin-sync') return
+
+      const loginData = data.data
+
+      onInjectLogin(
+        loginData.brightId,
+        loginData.email,
+        loginData.firstName,
+        loginData.lastName,
+        loginData.picture
+      )
+    })
     const brightId = userBrightId.get()
 
     if (!brightId) return

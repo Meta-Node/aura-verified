@@ -137,7 +137,6 @@ export class ProjectVerificationElement extends SignalWatcher(LitElement) {
   connectedCallback(): void {
     super.connectedCallback()
 
-    window.parent.postMessage(JSON.stringify({ type: 'app-ready', app: 'aura-get-verified' }), '*')
     queryClient
       .ensureQueryData({
         queryKey: ['projects'],
@@ -152,6 +151,37 @@ export class ProjectVerificationElement extends SignalWatcher(LitElement) {
       })
   }
 
+  protected onWindowMessage(auraTab: Window, e: MessageEvent<any>) {
+    const message = e.data
+
+    if (e.origin !== window.location.origin) return
+
+    try {
+      const data = JSON.parse(message)
+
+      if (data.app !== 'aura-get-verified') return
+
+      switch (data.type) {
+        case 'app-ready':
+          auraTab?.postMessage(
+            JSON.stringify({
+              type: 'signin-sync',
+              data: {
+                brightId: userBrightId.get(),
+                email: userEmail.get(),
+                firstName: userFirstName.get(),
+                lastName: userLastName.get(),
+                picture: userProfilePicture.get()
+              }
+            })
+          )
+          return
+      }
+    } catch {
+      return
+    }
+  }
+
   protected updated(_changedProperties: PropertyValues): void {
     super.updated(_changedProperties)
     if (userBrightId.get() === this.previousBrightID.get()) return
@@ -163,18 +193,7 @@ export class ProjectVerificationElement extends SignalWatcher(LitElement) {
   protected onGoToApp() {
     const auraTab = window.open('https://aura-get-verified.vercel.app')
 
-    auraTab?.postMessage(
-      JSON.stringify({
-        type: 'signin-sync',
-        data: {
-          brightId: userBrightId.get(),
-          email: userEmail.get(),
-          firstName: userFirstName.get(),
-          lastName: userLastName.get(),
-          picture: userProfilePicture.get()
-        }
-      })
-    )
+    auraTab?.addEventListener('message', this.onWindowMessage.bind(this, auraTab))
   }
 
   private updateLevelUpProgress() {

@@ -52,6 +52,8 @@ export class MyApp extends LitElement {
   connectedCallback(): void {
     super.connectedCallback()
 
+    window.parent.postMessage(JSON.stringify({ type: 'app-ready', app: 'aura-get-verified' }), '*')
+
     window.addEventListener('message', (event) => {
       if (!event.origin || event.origin !== 'https://aura-get-verified.vercel.app') return
 
@@ -69,9 +71,7 @@ export class MyApp extends LitElement {
           loginData.lastName,
           loginData.picture
         )
-      } catch (e) {
-        console.log(event)
-      }
+      } catch {}
     })
     const brightId = userBrightId.get()
 

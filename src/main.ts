@@ -53,6 +53,7 @@ export class MyApp extends LitElement {
     super.connectedCallback()
 
     window.addEventListener('message', (event) => {
+      console.log('[New Message]', event.data)
       if (event.origin !== 'https://aura-get-verified.vercel.app') return
 
       const data = JSON.parse(event.data)

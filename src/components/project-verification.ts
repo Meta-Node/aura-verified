@@ -132,6 +132,10 @@ export class ProjectVerificationElement extends SignalWatcher(LitElement) {
     .mt-5 {
       margin-top: 20px;
     }
+
+    .more {
+      cursor: pointer;
+    }
   `
 
   connectedCallback(): void {
@@ -309,8 +313,9 @@ export class ProjectVerificationElement extends SignalWatcher(LitElement) {
                   `
                 )}
 
-              <button @click=${this.onGoToApp} class="highlight-text">Get Verified Here</button>
-              >
+              <button @click=${this.onGoToApp} class="highlight-text more">
+                Get Verified Here
+              </button>
             </div>
           `}
     `

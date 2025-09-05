@@ -2,7 +2,7 @@
   "name": "aura-get-verified",
   "type": "module",
   "packageManager": "bun@1.2.20",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "workspaces": [
     "packages/*"
   ],
@@ -29,6 +29,11 @@
       "require": "./build/index.cjs",
       "types": "./build/index.d.ts",
       "import": "./build/index.js"
+    },
+    "./react": {
+      "require": "./build/react.cjs",
+      "types": "./build/react.d.ts",
+      "import": "./build/react.js"
     }
   },
   "scripts": {

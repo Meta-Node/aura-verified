@@ -1,63 +1,13 @@
-# Aura Get Verified App
+# get-verified
 
-### web components and utility functionalities for aura verification system.
+A Decentralized solution to get verified as a unique identity without having to share personal information across the internet
 
----
+### How it works?
 
-### What is Aura?
+1. Sign in with your unique identifier, (Google, apple, email, brightid)
 
-Aura is a decentralized platform for verifiying human uniqueness and identity
+2. Ask your relative aura players that know you to evaluate you as a valid identity
 
-### [More on whats Aura](https://brightid.gitbook.io/aura)
+3. Get a score based on those evaluations
 
-<br>
-
-## Get started
-
-1. Install the package
-
-Bun
-
-```bash
-bun add aura-get-verified
-```
-
-Yarn
-
-```bash
-yarn add aura-get-verified
-```
-
-npm
-
-```bash
-npm i aura-get-verified --save
-```
-
-<br>
-
-2. Usage
-
-```tsx
-import 'aura-get-verified'
-
-function VerificationFunction() {
-  const onFrameReady = () => {
-    console.log('Iframe verification is ready')
-  }
-
-  const onUserVerified = (timestamp: number, _v: number, _r: number, _s: number) => {
-    console.log('user is verified')
-  }
-  return (
-    <iframe-project-verification
-      onReady={onFrameReady}
-      verificationSuccess={onUserVerified}
-      height={550}
-      projectId={4}
-    ></iframe-project-verification>
-  )
-}
-```
-
-For getting a project id contact us on the [discord channel](https://discord.gg/kjjE5epB)
+**More information on [Aura Gitbook](https://brightid.gitbook.io/aura)**

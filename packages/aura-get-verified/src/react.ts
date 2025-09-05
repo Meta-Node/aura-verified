@@ -2,8 +2,8 @@ import { IFramePorjectVerification } from '@/components/iframe-project-verificat
 import { createComponent, EventName } from '@lit/react'
 import * as React from 'react'
 
-export const MyComponentReact = createComponent({
-  tagName: 'my-component',
+export const AuraReactIFrameVerification = createComponent({
+  tagName: 'iframe-project-verification',
   elementClass: IFramePorjectVerification,
   react: React,
   events: {

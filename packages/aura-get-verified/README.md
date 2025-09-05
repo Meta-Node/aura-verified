@@ -38,8 +38,10 @@ npm i aura-get-verified --save
 
 2. Usage
 
+- React
+
 ```tsx
-import 'aura-get-verified'
+import { AuraReactIFrameVerification } from 'aura-get-verified/react'
 
 function VerificationFunction() {
   const onFrameReady = () => {
@@ -58,14 +60,31 @@ function VerificationFunction() {
     console.log('user is verified')
   }
   return (
-    <iframe-project-verification
+    <AuraReactIFrameVerification
       onReady={onFrameReady}
       verificationSuccess={onUserVerified}
       height={550}
       projectId={4}
-    ></iframe-project-verification>
+    ></AuraReactIFrameVerification>
   )
 }
+```
+
+- Vue / Angular / Lit
+
+```tsx
+import 'aura-get-verified'
+
+import { html } from 'lit'
+
+// render this tag inside your html template
+
+html`<iframe-project-verification
+  onReady="{onFrameReady}"
+  verificationSuccess="{onUserVerified}"
+  height="{550}"
+  projectId="{4}"
+></iframe-project-verification>`
 ```
 
 For getting a project id contact us on the [discord channel](https://discord.gg/kjjE5epB)

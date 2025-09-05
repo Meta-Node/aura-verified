@@ -1,0 +1,53 @@
+{
+  "name": "aura-get-verified",
+  "type": "module",
+  "packageManager": "bun@1.2.20",
+  "version": "0.0.7",
+  "workspaces": [
+    "packages/*"
+  ],
+  "license": "MIT",
+  "homepage": "https://aura-get-verified.vercel.app/home",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Meta-Node/get-verified.git"
+  },
+  "bugs": "https://github.com/vite-pwa/Meta-Node/get-verified/issues",
+  "keywords": [
+    "brightid",
+    "aura",
+    "get-verified"
+  ],
+  "files": [
+    "build"
+  ],
+  "main": "build/index.js",
+  "module": "build/index.mjs",
+  "types": "build/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./build/index.cjs",
+      "types": "./build/index.d.ts",
+      "import": "./build/index.js"
+    }
+  },
+  "scripts": {
+    "generate-types": "openapi-typescript ./api-docs.json -o ./src/lib/schema.d.ts",
+    "build": "bun clean && tsup",
+    "clean": "rimraf build"
+  },
+  "devDependencies": {
+    "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
+    "@types/bcrypt": "^6.0.0",
+    "@types/crypto-js": "^4.2.2",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@lit-app/state": "^1.0.0",
+    "@lit-labs/router": "^0.1.4",
+    "@lit-labs/signals": "^0.1.2",
+    "@lit/task": "^1.0.3",
+    "lit": "^3.3.0"
+  }
+}

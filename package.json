@@ -1,8 +1,11 @@
 {
-  "name": "aura-get-verified",
+  "name": "get-verified",
   "type": "module",
   "packageManager": "bun@1.2.20",
   "version": "0.0.6",
+  "workspaces": [
+    "packages/*"
+  ],
   "license": "MIT",
   "homepage": "https://aura-get-verified.vercel.app/home",
   "repository": {

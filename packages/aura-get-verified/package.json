@@ -2,7 +2,7 @@
   "name": "aura-get-verified",
   "type": "module",
   "packageManager": "bun@1.2.20",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "workspaces": [
     "packages/*"
   ],
@@ -34,14 +34,24 @@
   "scripts": {
     "generate-types": "openapi-typescript ./api-docs.json -o ./src/lib/schema.d.ts",
     "build": "bun clean && tsup",
-    "clean": "rimraf build"
+    "clean": "rimraf build",
+    "release": "bumpp && npm publish"
   },
   "devDependencies": {
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@types/bcrypt": "^6.0.0",
     "@types/crypto-js": "^4.2.2",
+    "bumpp": "^10.2.3",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3"
+  },
+  "peerDependencies": {
+    "react": "*"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@lit-app/state": "^1.0.0",

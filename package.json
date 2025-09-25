@@ -67,6 +67,8 @@
     "@lit/task": "^1.0.3",
     "@shoelace-style/shoelace": "^2.20.1",
     "@tanstack/query-core": "^5.80.6",
+    "@wagmi/connectors": "^5.11.1",
+    "@wagmi/core": "^2.21.1",
     "bcryptjs": "^3.0.2",
     "brightid_sdk_v6": "^2.0.1",
     "crypto-js": "^4.2.0",
@@ -83,6 +85,7 @@
     "tweetnacl": "^1.0.3",
     "urlpattern-polyfill": "^10.1.0",
     "uuid": "^11.1.0",
+    "viem": "2.x",
     "zod": "^4.0.17"
   }
 }

@@ -4,6 +4,7 @@ import EmailIcon from '@/assets/icons/email.svg'
 import externalLinkIcon from '@/assets/icons/external-link.svg'
 import googleIcon from '@/assets/icons/google.svg'
 import spinnerIcon from '@/assets/icons/spinner.svg'
+import WalletIcon from '@/assets/icons/wallet.svg'
 import { auth } from '@/lib/firebase'
 import { pushRouter } from '@/router'
 import { inputText, isLoginLoading } from '@/states/login'
@@ -16,10 +17,12 @@ import {
   userProfilePicture
 } from '@/states/user'
 import { clientAPI } from '@/utils/apis'
+import { wagmiConfig } from '@/utils/wallet'
 import { SignalWatcher } from '@lit-labs/signals'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { css, html, LitElement, type CSSResultGroup } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
+import { map } from 'lit/directives/map.js'
 
 const generateUUID = () => {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {
@@ -43,6 +46,17 @@ const appleSignInOptions = {
 
 declare const AppleID: any
 
+interface AuthMethod {
+  id: string
+  name: string
+  icon: string
+  setupTime: string
+  security: number
+  description: string
+  color: string
+  callback?: CallableFunction
+}
+
 @customElement('home-page')
 export class LoginPage extends SignalWatcher(LitElement) {
   @property({
@@ -52,13 +66,17 @@ export class LoginPage extends SignalWatcher(LitElement) {
 
   constructor() {
     super()
-    AppleID.auth.init({
-      clientId: appleSignInOptions.clientID,
-      scope: appleSignInOptions.scope,
-      redirectURI: appleSignInOptions.redirectUri,
-      state: appleSignInOptions.state,
-      usePopup: true
-    })
+    try {
+      AppleID.auth.init({
+        clientId: appleSignInOptions.clientID,
+        scope: appleSignInOptions.scope,
+        redirectURI: appleSignInOptions.redirectUri,
+        state: appleSignInOptions.state,
+        usePopup: true
+      })
+    } catch (e) {
+      console.warn('Error in setting up apple auth init', e)
+    }
 
     if (userBrightId.get()) {
       pushRouter('/home')
@@ -66,30 +84,157 @@ export class LoginPage extends SignalWatcher(LitElement) {
   }
 
   static styles?: CSSResultGroup = css`
+    :host {
+      display: block;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .space-y-3 {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .space-y-2 {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .button {
+      width: 100%;
+      height: 3.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 1rem;
+      border-radius: 0.5rem;
+      padding: 0 1.25rem;
+      background: linear-gradient(145deg, #2a2a2a05, #1e1e1e6c);
+      border: 1px solid #3a3a3a;
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background: linear-gradient(145deg, #39383d, #1a0b35);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .button:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    .flex-container {
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex: 1;
+    }
+
+    .flex-1 {
+      flex: 1;
+    }
+
+    .font-medium {
+      font-weight: 600;
+    }
+
+    .text-xs {
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+    }
+
+    .text-muted-foreground {
+      color: #9ca3af;
+    }
+
+    .badge-container {
+      display: flex;
+      gap: 0.75rem;
+      margin-left: 1rem;
+    }
+
+    .badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      padding: 0.375rem 0.75rem;
+      border-radius: 0.5rem;
+      border: 1px solid #454545;
+    }
+
+    .security-0,
+    .security-1,
+    .security-2,
+    .security-3 {
+      background-color: #3d1c1c;
+      color: #f87171;
+      border-color: #b91c1c;
+    }
+
+    .security-4,
+    .security-5,
+    .security-6 {
+      background-color: #3d3b1c;
+      color: #facc15;
+      border-color: #ca8a04;
+    }
+
+    .security-7,
+    .security-8,
+    .security-9,
+    .security-10 {
+      background-color: #1c3d2e;
+      color: #34d399;
+      border-color: #059669;
+    }
+
+    .icon {
+      width: 1rem;
+      height: 1rem;
+    }
+
     .wrapper {
-      margin-top: 40px;
+      margin-top: 3rem;
+      max-width: 28rem;
+      margin-left: auto;
+      margin-right: auto;
     }
+
     .logo {
-      width: 60px;
-      height: 60px;
-      box-sizing: border-box;
+      width: 4.5rem;
+      height: 4.5rem;
     }
+
     .container {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 10px 0;
-      flex: 1 1 auto;
+      padding: 1.5rem 0;
+      flex: 1;
     }
+
     h1.title {
-      margin: 20px 0 0;
-      font-size: 24px;
+      margin: 1.5rem 0 0;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #ffffff;
     }
+
     .info-text {
-      margin: 15px 0 20px;
-      color: #9f9f9f;
-      font-size: 11px;
+      margin: 1rem 0 1.5rem;
+      color: #9ca3af;
+      font-size: 0.875rem;
+      text-align: center;
     }
 
     .desc-btn {
@@ -98,70 +243,88 @@ export class LoginPage extends SignalWatcher(LitElement) {
       background: transparent;
       border: none;
       font-weight: 600;
-      color: #fff;
+      color: #60a5fa;
       cursor: pointer;
+      transition: color 0.2s ease;
     }
+
+    .desc-btn:hover {
+      color: #3b82f6;
+    }
+
     .desc-btn span {
-      margin-right: 4px;
+      margin-right: 0.5rem;
     }
 
     .form-container {
-      margin: 30px 0 16px;
+      margin: 2rem 0 1rem;
       position: relative;
-      border-radius: 12px;
-      border: 1px solid #5f5f5f;
-      background: rgba(255, 255, 255, 0.05);
-      overflow: hidden;
-      width: 369px;
-      max-width: 100vw;
-      padding: 10px;
-      box-sizing: border-box;
+      border-radius: 1rem;
+      border: 1px solid #4b5563;
+      background: rgba(255, 255, 255, 0.08);
+      width: 100%;
+      max-width: 24rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
+
     .lamp-light {
       position: absolute;
-      top: -10px;
-      right: -10px;
-      z-index: -1;
+      top: -0.5rem;
+      right: -0.5rem;
       width: 1px;
       height: 1px;
       border-radius: 50%;
-      box-shadow: 0 0 400px 150px rgba(253, 224, 255, 0.12);
+      box-shadow: 0 0 300px 100px rgba(253, 224, 255, 0.15);
     }
+
     h2.form-title {
       margin: 0;
-      color: #d9d9d9;
-      font-size: 32px;
+      color: #e5e7eb;
+      font-size: 1.875rem;
+      font-weight: 600;
+      text-align: center;
     }
+
     .form-desc {
-      margin: 8px 0 10px;
-      color: #6c7278;
-      font-size: 12px;
+      margin: 0.75rem 0 1.25rem;
+      color: #9ca3af;
+      font-size: 0.875rem;
       text-align: center;
     }
 
     .email-wrapper {
       position: relative;
-      margin-bottom: 16px;
+      margin-bottom: 1rem;
     }
+
     .email-icon {
       position: absolute;
       top: 50%;
-      left: 16px;
+      left: 1rem;
       transform: translateY(-50%);
-      color: #acb5bb;
+      color: #9ca3af;
     }
+
     .email-input {
       width: 100%;
-      padding: 12px 16px 12px 48px;
-      background: #54545421;
-      border: 1px solid #545454;
-      border-radius: 12px;
-      color: #fff;
-      font-size: 1rem;
       box-sizing: border-box;
+      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      background: #1f2937;
+      border: 1px solid #4b5563;
+      border-radius: 0.5rem;
+      color: #ffffff;
+      font-size: 1rem;
+      transition: border-color 0.2s ease;
     }
+
+    .email-input:focus {
+      border-color: #60a5fa;
+      outline: none;
+    }
+
     .email-input::placeholder {
-      color: #acb5bb;
+      color: #6b7280;
     }
 
     .btn {
@@ -169,144 +332,151 @@ export class LoginPage extends SignalWatcher(LitElement) {
       align-items: center;
       justify-content: center;
       width: 100%;
-      padding: 12px 0;
-      border-radius: 12px;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
       font-size: 1rem;
+      font-weight: 500;
       cursor: pointer;
+      transition: all 0.2s ease;
     }
+
     .btn-email {
-      background: #1d61e7;
-      color: #fff;
+      background: #2563eb;
+      color: #ffffff;
       border: none;
-      margin-bottom: 8px;
     }
+
+    .btn-email:hover {
+      background: #1d4ed8;
+    }
+
     .divider {
       height: 1px;
-      background: #545454;
-      margin: 24px 0;
+      background: #4b5563;
+      margin: 1.5rem 0;
     }
 
     .mini-divider {
-      margin: 10px 0;
-      padding-bottom: 12px;
-      border-bottom: 1px solid #a5a5a575;
+      margin: 0.75rem 0;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid #6b7280;
     }
 
-    .btn-google,
-    .btn-apple {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      /* margin-bottom: 16px; */
-      border-radius: 12px;
-      padding: 12px 0;
-      font-size: 1rem;
-      cursor: pointer;
-    }
     .btn-google {
-      background: #fff;
-      color: #000;
-      border: 1px solid #5c5c5c;
-    }
-    .btn-apple {
-      background: #000;
-      color: #fff;
-      border: 1px solid #545454;
-    }
-    .btn-brightid {
-      background: #202020;
-      color: white;
-      transition: all;
-      border: 1px solid #545454;
+      background: #ffffff;
+      color: #111827;
+      border: 1px solid #d1d5db;
     }
 
-    .btn-brightid:hover {
+    .btn-google:hover {
+      background: #f3f4f6;
+    }
+
+    .btn-apple {
+      background: #000000;
+      color: #ffffff;
+      border: 1px solid #4b5563;
+    }
+
+    .btn-apple:hover {
       background: #1f1f1f;
     }
 
-    .btn-brightid .btn-icon {
-      margin-bottom: 0;
+    .btn-brightid {
+      background: #1e40af;
+      color: #ffffff;
+      border: 1px solid #3b82f6;
     }
+
+    .btn-brightid:hover {
+      background: #1e3a8a;
+    }
+
     .btn-icon {
-      margin-right: 15px;
-      height: 24px;
-      width: 24px;
+      margin-right: 0.75rem;
+      height: 1.5rem;
+      width: 1.5rem;
     }
 
     .form-footer {
-      color: #787878;
-      font-size: 11px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 130%;
-      letter-spacing: -0.22px;
+      color: #9ca3af;
+      font-size: 0.75rem;
       text-align: center;
-      color: #acb5bb;
+      margin-top: 1rem;
     }
 
     .bottom-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 24px;
-      z-index: 10;
-      margin-top: 40px;
-      gap: 50px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+      gap: 2rem;
     }
+
     .brand {
       display: flex;
       align-items: center;
     }
+
     .brand-icon {
-      margin-right: 8px;
-      height: 32px;
-      width: 32px;
-      fill: #f4712f;
+      margin-right: 0.5rem;
+      height: 2rem;
+      width: 2rem;
+      fill: #f97316;
     }
+
     .brand-name {
-      font-weight: bold;
-      color: white;
-      margin-left: 12px;
+      font-weight: 700;
+      color: #ffffff;
+      font-size: 1rem;
     }
+
     .privacy {
-      color: #fff;
+      color: #60a5fa;
       text-decoration: none;
+      font-size: 0.875rem;
+    }
+
+    .privacy:hover {
+      text-decoration: underline;
     }
 
     .btn:disabled {
-      opacity: 0.6;
+      opacity: 0.5;
       cursor: not-allowed;
     }
 
     .loading-wrapper {
-      height: 369px;
+      height: 24rem;
       display: grid;
       place-items: center;
     }
 
     .loading-wrapper h2 {
       margin: 0;
+      color: #e5e7eb;
+      font-size: 1.5rem;
     }
 
     .loading-wrapper img {
-      margin-top: 20px;
+      margin-top: 1.5rem;
       animation: spin 1s linear infinite;
     }
 
     .mini-integrations {
       display: flex;
-      gap: 5px;
+      gap: 0.5rem;
     }
 
     .mini-integrations button {
-      justify-content: center !important;
-      height: 50px !important;
-      margin-bottom: 0 !important;
-      padding: 0 !important;
+      justify-content: center;
+      height: 3rem;
+      padding: 0;
     }
 
     .mini-integrations button .btn-icon {
-      margin: 0 !important;
+      margin: 0;
     }
 
     @keyframes spin {
@@ -321,9 +491,9 @@ export class LoginPage extends SignalWatcher(LitElement) {
     .integration-info {
       display: flex;
       flex-direction: column;
-      font-size: 0.8rem;
-      color: #acb5bb;
-      margin-left: 10px;
+      font-size: 0.875rem;
+      color: #9ca3af;
+      margin-left: 0.75rem;
     }
 
     .mini-integration-wrapper {
@@ -331,42 +501,41 @@ export class LoginPage extends SignalWatcher(LitElement) {
       display: flex;
       flex-direction: column;
       align-items: center;
-      flex: 1 1 auto;
+      flex: 1;
     }
 
     .mini-info {
       position: absolute;
-      bottom: -13px;
-      font-size: 0.7rem;
-      color: #acb5bb;
+      bottom: -0.875rem;
+      font-size: 0.75rem;
+      color: #9ca3af;
       white-space: nowrap;
     }
 
     .btn-wrapper {
       display: flex;
       flex-direction: column;
-      margin-bottom: 8px;
+      margin-bottom: 0.5rem;
     }
 
     .btn-info {
       display: flex;
       justify-content: space-between;
-      font-size: 0.8rem;
-      color: #acb5bb;
-      margin-top: 4px;
-      margin-bottom: 5px;
+      font-size: 0.75rem;
+      color: #9ca3af;
+      margin-top: 0.25rem;
     }
 
     .green {
-      color: #00ffbb;
+      color: #34d399;
     }
 
     .yellow {
-      color: #ffe81a;
+      color: #f4d03f;
     }
 
     .orange {
-      color: #ff811a;
+      color: #f97316;
     }
   `
 
@@ -455,8 +624,6 @@ export class LoginPage extends SignalWatcher(LitElement) {
     try {
       const data = await AppleID.auth.signIn()
 
-      // Debug log
-
       if (!data.authorization) {
         throw new Error('Authorization data is missing')
       }
@@ -473,7 +640,6 @@ export class LoginPage extends SignalWatcher(LitElement) {
       const id = await this.createBrightId(email)
 
       userBrightId.set(id)
-      // Only update name if provided by Apple
       if (firstName) userFirstName.set(firstName)
       if (lastName) userLastName.set(lastName)
       userProfilePicture.set('')
@@ -482,7 +648,6 @@ export class LoginPage extends SignalWatcher(LitElement) {
       pushRouter('/home')
     } catch (error) {
       console.error('Error signing in with Apple:', error)
-      // Add more detailed error logging
       if (error instanceof Error) {
         console.error('Error details:', error.message)
       }
@@ -490,6 +655,57 @@ export class LoginPage extends SignalWatcher(LitElement) {
       isLoginLoading.set(false)
     }
   }
+
+  private async signInWithEthereum() {
+    isLoginLoading.set(true)
+
+    wagmiConfig.connectors[0]?.connect().finally(() => {
+      isLoginLoading.set(false)
+    })
+  }
+
+  authMethods: AuthMethod[] = [
+    {
+      id: 'google',
+      name: 'Google',
+      icon: googleIcon,
+      setupTime: '30s',
+      security: 2,
+      description: 'Sign in with your Google account',
+      color: 'bg-red-50 text-red-700 border-red-200',
+      callback: this.signInWithGoogle
+    },
+    {
+      id: 'apple',
+      name: 'Apple',
+      icon: appleIcon,
+      setupTime: '45s',
+      security: 3,
+      description: 'Sign in with Apple ID',
+      color: 'bg-gray-50 text-gray-700 border-gray-200',
+      callback: this.signInWithApple
+    },
+    {
+      id: 'ethereum',
+      name: 'Ethereum Wallet',
+      icon: WalletIcon,
+      setupTime: '2m',
+      security: 4,
+      description: 'Connect your crypto wallet',
+      color: 'bg-blue-50 text-blue-700 border-blue-200',
+      callback: this.signInWithEthereum
+    },
+    {
+      id: 'brightid',
+      name: 'BrightID',
+      icon: brightIDIcon,
+      setupTime: '5m',
+      security: 10,
+      description: 'Decentralized identity verification',
+      color: 'bg-orange-50 text-orange-700 border-orange-200',
+      callback: this.signInWithBrightID
+    }
+  ]
 
   render() {
     if (this.withoutTitle) {
@@ -640,46 +856,35 @@ export class LoginPage extends SignalWatcher(LitElement) {
 
               <div class="divider"></div>
 
-              <div class="btn-wrapper">
-                <button @click=${this.signInWithGoogle} class="btn-google btn">
-                  <div class="btn-icon">
-                    <img src="${googleIcon}" width="24" height="24" alt="Google" />
-                  </div>
-                  Sign in with Google
-                </button>
-                <div class="btn-info">
-                  <span>Security: Low</span>
-                  <span>Setup: 1 min</span>
-                </div>
-              </div>
+                  <div class="space-y-3">
+              ${map(
+                this.authMethods,
+                (method) => html`
+                  <div class="space-y-2">
+                    <button class="button" @click=${() => method.callback?.()}>
+                      <div class="flex-container">
+                        <img width="20" height="20" src="${method.icon}" alt="${method.name}" />
+                        <div class="flex-1">
+                          <div class="font-medium">${method.name}</div>
+                          <div class="text-xs text-muted-foreground">${method.description}</div>
+                        </div>
+                      </div>
+                    </button>
 
-              <div class="btn-wrapper">
-                <button @click=${
-                  this.signInWithApple
-                } id="appleid-signin" data-color="black" data-border="true" data-type="sign in" class="btn-apple btn">
-                  <div class="btn-icon">
-                    <img src="${appleIcon}" width="24" height="24" alt="Apple" />
+                    <div class="badge-container">
+                      <div class="badge" style="color: ${method.color}">
+                        <span class="icon">🕒</span>
+                        <span>Setup: + ${method.setupTime}</span>
+                      </div>
+                      <div class="badge security-${method.security}">
+                        <span class="icon">🛡️</span>
+                        <span>Security: ${method.security}/10</span>
+                      </div>
+                    </div>
                   </div>
-                  Sign in with Apple
-                </button>
-                <div class="btn-info">
-                  <span>Security: Medium</span>
-                  <span>Setup: 1 min</span>
-                </div>
-              </div>
-
-              <div class="btn-wrapper">
-                <button @click=${
-                  this.signInWithBrightID
-                } id="brightid-signin" data-color="black" data-border="true" data-type="sign in" class="btn-brightid btn">
-                    <img class="btn-icon" width="20" height="20" src="${brightIDIcon}" alt="bright id" />
-                  Sign in with BrightID
-                </button>
-                <div class="btn-info green">
-                  <span>Security: High</span>
-                  <span>Setup: 5 min</span>
-                </div>
-              </div>
+                `
+              )}
+                    </div>
 
               <p class="form-footer">By Signing in you will agree to our privacy policy</p>
             </div>

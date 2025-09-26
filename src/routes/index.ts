@@ -672,10 +672,10 @@ export class LoginPage extends SignalWatcher(LitElement) {
       minute: 'numeric',
       second: 'numeric',
       hour12: true,
-      timeZone: 'UTC' // Use UTC for consistency
+      timeZone: 'UTC'
     })
 
-    const message = `${formattedDate}\n${signingMessage}`
+    const message = `Wallet: ${address}\nDate: ${formattedDate}\nConfirmation: ${signingMessage}`
 
     const hashResult = await signMessage(wagmiConfig, {
       message,

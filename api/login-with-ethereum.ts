@@ -20,7 +20,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return
   }
 
-  const { email, integration } = req.body
+  const { message, hashed } = req.body
 
   if (!email || !emailRegex.test(email)) {
     res.status(400).send('Email is Required')

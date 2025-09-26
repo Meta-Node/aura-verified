@@ -19,10 +19,12 @@ import {
 import { clientAPI } from '@/utils/apis'
 import { wagmiConfig } from '@/utils/wallet'
 import { SignalWatcher } from '@lit-labs/signals'
+import { Connector, signMessage } from '@wagmi/core'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { css, html, LitElement, type CSSResultGroup } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 import { map } from 'lit/directives/map.js'
+import { Address } from 'viem'
 
 const generateUUID = () => {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {
@@ -45,6 +47,9 @@ const appleSignInOptions = {
 } as const
 
 declare const AppleID: any
+
+export const signingMessage =
+  'Account Responsibility Notice\nYou are using Aura get verified. By signing this message, you confirm ownership of your account. You are responsible for protecting your account and private keys. Keep them secure and do not share them with anyone.'
 
 interface AuthMethod {
   id: string
@@ -656,12 +661,49 @@ export class LoginPage extends SignalWatcher(LitElement) {
     }
   }
 
+  private async requestEthereumSignature(address: Address, connector: Connector) {
+    const now = new Date()
+
+    const formattedDate = now.toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      hour12: true,
+      timeZone: 'UTC' // Use UTC for consistency
+    })
+
+    const message = `${formattedDate}\n${signingMessage}`
+
+    const hashResult = await signMessage(wagmiConfig, {
+      message,
+      account: address,
+      connector
+    })
+
+    console.log(hashResult)
+  }
+
   private async signInWithEthereum() {
     isLoginLoading.set(true)
 
-    wagmiConfig.connectors[0]?.connect().finally(() => {
+    try {
+      const connector = wagmiConfig.connectors[0]
+
+      const res = await connector?.connect({
+        chainId: 1
+      })
+
+      if (!res?.accounts[0]) return
+
+      await this.requestEthereumSignature(res.accounts[0], connector!)
+    } catch (e) {
+      console.log('Error connecting to wallet:', e)
+    } finally {
       isLoginLoading.set(false)
-    })
+    }
   }
 
   authMethods: AuthMethod[] = [
@@ -693,7 +735,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
       security: 4,
       description: 'Connect your crypto wallet',
       color: 'bg-blue-50 text-blue-700 border-blue-200',
-      callback: this.signInWithEthereum
+      callback: () => this.signInWithEthereum()
     },
     {
       id: 'brightid',

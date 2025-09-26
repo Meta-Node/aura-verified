@@ -4,7 +4,7 @@ import { eq } from 'drizzle-orm'
 import { db } from './lib/db.js'
 import { usersTable } from './lib/schema.js'
 
-const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+const regex = /^Wallet:\s*(.+)\nDate:\s*(.+)\nConfirmation:\s*(.+)$/m
 
 function createBrightId(email: string) {
   const secretKey = process.env['SECRET_KEY']
@@ -22,9 +22,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const { message, hashed } = req.body
 
-  if (!email || !emailRegex.test(email)) {
-    res.status(400).send('Email is Required')
+  const match = message.match(regex)
+
+  if (!match || !hashed) {
+    res.status(400).send('invalid data')
     return
+  }
+
+  const [, wallet, date, confirmation] = match
+
+  if (new Date(date) < Date.now() - 20000) {
   }
 
   const hashedEmail = createBrightId(email)

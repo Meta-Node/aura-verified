@@ -44,6 +44,28 @@
         "tags": ["Users"]
       }
     },
+    "/login-with-ethereum": {
+      "post": {
+        "operationId": "ethereum_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EthLoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": ["Users"]
+      }
+    },
     "/projects": {
       "get": {
         "operationId": "ProjectsController_getAllProjects",
@@ -78,6 +100,18 @@
           }
         },
         "required": ["email", "integration"]
+      },
+      "EthLoginDto": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "hashed": {
+            "type": "string"
+          }
+        },
+        "required": ["message", "hashed"]
       }
     }
   }

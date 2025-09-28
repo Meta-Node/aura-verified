@@ -672,10 +672,10 @@ export class LoginPage extends SignalWatcher(LitElement) {
       minute: 'numeric',
       second: 'numeric',
       hour12: true,
-      timeZone: 'UTC' // Use UTC for consistency
+      timeZone: 'UTC'
     })
 
-    const message = `${formattedDate}\n${signingMessage}`
+    const message = `Wallet: ${address}\nDate: ${formattedDate}\nConfirmation: ${signingMessage}`
 
     const hashResult = await signMessage(wagmiConfig, {
       message,
@@ -683,7 +683,18 @@ export class LoginPage extends SignalWatcher(LitElement) {
       connector
     })
 
-    console.log(hashResult)
+    const res = await clientAPI.POST('/login-with-ethereum', {
+      body: {
+        hashed: hashResult,
+        message
+      }
+    })
+
+    if (!res.data) return
+
+    const data = res.data as { id: string }
+
+    userBrightId.set(data.id)
   }
 
   private async signInWithEthereum() {

@@ -1,18 +1,13 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
-import * as crypto from 'crypto'
 import { eq } from 'drizzle-orm'
+import { verifyMessage } from 'viem'
 import { db } from './lib/db.js'
 import { usersTable } from './lib/schema.js'
 
-const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+const regex = /^Wallet:\s*(.+)\nDate:\s*(.+)\nConfirmation:\s*(.+)$/m
 
-function createBrightId(email: string) {
-  const secretKey = process.env['SECRET_KEY']
-
-  if (!secretKey) throw new Error('Secret key must be present in env variables')
-
-  return crypto.scryptSync(email, secretKey, 32).toString('base64').slice(0, 43)
-}
+const confirmationMessage =
+  'Account Responsibility Notice\nYou are using Aura get verified. By signing this message, you confirm ownership of your account. You are responsible for protecting your account and private keys. Keep them secure and do not share them with anyone.'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
@@ -20,27 +15,48 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return
   }
 
-  const { email, integration } = req.body
+  const { message, hashed } = req.body
 
-  if (!email || !emailRegex.test(email)) {
-    res.status(400).send('Email is Required')
+  const match = message.match(regex)
+
+  if (!match || !hashed) {
+    res.status(400).send('invalid data')
     return
   }
 
-  const hashedEmail = createBrightId(email)
+  const [, wallet, date, confirmation] = match
 
-  const result = await db.select().from(usersTable).where(eq(usersTable.id, hashedEmail))
+  if (new Date(date).getTime() < Date.now() - 5 * 60 * 1000) {
+    res.status(400).send('signature expired')
+    return
+  }
+
+  if (confirmation !== confirmationMessage) {
+    res.status(400).send('invalid confirmation')
+    return
+  }
+
+  const isVerified = await verifyMessage({
+    address: wallet,
+    message,
+    signature: hashed
+  })
+
+  if (!isVerified) {
+    res.status(400).send('invalid signature')
+    return
+  }
+
+  const result = await db.select().from(usersTable).where(eq(usersTable.id, wallet))
 
   if (result.length === 0) {
-    const brightId = createBrightId(email)
-
     await db.insert(usersTable).values({
-      id: brightId,
-      integrations: [integration]
+      id: wallet,
+      integrations: ['wallet']
     })
 
     res.json({
-      id: brightId
+      id: wallet
     })
     return
   }

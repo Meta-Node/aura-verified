@@ -1,3 +1,4 @@
+import timesIcon from '@/assets/icons/times.svg'
 import { css, CSSResultGroup, html, LitElement } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
 
@@ -58,7 +59,8 @@ export class EmbeddedVerificationPageElement extends SignalWatcher(LitElement) {
       animation: fadeIn 0.3s ease-in-out;
     }
     .modal-content {
-      background: #2d3b5e; /* Dark blue modal background */
+      background: #ffffff14;
+      border: 1px solid #2f353d;
       padding: 14px;
       width: 350px;
       border-radius: 8px;
@@ -153,13 +155,15 @@ export class EmbeddedVerificationPageElement extends SignalWatcher(LitElement) {
         <button @click=${this.toggleModal}>Get Verified</button>
         <div class="modal ${this.isModalOpen ? 'open' : ''}">
           <div class="modal-content">
-            <div class="close-btn" @click=${this.toggleModal}>X</div>
+            <div class="close-btn" @click=${this.toggleModal}>
+              <img src="${timesIcon}" alt="times" width="24" height="24" />
+            </div>
 
             <iframe
               id="iframe"
               @load=${this.onIframeLoad}
               height="550"
-              src="https://aura-get-verified.vercel.app/embed/projects/4"
+              src="/embed/projects/4"
             ></iframe>
             <!-- src="/embed/projects/4" -->
           </div>

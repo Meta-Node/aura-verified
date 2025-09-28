@@ -124,6 +124,13 @@ export class LoginPage extends SignalWatcher(LitElement) {
       cursor: pointer;
     }
 
+    .mini-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 4rem;
+    }
+
     .button:hover {
       background: linear-gradient(145deg, #39383d, #1a0b35);
       transform: translateY(-2px);
@@ -166,6 +173,12 @@ export class LoginPage extends SignalWatcher(LitElement) {
       margin-left: 1rem;
     }
 
+    .mini {
+      margin-left: 0 !important;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+
     .badge {
       display: flex;
       align-items: center;
@@ -174,6 +187,15 @@ export class LoginPage extends SignalWatcher(LitElement) {
       padding: 0.375rem 0.75rem;
       border-radius: 0.5rem;
       border: 1px solid #454545;
+    }
+
+    .mini .badge,
+    .badge-mini {
+      padding: 0.2rem;
+    }
+
+    .opacity-50 {
+      opacity: 0.5;
     }
 
     .security-0,
@@ -314,7 +336,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
     .email-input {
       width: 100%;
       box-sizing: border-box;
-      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      padding: 0.75rem 1rem 0.75rem 3rem;
       background: #1f2937;
       border: 1px solid #4b5563;
       border-radius: 0.5rem;
@@ -504,7 +526,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
     .mini-integration-wrapper {
       position: relative;
       display: flex;
-      flex-direction: column;
+      justify-content: space-evenly;
       align-items: center;
       flex: 1;
     }
@@ -528,7 +550,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
       justify-content: space-between;
       font-size: 0.75rem;
       color: #9ca3af;
-      margin-top: 0.25rem;
+      margin-top: 0.5rem;
     }
 
     .green {
@@ -797,8 +819,14 @@ export class LoginPage extends SignalWatcher(LitElement) {
                   Sign in with Email
                 </button>
                 <div class="btn-info">
-                  <span>Security: Medium</span>
-                  <span>Setup: 1 min</span>
+                  <span class="badge badge-mini security-3 opacity-50">
+                    <span class="icon">🛡️</span>
+                    <span>3/10</span>
+                  </span>
+                  <span class="badge badge-mini">
+                    <span class="icon">🕒</span>
+                    <span>Setup: +1m</span>
+                  </span>
                 </div>
               </div>
 
@@ -806,48 +834,24 @@ export class LoginPage extends SignalWatcher(LitElement) {
 
               <div class="mini-integrations">
                 <div class="mini-integration-wrapper">
-                  <button @click=${this.signInWithGoogle} class="btn-google btn">
-                    <div class="btn-icon">
-                      <img src="${googleIcon}" width="24" height="24" alt="Google" />
-                    </div>
-                  </button>
-                  <div class="mini-info">Security: Low</div>
-                </div>
-
-                <div class="mini-integration-wrapper">
-                  <button
-                    @click=${this.signInWithApple}
-                    id="appleid-signin"
-                    data-color="black"
-                    data-border="true"
-                    data-type="sign in"
-                    class="btn-apple btn"
-                  >
-                    <div class="btn-icon">
-                      <img src="${appleIcon}" width="24" height="24" alt="Apple" />
-                    </div>
-                  </button>
-                  <div class="mini-info">Security: Medium</div>
-                </div>
-
-                <div class="mini-integration-wrapper">
-                  <button
-                    @click=${this.signInWithBrightID}
-                    id="brightid-signin"
-                    data-color="black"
-                    data-border="true"
-                    data-type="sign in"
-                    class="btn-brightid btn"
-                  >
-                    <img
-                      class="btn-icon"
-                      width="20"
-                      height="20"
-                      src="${brightIDIcon}"
-                      alt="bright id"
-                    />
-                  </button>
-                  <div class="mini-info green">Security: High</div>
+                  ${map(
+                    this.authMethods,
+                    (method) => html`
+                      <div class="space-y-2">
+                        <button class="button mini-button" @click=${() => method.callback?.()}>
+                          <div class="">
+                            <img width="20" height="20" src="${method.icon}" alt="${method.name}" />
+                          </div>
+                        </button>
+                        <div class="badge-container mini">
+                          <div class="badge security-${method.security}">
+                            <span class="icon">🛡️</span>
+                            <span>${method.security}/10</span>
+                          </div>
+                        </div>
+                      </div>
+                    `
+                  )}
                 </div>
               </div>
             `}

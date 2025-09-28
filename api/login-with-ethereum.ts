@@ -4,7 +4,7 @@ import { verifyMessage } from 'viem'
 import { db } from './lib/db.js'
 import { usersTable } from './lib/schema.js'
 
-const regex = /^Wallet:\s*(.+)\nDate:\s*(.+)\nConfirmation:\s*(.+)$/m
+const regex = /^Wallet:\s*(.+)\nDate:\s*(.+)\nConfirmation:\s*([\s\S]*)$/m
 
 const confirmationMessage =
   'Account Responsibility Notice\nYou are using Aura get verified. By signing this message, you confirm ownership of your account. You are responsible for protecting your account and private keys. Keep them secure and do not share them with anyone.'

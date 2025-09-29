@@ -7,7 +7,7 @@ export class VerificationCardSkeleton extends LitElement {
     .verification-card {
       color: inherit;
       text-decoration: none;
-      background: #15162c;
+      background: #ffffff14;
       backdrop-filter: blur(4px);
       border: 1px solid rgba(229, 231, 235, 0.21);
       border-radius: 12px;

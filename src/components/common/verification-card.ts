@@ -1,6 +1,6 @@
+import checkboxGreenIcon from '@/assets/icons/checkbox-green.svg'
 import { css, html, LitElement } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
-import checkboxGreenIcon from '@/assets/icons/checkbox-green.svg'
 
 @customElement('verification-card')
 export class VerificationCard extends LitElement {
@@ -27,7 +27,7 @@ export class VerificationCard extends LitElement {
       color: inherit;
       text-decoration: none;
 
-      background: #15162c;
+      background: #ffffff14;
 
       backdrop-filter: blur(4px);
       border: 1px solid rgba(229, 231, 235, 0.21);

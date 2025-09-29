@@ -732,6 +732,8 @@ export class LoginPage extends SignalWatcher(LitElement) {
       if (!res?.accounts[0]) return
 
       await this.requestEthereumSignature(res.accounts[0], connector!)
+
+      pushRouter('/complete-profile')
     } catch (e) {
       console.log('Error connecting to wallet:', e)
     } finally {

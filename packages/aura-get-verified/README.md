@@ -1,4 +1,4 @@
-# Aura Get Verified App
+# Aura Verified App
 
 ### web components and utility functionalities for aura verification system.
 

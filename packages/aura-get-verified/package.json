@@ -16,7 +16,8 @@
   "keywords": [
     "brightid",
     "aura",
-    "get-verified"
+    "get-verified",
+    "aura-verified"
   ],
   "files": [
     "build"

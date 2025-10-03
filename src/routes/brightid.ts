@@ -229,7 +229,7 @@ export class BrightIDLoginElement extends SignalWatcher(LitElement) {
           : { href: channelUrl },
         t: urlTypesOfActions['superapp'],
         changePrimaryDevice: false,
-        name: `Aura Get Verified ${deviceInfo}`
+        name: `Aura Verified ${deviceInfo}`
       })
 
       const link = `https://app.brightid.org/connection-code/${encodeURIComponent(newQrUrl.href)}`

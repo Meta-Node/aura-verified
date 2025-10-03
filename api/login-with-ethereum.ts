@@ -7,7 +7,7 @@ import { usersTable } from './lib/schema.js'
 const regex = /^Wallet:\s*(.+)\nDate:\s*(.+)\nConfirmation:\s*([\s\S]*)$/m
 
 const confirmationMessage =
-  'Account Responsibility Notice\nYou are using Aura get verified. By signing this message, you confirm ownership of your account. You are responsible for protecting your account and private keys. Keep them secure and do not share them with anyone.'
+  'Account Responsibility Notice\nYou are using Aura verified. By signing this message, you confirm ownership of your account. You are responsible for protecting your account and private keys. Keep them secure and do not share them with anyone.'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {

@@ -1,5 +1,5 @@
 {
-  "name": "get-verified",
+  "name": "aura-verified",
   "type": "module",
   "packageManager": "bun@1.2.20",
   "version": "0.0.6",
@@ -16,7 +16,8 @@
   "keywords": [
     "brightid",
     "aura",
-    "get-verified"
+    "get-verified",
+    "aura-verified"
   ],
   "files": [
     "build"

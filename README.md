@@ -1,4 +1,4 @@
-# get-verified
+# Aura verified
 
 A Decentralized solution to get verified as a unique identity without having to share personal information across the internet
 

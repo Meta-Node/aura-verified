@@ -4,10 +4,10 @@ import { customElement } from 'lit/decorators.js'
 
 export const content = `
 
-# Privacy Policy for Aura Get Verified
+# Privacy Policy for Aura Verified
 
 ## Introduction
-Aura Get Verified ("we," "us," or "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you use our website and services.
+Aura Verified ("we," "us," or "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you use our website and services.
 
 ## Information We Collect
 - **Email Address**: When you sign up or log in using your email, Google, or Apple ID, we collect your email address.

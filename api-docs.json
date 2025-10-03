@@ -80,8 +80,8 @@
     }
   },
   "info": {
-    "title": "Aura Get verified",
-    "description": "The Aura Get verified API description",
+    "title": "Aura verified",
+    "description": "The Aura verified API description",
     "version": "1.0",
     "contact": {}
   },

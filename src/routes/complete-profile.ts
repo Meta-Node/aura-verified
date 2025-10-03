@@ -328,7 +328,7 @@ export class CompleteProfile extends SignalWatcher(LitElement) {
         <img src="/favicon.png" class="logo" alt="Aura" />
 
         <div class="container">
-          <h1 class="title">Aura Get Verified</h1>
+          <h1 class="title">Aura Verified</h1>
           <p class="info-text">Decentralized verification platform</p>
 
           <a href="https://brightid.gitbook.io/aura" target="_blank" class="desc-btn">

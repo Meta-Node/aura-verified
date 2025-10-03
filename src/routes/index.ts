@@ -776,7 +776,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
       id: 'brightid',
       name: 'BrightID',
       icon: brightIDIcon,
-      setupTime: '5m',
+      setupTime: '3m',
       security: 10,
       description: 'Decentralized identity verification',
       color: 'bg-orange-50 text-orange-700 border-orange-200',
@@ -827,7 +827,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
                   </span>
                   <span class="badge badge-mini">
                     <span class="icon">🕒</span>
-                    <span>Setup: +1m</span>
+                    <span>Setup time: +1m</span>
                   </span>
                 </div>
               </div>
@@ -909,7 +909,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
                 </button>
                 <div class="btn-info">
                   <span>Security: Medium</span>
-                  <span>Setup: 1 min</span>
+                  <span>Setup time: 1 min</span>
                 </div>
               </div>
 
@@ -933,7 +933,7 @@ export class LoginPage extends SignalWatcher(LitElement) {
                     <div class="badge-container">
                       <div class="badge" style="color: ${method.color}">
                         <span class="icon">🕒</span>
-                        <span>Setup: + ${method.setupTime}</span>
+                        <span>Setup time: + ${method.setupTime}</span>
                       </div>
                       <div class="badge security-${method.security}">
                         <span class="icon">🛡️</span>

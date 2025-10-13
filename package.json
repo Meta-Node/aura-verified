@@ -2,7 +2,7 @@
   "name": "aura-verified",
   "type": "module",
   "packageManager": "bun@1.2.20",
-  "version": "0.0.7",
+  "version": "0.0.71",
   "workspaces": [
     "packages/*"
   ],

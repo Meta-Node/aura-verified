@@ -243,6 +243,17 @@ export class CompleteProfile extends SignalWatcher(LitElement) {
       background: #1d4ed8;
     }
 
+    .btn-skip {
+      background: transparent;
+      color: #60a5fa;
+      border: 1px solid #60a5fa;
+    }
+
+    .btn-skip:hover {
+      background: #60a5fa;
+      color: #ffffff;
+    }
+
     .btn-brightid:hover {
       background: #1e3a8a;
     }
@@ -303,6 +314,7 @@ export class CompleteProfile extends SignalWatcher(LitElement) {
     .btn-wrapper {
       display: flex;
       flex-direction: column;
+      gap: 0.75rem;
       margin-bottom: 0.5rem;
     }
   `
@@ -313,13 +325,17 @@ export class CompleteProfile extends SignalWatcher(LitElement) {
     name.set(target.value)
   }
 
+  onSkip() {
+    pushRouter('/home')
+  }
+
   onSubmit() {
     const [firstName, lastName] = name.get().split(' ')
 
     userFirstName.set(firstName ?? '')
     userLastName.set(lastName ?? '')
 
-    pushRouter('/')
+    pushRouter('/home')
   }
 
   protected render() {
@@ -354,6 +370,7 @@ export class CompleteProfile extends SignalWatcher(LitElement) {
 
             <div class="btn-wrapper">
               <button @click=${this.onSubmit} class="btn btn-name">Continue</button>
+              <button @click=${this.onSkip} class="btn btn-skip">Skip</button>
             </div>
           </div>
         </div>
